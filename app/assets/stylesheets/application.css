@@ -1,0 +1,110 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS (and SCSS, if configured) file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+ .material-symbols-outlined {
+   font-variation-settings:
+   'FILL' 0,
+   'wght' 300,
+   'GRAD' 200,
+   'opsz' 40
+ }
+
+main {
+  margin: 80px 50px;
+  font-family: Open Sans;
+  font-weight: 400;
+}
+
+nav {
+
+}
+
+article#badge {
+  text-align: center;
+  border: 1px solid #999;
+  padding: 5mm;
+  margin: 10px auto;
+  width: 400px;
+  height: 234px;
+  font-size: .9em;
+}
+
+h1 {
+  font-weight: 800;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2em;
+}
+
+h2 {
+  padding: 0;
+}
+
+#degree {
+  font-weight: 400;
+  font-style: italic;
+}
+
+#order, #height {
+  text-align: center;
+}
+
+#honors {
+  text-align: center
+}
+
+#action-bar {
+  margin: 40px auto;
+  text-align: center;
+  width: 400px;
+}
+
+
+@media print {
+  nav, #back, #height-modal, #action-bar, .modal {
+    display: none;
+  }
+
+  main {
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    margin: 0
+    padding: 0
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    max-height: 52mm;
+    text-align: center;
+  }
+
+  article#badge {
+    border: none;
+    margin: 0;
+    padding: 5mm;
+  }
+
+  @page {
+    size: 100mm 62mm;   /* auto is the initial value */
+
+    /* this affects the margin in the printer settings */
+    margin: 0mm;
+  }
+}

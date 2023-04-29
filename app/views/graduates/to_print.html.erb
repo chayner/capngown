@@ -1,0 +1,44 @@
+<%= form_with url: print_path, local: true, method: :get do |form| %>
+  <div>
+    <label>
+      <input type="checkbox" name="printed" value="show" <%= params[:printed] == 'show' ? "checked" : "" %>>
+      <span class="checkable">Include Printed</span>
+    </label>
+  </div>
+  <%= form.hidden_field "form_submitted", value: "true" %>
+  <%= form.submit "Submit" %>
+<% end %>
+
+
+<table class="primary">
+  <thead>
+    <tr>
+      <th>BUID</th>
+      <th>Name</th>
+      <th>Level</th>
+      <th>College / Degree</th>
+      <th>Order #</th>
+      <th>Honors</th>
+      <th><span class="material-symbols-outlined">verified</span></th>
+      <th><span class="material-symbols-outlined">Print</span></th>
+  <% @graduates.each do |graduate| %>
+    <tr>
+      <td><%= link_to(graduate.buid, graduate_path(buid: graduate.buid, print: true)) %></td>
+      <td><%= graduate.preferredlast %>, <%= graduate.preferredfirst %> <%= graduate.middlename[0,1] %> </td>
+      <td><%= graduate.levelcode %></td>
+      <td><%= graduate.college1 %> - <%= graduate.degree1 %></td>
+      <td><%= graduate.orderid %></td>
+      <td><%= graduate.honors %></td>
+      <td>
+        <% if graduate.checked_in? %>
+          <span class="material-symbols-outlined">done</span>
+        <% end %>
+      </td>
+      <td>
+        <% if graduate.printed? %>
+          <span class="material-symbols-outlined">done</span>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>

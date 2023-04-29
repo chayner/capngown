@@ -1,0 +1,18 @@
+<%= form_with url: list_path, local: true, method: :get do |form| %>
+  <!-- <div>
+    <%= form.label :buid, "BUID:" %>
+    <%= form.text_field :buid %>
+  </div> -->
+  <div>
+    <%= form.label :lastname, "Last Name:" %>
+    <%= form.text_field :lastname, value: lastname %>
+  </div>
+  <div>
+    <label>
+      <input type="checkbox" name="checkedin" value="show" <%= checkedin == 'show' ? "checked" : "" %>>
+      <span class="checkable">Include Checked-In</span>
+    </label>
+  </div>
+  <%= form.hidden_field "form_submitted", value: "true" %>
+  <%= form.submit "Search" %>
+<% end %>

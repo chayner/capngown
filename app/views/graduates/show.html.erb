@@ -1,0 +1,79 @@
+<div c id="back">
+  <% if params[:print] %>
+    <%= link_to "Back to Print List", print_path %>
+  <% elsif params[:lastname] %>
+    <%= link_to "Back to List", list_path(lastname: params.fetch(:lastname, nil)) || start_path %>
+  <% else %>
+    <%= link_to "Start Over", start_path %>
+  <% end %>
+</div>
+
+<article id="badge">
+  <h1 id="name"><%= @graduate.preferredlast.upcase %>, <%= @graduate.preferredfirst.upcase %></h1>
+  <h4 id="degree"><%= @graduate.collegedesc %></h4>
+  <% if @graduate.levelcode == "GR" %>
+    <h2><%= @graduate.degree1 %> (<%= "#{@graduate.hoodcolor}" unless @graduate.levelcode != "GR"%>)</h2>
+  <% end %>
+  <div class="flex two">
+    <div>
+      <% if @graduate.orderid.present? %>
+        <h3 id="order">Pre-Order ✔</h3>
+      <% elsif @graduate.height.present? %>
+        <h3 id="height"><%= @graduate.height %> <label id="height-modal" for="modal_1" class="button">Edit</label></h3>
+      <% end %>
+    </div>
+    <div>
+      <% if @graduate.honors == "Y" %><h3 id="honors">Cord ✔</h3><% end %>
+    </div>
+  </div>
+</article>
+
+<div class="modal">
+  <input id="modal_1" type="checkbox" />
+  <label for="modal_1" class="overlay"></label>
+  <article>
+    <header>
+      <h3>Submit Height</h3>
+      <label for="modal_1" class="close">&times;</label>
+    </header>
+    <%= form_for @graduate, url: graduate_path(buid: @graduate.buid), method: :put do |form| %>
+    <section class="content">
+        <div class="form-group">
+          <%= form.label :height %>
+          <%= form.number_field :height, class: "form-control" %>
+          <%= hidden_field_tag :buid, @graduate.buid %>
+        </div>
+    </section>
+    <footer>
+      <%= form.submit "Save", class: "button btn-primary" %>
+    </footer>
+    <% end %>
+  </article>
+</div>
+
+
+
+  <div id="action-bar" class="flex">
+    <div>
+      <% if !@graduate.height.present? %>
+        <label id="height-modal" for="modal_1" class="button">Add Height</label>
+      <% else %>
+
+      <% if @graduate.checked_in? %>
+        <div class="checkedin">
+          ✔ Checked In (<%= link_to "Undo", checkin_graduate_path(@graduate, checkin: "clear"), method: 'patch' %>)
+        </div>
+      <% else %>
+        <%= button_to 'Check In', checkin_graduate_path(page: { checkin: true }), { method: :patch, form: { data: { turbo: true } }, :disabled => !@graduate.height? } %>
+      <% end %>
+    </div>
+    <div>
+      <% if @graduate.printed? %>
+        ✔ Printed (<%= link_to "Undo", print_graduate_path(@graduate, print: "clear"), method: 'patch' %>)
+      <% elsif params[:print] %>
+        <%= button_to 'Mark as Printed', print_graduate_path(page: { print: true }), { method: :patch, form: { data: { turbo: true } }, :disabled => !@graduate.checked_in? } %>
+      <% end %>
+    </div>
+  </div>
+
+<% end %>
