@@ -81,6 +81,6 @@ test:
 #
 production:
   <<: *default
-  database: capngown_production
-  username: capngown
-  password: <%= ENV["CAPNGOWN_DATABASE_PASSWORD"] %>
+  database: d1t3oaqk1h1tlu
+  username: czaldgwrftmrxa
+  password: <%= ENV["SECRET_KEY_BASE"] %>
