@@ -1,5 +1,5 @@
 class CreateTable < ActiveRecord::Migration[7.0]
-  def chgange
+  def change
     create_table "graduates", primary_key: "buid", id: { type: :string, limit: 50 }, force: :cascade do |t|
       t.string "lastname", limit: 50
       t.string "suffix", limit: 50
