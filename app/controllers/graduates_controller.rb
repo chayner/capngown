@@ -65,6 +65,16 @@ class GraduatesController < ApplicationController
     redirect_to graduate_path(@graduate, print: true)
   end
 
+  def get_print_html
+    printed = params[:printed]
+    @graduates = Graduate.where('checked_in IS NOT NULL').order(:checked_in)
+    if printed != "show"
+      @graduates = @graduates.where('printed IS NULL')
+    end
+    html_string = render_to_string partial: 'print_list', locals: { graduates: @graduates }
+    render html: html_string
+  end
+
   private
 
   def set_graduate

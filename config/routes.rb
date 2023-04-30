@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get 'list' => 'graduates#list'
 
   get 'print' => 'graduates#to_print'
+  get 'get_print' => 'graduates#get_print_html'
 
   resources :graduates, param: :buid do
     member do
