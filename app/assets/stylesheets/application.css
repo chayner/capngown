@@ -102,7 +102,7 @@ h2 {
   }
 
   @page {
-    size: 100mm 62mm;   /* auto is the initial value */
+    size: 80mm 62mm;   /* auto is the initial value */
 
     /* this affects the margin in the printer settings */
     margin: 0mm;
