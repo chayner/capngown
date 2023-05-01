@@ -12,18 +12,24 @@
   <h1 id="name"><%= @graduate.preferredlast.upcase %>, <%= @graduate.preferredfirst.upcase %></h1>
   <h4 id="degree"><%= @graduate.collegedesc %></h4>
   <% if @graduate.levelcode == "GR" %>
-    <h2><%= @graduate.degree1 %> (<%= "#{@graduate.hoodcolor}" unless @graduate.levelcode != "GR"%>)</h2>
+    <h2><span class="material-symbols-outlined">school</span> <%= @graduate.degree1 %> (<%= "#{@graduate.hoodcolor}" unless @graduate.levelcode != "GR"%>)</h2>
   <% end %>
   <div class="flex two">
     <div>
       <% if @graduate.orderid.present? %>
-        <h3 id="order">Pre-Order ✔</h3>
+        <h3 id="order"><span class="material-symbols-outlined">
+order_approve
+</span> Order</h3>
       <% elsif @graduate.height.present? %>
-        <h3 id="height"><%= @graduate.height %> <label id="height-modal" for="modal_1" class="button">Edit</label></h3>
+        <h3 id="height"><span class="material-symbols-outlined">
+accessibility_new
+</span> <%= @graduate.height %> <label id="height-modal" for="modal_1" class="button">Edit</label></h3>
       <% end %>
     </div>
     <div>
-      <% if @graduate.honors == "Y" %><h3 id="honors">Cord ✔</h3><% end %>
+      <% if @graduate.honors == "Y" %><h3 id="honors"><span class="material-symbols-outlined">
+new_releases
+</span> Cord</h3><% end %>
     </div>
   </div>
 </article>

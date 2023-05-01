@@ -53,16 +53,25 @@ h2 {
   padding: 0;
 }
 
+#inc-checkbox {
+  margin: 0;
+  display: block;
+}
+
+.form-submit {
+  padding-top: 21px;
+}
+
 #degree {
   font-weight: 400;
   font-style: italic;
 }
 
-#order, #height {
-  text-align: center;
+#order span, #height span, #honors span {
+  font-size: 16px;
 }
 
-#honors {
+#order, #height, #honors {
   text-align: center
 }
 

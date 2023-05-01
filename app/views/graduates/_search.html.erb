@@ -3,21 +3,21 @@
     <%= form.label :buid, "BUID:" %>
     <%= form.text_field :buid %>
   </div> -->
-  <div>
-    <label>
-      <input type="checkbox" name="checkedin" value="show" <%= checkedin == 'show' ? "checked" : "" %>>
-      <span class="checkable">Include Checked-In</span>
-    </label>
-  </div>
-
   <div class="flex two">
     <div>
       <%= form.label :lastname, "Last Name:" %>
       <%= form.text_field :lastname, value: lastname %>
     </div>
-    <div>
+    <div class="form-submit">
       <%= form.hidden_field "form_submitted", value: "true" %>
       <%= form.submit "Search" %>
     </div>
+    <footer class="full">
+      <label id="inc-checkbox">
+        <input type="checkbox" name="checkedin" value="show" <%= checkedin == 'show' ? "checked" : "" %>>
+        <span class="checkable">Include Checked-In</span>
+      </label>
+    </footer>
+
 <% end %>
 </div>

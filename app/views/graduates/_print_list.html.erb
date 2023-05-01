@@ -3,10 +3,10 @@
     <tr>
       <th>BUID</th>
       <th>Name</th>
-      <th>Level</th>
-      <th>College / Degree</th>
+      <th>GR</th>
+      <th>Degree</th>
       <th>Order #</th>
-      <th>Honors</th>
+      <th>Cord</th>
       <th><span class="material-symbols-outlined">verified</span></th>
       <th><span class="material-symbols-outlined">Print</span></th>
     <tr>
@@ -15,8 +15,12 @@
     <tr>
       <td><%= link_to(graduate.buid, graduate_path(buid: graduate.buid, print: true)) %></td>
       <td><%= graduate.preferredlast %>, <%= graduate.preferredfirst %> <%= graduate.middlename[0,1] %> </td>
-      <td><%= graduate.levelcode %></td>
-      <td><%= graduate.college1 %> - <%= graduate.degree1 %></td>
+      <td>
+        <% if graduate.levelcode == "GR" %>
+          <span class="material-symbols-outlined">school</span>
+        <% end %>
+      </td>
+      <td><%= graduate.degree1 %> (<%= graduate.college1 %>)</td>
       <td><%= graduate.orderid %></td>
       <td><%= graduate.honors %></td>
       <td>
