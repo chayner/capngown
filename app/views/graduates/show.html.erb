@@ -76,7 +76,7 @@ new_releases
     <div>
       <% if @graduate.printed? %>
         ✔ Printed (<%= link_to "Undo", print_graduate_path(@graduate, print: "clear"), method: 'patch' %>)
-      <% elsif params[:print] %>
+      <% elsif @graduate.height.present? %>
         <%= button_to 'Mark as Printed', print_graduate_path(page: { print: true }), { method: :patch, form: { data: { turbo: true } }, :disabled => !@graduate.checked_in? } %>
       <% end %>
     </div>
