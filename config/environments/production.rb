@@ -97,7 +97,8 @@ Rails.application.configure do
     "belmont-cap-and-gown-ed8fb27c409f.herokuapp.com",
     "infinite-meadow-09480.herokuapp.com",
     ENV["SERVER_HOST_NAME"],
-    "belmontalum.chip.fyi"
+    "belmontalum.chip.fyi",
+    "capngown.chip.fyi"
   ]
 
 end
