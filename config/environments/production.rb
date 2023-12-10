@@ -93,6 +93,8 @@ Rails.application.configure do
 
   config.hosts = [
     "*.herokuapp.com",
+    "bucapandgown.com",
+    "belmont-cap-and-gown*.herokuapp.com",
     "infinite-meadow-09480.herokuapp.com",
     ENV["SERVER_HOST_NAME"],
     "belmontalum.chip.fyi"
