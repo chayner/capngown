@@ -61,7 +61,7 @@ new_releases
 
   <div id="action-bar" class="flex">
     <div>
-      <% if !@graduate.height.present? %>
+      <% if !@graduate.height.present? && !@graduate.orderid.present? %>
         <label id="height-modal" for="modal_1" class="button">Add Height</label>
       <% else %>
 
