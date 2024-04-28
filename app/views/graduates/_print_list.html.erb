@@ -9,6 +9,7 @@
       <th>Cord</th>
       <th><span class="material-symbols-outlined">verified</span></th>
       <th><span class="material-symbols-outlined">Print</span></th>
+      <th><span class="material-symbols-outlined">diagnosis</span></th>
     <tr>
   </thead>
   <% @graduates.each do |graduate| %>
@@ -31,6 +32,11 @@
       <td>
         <% if graduate.printed? %>
           <span class="material-symbols-outlined">done</span>
+        <% end %>
+      </td>
+      <td>
+        <% if graduate.brags.any? %>
+          <span class="material-symbols-outlined">done</span>        
         <% end %>
       </td>
     </tr>

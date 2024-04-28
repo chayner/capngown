@@ -6,7 +6,7 @@ class GraduatesController < ApplicationController
   end
 
   def results
-    @graduate = Graduate.find_sole_by(buid: params[:buid], lastname: params[:lastname])
+    @graduate = Graduate.includes(:brags).find_sole_by(buid: params[:buid], lastname: params[:lastname])
 
     if @graduate
       redirect_to action: 'confirm', buid: params[:buid]
@@ -18,7 +18,9 @@ class GraduatesController < ApplicationController
   def list
     lastname = params[:lastname]
     checkedin = params[:checkedin]
-    @graduates = Graduate.where('lower(lastname) LIKE lower(?)', "%" + lastname + "%").order(:lastname, :firstname)
+    @graduates = Graduate.includes(:brags)
+                         .where('lower(lastname) LIKE lower(?)', "%" + lastname + "%")
+                         .order(:lastname, :firstname)
     if checkedin != "show"
       @graduates = @graduates.where('checked_in IS NULL')
     end

@@ -10,9 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_29_034854) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_27_203722) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "brags", force: :cascade do |t|
+    t.string "name"
+    t.string "buid"
+    t.text "message"
+  end
 
   create_table "graduates", primary_key: "buid", id: { type: :string, limit: 50 }, force: :cascade do |t|
     t.string "lastname", limit: 50
@@ -34,6 +40,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_29_034854) do
     t.integer "height"
     t.datetime "checked_in", precision: nil
     t.datetime "printed", precision: nil
+    t.string "degstatus", limit: 50
+    t.string "degstatusdesc", limit: 50
   end
 
 end

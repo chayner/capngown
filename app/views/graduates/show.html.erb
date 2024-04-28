@@ -14,7 +14,7 @@
   <% if @graduate.levelcode == "GR" %>
     <h2><span class="material-symbols-outlined">school</span> <%= @graduate.degree1 %> (<%= "#{@graduate.hoodcolor}" unless @graduate.levelcode != "GR"%>)</h2>
   <% end %>
-  <div class="flex two">
+  <div class="flex three">
     <div>
       <% if @graduate.orderid.present? %>
         <h3 id="order"><span class="material-symbols-outlined">
@@ -30,6 +30,13 @@ accessibility_new
       <% if @graduate.honors == "Y" %><h3 id="honors"><span class="material-symbols-outlined">
 new_releases
 </span> Cord</h3><% end %>
+    </div>
+    <div>
+      <% if @graduate.brags.count == 1 %>
+        <h3 id="honors"><span class="material-symbols-outlined">diagnosis</span> Note</h3>
+      <%elsif @graduate.brags.count > 1 %>
+        <h3 id="honors"><span class="material-symbols-outlined">diagnosis</span> Note <small>(<%= @graduate.brags.count %>)</small></h3>
+      <% end %>
     </div>
   </div>
 </article>
