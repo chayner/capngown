@@ -15,7 +15,10 @@
  */
 
  .material-symbols-outlined {
-   font-variation-settings:
+  margin-right: 4px;
+  height: 26px;
+  vertical-align: middle;
+  font-variation-settings:
    'FILL' 0,
    'wght' 300,
    'GRAD' 200,
@@ -23,34 +26,167 @@
  }
 
 main {
-  margin: 80px 50px;
   font-family: Open Sans;
   font-weight: 400;
+  margin: 80px 50px;
+  max-width: 960px;
+  padding-bottom: 20px;
 }
 
 nav {
-
+  background: #001D54;
+  color: #fff;
 }
 
-article#badge {
-  text-align: center;
-  border: 1px solid #999;
-  padding: 5mm;
-  margin: 10px auto;
-  width: 400px;
-  height: 234px;
+nav a {
+  color: #fff;
+}
+
+a {
+  color: #2874AF;
+}
+
+a:hover {
+  color: #B21029;
+}
+
+.notice {
+  background: #4EB57C;
+  padding: 5px;
+}
+
+.error {
+  color: #FFF;
+  background: #B21029;  
+}
+
+.pseudo.button.error {
+  color: #B21029;
+  font-size: .8em;
+}
+
+.button, [type=submit] {
+  background: #001D54
+}
+
+.button.secondary {
+  background: #2874AF;
+}
+
+.row-category {
+  white-space: nowrap;
+}
+
+.page-header {
+  border-bottom: 2px solid #333;
+  margin: .6em auto 1.2em;
+  padding-bottom: 1.2em;
+}
+
+table th {
+  background-color: #2874AF;
+}
+
+table.primary td {
   font-size: .9em;
 }
 
-h1 {
+table.primary td.name-col {
+  font-size: 1em;
+}
+
+th.status-col, td.status-col {
+  padding: .3em .4em;
+}
+
+table.primary .icon-legend {
+  font-size: .8em;
+  text-align: center;
+  padding: .3em .4em;
+  color: #3D3D3D;
+}
+
+
+article.badge {
+  border: 1px solid #999;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  text-align: center;
+  padding: 5mm;
+  margin: 2em auto 10px;
+  width: 85mm;
+  height: 51mm;
+  font-size: .85em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  zoom: 130%;
+  position: relative;
+}
+
+article.badge .checkedin-banner {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px;
+  position: absolute;
+  width: 101mm;
+  top: -20px;
+  background: #6AB3E7;
+  color: #FFF;
+}
+
+article.badge .checkedin-banner .material-symbols-outlined {
+  font-size: 13px;
+  height: 13px;
+}
+
+.printed-badge {
+  content: ""; /* No content, used purely for styling */
+  position: absolute;
+  bottom: 0; /* Align at the bottom */
+  right: 0; /* Align at the left */
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 50px 0px 0px; /* Creates a triangle */
+  border-color: transparent #6AB3E7 transparent transparent; /* Add yellow color to the triangle */
+  z-index: 1; /* Ensure it appears above the badge background */
+}
+
+.printed-badge .material-symbols-outlined {
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  right: -50px;
+  bottom: 0;
+}
+
+div.badge-content {
+  position: relative;
+  vertical-align: middle;
+  max-height: 45mm;
+  width: 75mm;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+article.badge.sticker {
+  width: 101mm;
+  height: 53mm;
+}
+.sticker div.badge-content {
+  width: 91mm;
+  max-height: 51mm;
+}
+
+h1.name {
   font-weight: 800;
   margin: 0;
   padding: 0;
   line-height: 1.2em;
-}
-
-h2 {
-  padding: 0;
 }
 
 #inc-checkbox {
@@ -62,28 +198,69 @@ h2 {
   padding-top: 21px;
 }
 
-#degree {
+.classification .college {
+  font-size: 13px;
   font-weight: 400;
   font-style: italic;
 }
 
-#order span, #height span, #honors span {
-  font-size: 16px;
+.classification .degree {
+  font-size: 15px;
+  font-weight: 800;
+  font-style: italic;
 }
 
-#order, #height, #honors {
+.order, .height, .honors {
   text-align: center
 }
 
-#action-bar {
+.action-bar {
   margin: 40px auto;
   text-align: center;
   width: 400px;
 }
 
+.badge .bottom-row {
+  font-size: 13px;
+}
+
+.badge .bottom-row .material-symbols-outlined {
+  font-size: 15px;
+  height: 15px;
+}
+
+.action-bar, .card-action-bar, .bulk-action-bar {
+  margin: 10px auto;
+  text-align: center;
+}
+
+.bulk-action-bar .button_to, .card-action-bar .button_to{
+  display: inline;
+}
+
+.card-action-bar {
+  max-width: 400px;
+  margin-bottom: 3em;
+}
+
+.bulk-action-bar {
+  max-width: 600px;
+}
+
+.instructions {
+  color: #C8102E;
+  background-color: #c8102f18;
+  border: 1px solid #C8102E;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 4px;
+  text-align: center;
+}
+
 
 @media print {
-  nav, #back, #height-modal, #action-bar, .modal {
+  nav, #back, #height-modal, .page-header, .action-bar, .notice, .card, .modal,
+  .card-action-bar, .bulk-action-bar, .instructions, .printed-badge, .checkedin-banner {
     display: none;
   }
 
@@ -93,27 +270,46 @@ h2 {
   }
 
   html {
-    margin: 0
-    padding: 0
+    margin: 0;
+    padding: 0;
   }
 
   body {
     margin: 0;
     padding: 0;
-    max-height: 52mm;
     text-align: center;
   }
 
-  article#badge {
+  body article.badge,
+  body article.badge-back {
     border: none;
     margin: 0;
-    padding: 5mm;
+    padding: 0mm;
+    size: 89mm 48mm;
+    width: 89mm;
+    height: 48mm;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    page-break-after: always;
+    zoom: 100%;
+  }
+
+  body article.badge.sticker {
+    width: 101mm;
+    height: 53mm;
+    size: 101mm 53mm;
+    margin-top: -10px
   }
 
   @page {
-    size: 80mm 62mm;   /* auto is the initial value */
-
+    /* size: 70mm 45mm;   /* auto is the initial value */
+    
     /* this affects the margin in the printer settings */
-    margin: 0mm;
+    margin: 0mm auto;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }

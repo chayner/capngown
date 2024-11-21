@@ -1,5 +1,5 @@
 class GraduatesController < ApplicationController
-  before_action :set_graduate, only: [:show, :update, :checkin, :print]
+  before_action :set_graduate, only: [:show, :update, :checkin, :print], except: [:show_bulk, :bulk_print]
 
   def start
 
@@ -35,10 +35,40 @@ class GraduatesController < ApplicationController
     end
   end
 
+  #B00610448,B00489639
+
   def show
-
-
     # @graduate = Graduate.find_sole_by(buid: params[:buid])
+  end
+
+  def show_bulk
+    # Split the BUIDs by commas and trim whitespace
+    @buids = params[:buids]&.split(',')
+    
+    # Fetch graduates matching the provided BUIDs
+    @graduates = Graduate.where(buid: @buids).order(:lastname, :firstname)
+    # @graduates = Graduate.where(buid: params[:buid]) # Fetch graduates by IDs passed in params
+  end
+
+  def bulk_print
+    checkval = params[:print] == "clear" ? nil : Time.now
+
+    @buids = params[:buids]&.split(',')
+    @graduates = Graduate.where(buid: @buids)
+
+    updated_count = 0
+
+    @graduates.each do |graduate|
+      updated_count += 1 if update_graduate(graduate, :printed, checkval)
+    end
+  
+    if params[:print] == "clear"
+      message = "#{updated_count} graduates successfully marked as not printed."
+    else
+      message = "#{updated_count} graduates successfully marked as printed."
+    end
+    
+    redirect_to show_bulk_path(buids: params[:buids]), notice: message
   end
 
   def update
@@ -57,13 +87,16 @@ class GraduatesController < ApplicationController
 
   def checkin
     checkval = params[:checkin] == "clear" ? nil : Time.now
-    @graduate.update(checked_in: checkval)
+    update_graduate(@graduate, :checked_in, checkval)
+
     redirect_to graduate_path(@graduate)
+
   end
 
   def print
     checkval = params[:print] == "clear" ? nil : Time.now
-    @graduate.update(printed: checkval)
+    update_graduate(@graduate, :printed, checkval)
+
     redirect_to graduate_path(@graduate, print: true)
   end
 
@@ -79,6 +112,13 @@ class GraduatesController < ApplicationController
 
   private
 
+  def update_graduate(graduate, field, value)
+    graduate.update(field => value)
+  rescue StandardError => e
+    Rails.logger.error "Failed to update Graduate #{graduate.buid}: #{e.message}"
+    false
+  end
+  
   def set_graduate
     @graduate = Graduate.find_sole_by(buid: params[:buid])
   end

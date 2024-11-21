@@ -1,13 +1,3 @@
-<%= form_with url: print_path, local: true, method: :get do |form| %>
-  <div>
-    <label>
-      <input type="checkbox" name="printed" value="show" id="show-printed" <%= params[:printed] == 'show' ? "checked" : "" %>>
-      <span class="checkable">Include Printed</span>
-    </label>
-  </div>
-  <%= form.hidden_field "form_submitted", value: "true" %>
-<% end %>
-
 <div  id="to-print">
   <%= render partial: 'print_list', locals: { graduates: @graduates } %>
 </div>

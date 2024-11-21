@@ -1,0 +1,64 @@
+<% if currentpage == "bulk" %>
+
+  <div class="card-action-bar flex">
+    <div>
+      <%= link_to("View Graduate", graduate_path(buid: graduate.buid, lastname: params.fetch(:lastname, nil))) %>
+    </div>
+  </div>
+
+<% else %>
+
+<div class="modal">
+  <input id="modal_1" type="checkbox" />
+  <label for="modal_1" class="overlay"></label>
+  <article>
+    <header>
+      <h3>Submit Height</h3>
+      <label for="modal_1" class="close">&times;</label>
+    </header>
+    <%= form_for graduate, url: graduate_path(buid: graduate.buid), method: :put do |form| %>
+    <section class="content">
+        <div class="form-group">
+          <%= form.label :height %>
+          <%= form.number_field :height, class: "form-control" %>
+          <%= hidden_field_tag :buid, graduate.buid %>
+        </div>
+    </section>
+    <footer>
+      <%= form.submit "Save", class: "button btn-primary" %>
+    </footer>
+    <% end %>
+  </article>
+</div>
+
+
+
+<div class="card-action-bar flex">
+  
+  <% if !graduate.height.present? && !graduate.orderid.present? %>
+    <div>
+      <label id="height-modal" for="modal_1" class="button">Add Height</label>
+    </div>
+  <% else %>
+    <div>
+      <% if graduate.checked_in? %>
+        <div class="checkedin">
+          ✔ Checked In <%= button_to "(Undo)", checkin_graduate_path(buid: graduate.buid, checkin: "clear", currentpage: currentpage), method: 'patch', class: 'pseudo' %>
+        </div>
+      <% else %>
+        <%= button_to 'Check In', checkin_graduate_path(buid: graduate.buid, checkin: true, currentpage: currentpage), { method: :patch, form: { data: { turbo: true } }, :disabled => !graduate.height? } %>
+      <% end %>
+    </div>
+  
+    <div>
+      <% if graduate.printed? %>
+        ✔ Printed <%= button_to "(Undo)", print_graduate_path(buid: graduate.buid, print: "clear", currentpage: currentpage), method: 'patch', class: 'pseudo' %>
+      <% elsif graduate.height.present? %>
+        <%= button_to 'Mark as Printed', print_graduate_path(buid: graduate.buid, print: true, currentpage: currentpage), { method: :patch, form: { data: { turbo: true } }, :disabled => !graduate.checked_in? } %>
+      <% end %>
+    </div>
+
+  <% end %>
+</div>
+
+<% end %>

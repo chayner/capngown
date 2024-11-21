@@ -2,7 +2,6 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
-  # root "articles#index"
   root to: redirect('/start')
   
   get 'welcome' => 'pages#home'
@@ -11,21 +10,20 @@ Rails.application.routes.draw do
   get 'list' => 'graduates#list'
 
   get 'print' => 'graduates#to_print'
+  patch 'print' => 'graduates#print', as: 'print_graduate'
   get 'get_print' => 'graduates#get_print_html'
 
-  resources :graduates, param: :buid do
-    member do
-      get :show
-      post :update
+  # Graduates collection-specific route
+  patch 'bulk_print' => 'graduates#bulk_print', as: 'bulk_print'
+  get 'show_bulk', to: 'graduates#show_bulk', as: 'show_bulk'
 
+
+  resources :graduates, except: :index, param: :buid do
+    member do
       patch :checkin
       get :checkin
-
-      patch :print
-      get :print
-
     end
   end
 
-  # get 'graduates/confirm' => 'graduates#confirm', as: :grad_confirm
+  get '/graduates', to: redirect('/start')
 end

@@ -1,0 +1,60 @@
+<div>
+  <article class="badge sticker printed">
+    <% if graduate.checked_in? %>
+      <div class="checkedin-banner full"><span class="material-symbols-outlined">verified</span>CHECKED IN</div>
+    <% end %>
+  <div class="badge-content">
+    <h1 class="name">
+      <%= (graduate.preferredlast.presence || graduate.lastname).upcase %>, 
+      <%= (graduate.preferredfirst.presence || graduate.firstname).upcase %>
+    </h1>
+    
+    <div class="classification">
+    <h4 class="college">
+      <%= CollegeCodeTranslator.translate_full(graduate.college1) %>
+    </h4>
+    <% if graduate.levelcode.start_with?("GR") %>
+      <h2 class="degree"><span class="material-symbols-outlined">school</span> <%= graduate.degree1 %> (<%= DegreeHoodTranslator.translate(graduate.degree1)[:hood_color] %>)</h2>
+    <% end %>
+    </div>
+
+    <div class="bottom-row flex grow center">
+      <div>
+        <% if graduate.orderid.present? %>
+          <h3 class="order"><span class="material-symbols-outlined">order_approve</span> Order</h3>
+        <% elsif graduate.height.present? %>
+          <h3 class="height"><span class="material-symbols-outlined">accessibility_new</span> <%= graduate.height %> <label id="height-modal" for="modal_1" class="button">Edit</label></h3>
+        <% end %>
+      </div>
+
+      <% if graduate.honors == "Y" %>
+        <div>
+          <h3 class="honors"><span class="material-symbols-outlined">new_releases</span> Cord</h3>
+        </div>
+      <% end %>
+      
+      <% if graduate.brags.count > 0 %>
+        <div>
+          <% if graduate.brags.count == 1 %>
+            <h3 class="honors">
+              <span class="material-symbols-outlined">diagnosis</span> Note
+            </h3>
+          <% else %>
+            <h3 class="honors">
+              <span class="material-symbols-outlined">diagnosis</span> Note <small>(<%= graduate.brags.count %>)</small>
+            </h3>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+  <% if graduate.printed? %>
+    <div class="printed-badge">
+      <span class="material-symbols-outlined">Print</span>
+    </div>
+  <% end %> 
+</article>
+
+<%= render partial: "badge_action_bar", locals: { graduate: graduate, currentpage: currentpage } %>
+</div>

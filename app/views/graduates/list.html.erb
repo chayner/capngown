@@ -1,44 +1,64 @@
 <%= render partial: 'search', locals: { lastname: params.fetch(:lastname, nil), checkedin: params.fetch(:checkedin, nil) } %>
 
 <table class="primary">
+  
   <thead>
     <tr>
-      <th>BUID</th>
+      <td colspan="8" class="icon-legend">
+        <span class="material-symbols-outlined">receipt_long</span>Pre-Ordered | 
+        <span class="material-symbols-outlined">workspace_premium</span>Honors Cord |
+        <span class="material-symbols-outlined">diagnosis</span>Brag Card |
+        <span class="material-symbols-outlined">verified</span>Checked-In |
+        <span class="material-symbols-outlined">Print</span>Printed
+      </td>
+    </tr> 
+    <tr>
       <th>Name</th>
-      <th>GR</th>
-      <th>Degree</th>
-      <th>Order #</th>
-      <th>Cord</th>
-      <th><span class="material-symbols-outlined">verified</span></th>
-      <th><span class="material-symbols-outlined">Print</span></th>
-      <th><span class="material-symbols-outlined">diagnosis</span></th>
+      <th>Deg</th>
+      <th>College</th>
+      <th class="status-col"><span class="material-symbols-outlined">receipt_long</span></th>
+      <th class="status-col"><span class="material-symbols-outlined">workspace_premium</span></th>
+      <th class="status-col"><span class="material-symbols-outlined">diagnosis</span></th>
+      <th class="status-col"><span class="material-symbols-outlined">verified</span></th>
+      <th class="status-col"><span class="material-symbols-outlined">Print</span></th>
   <% @graduates.each do |graduate| %>
     <tr>
-      <td><%= link_to(graduate.buid, graduate_path(buid: graduate.buid, lastname: params.fetch(:lastname, nil))) %></td>
-      <td><%= graduate.preferredlast %>, <%= graduate.preferredfirst %> <%= graduate.middlename[0,1] %> </td>
-      <td>
-        <% if graduate.levelcode == "GR" %>
+      <td class="name-col" nowrap>
+        <%= link_to "#{graduate.preferredlast.presence || graduate.lastname}, #{graduate.preferredfirst.presence || graduate.firstname}",
+              graduate_path(buid: graduate.buid, lastname: params.fetch(:lastname, nil)) %>
+      </td>
+      <td nowrap>
+        <%= graduate.degree1 %>
+        <% if graduate.levelcode.start_with?("GR") %>
           <span class="material-symbols-outlined">school</span>
         <% end %>
       </td>
-      <td>
-        <%= graduate.degree1 %> (<%= graduate.college1 %>)
+      <td nowrap>
+        <span class="material-symbols-outlined"><%= CollegeCodeTranslator.icon(graduate.college1) %></span> <%= CollegeCodeTranslator.translate_short(graduate.college1) %>
       </td>
-      <td><%= graduate.orderid %></td>
-      <td><%= graduate.honors %></td>
-      <td>
+      <td class="status-col">
+        <% if graduate.orderid.presence %>
+          <span class="material-symbols-outlined">receipt_long</span>
+        <% end %>
+      </td>
+      <td class="status-col">
+        <% if graduate.honors.presence %>
+          <span class="material-symbols-outlined">workspace_premium</span>
+        <% end %>
+      </td>
+      <td class="status-col">
+        <% if graduate.brags.any? %>
+          <span class="material-symbols-outlined">diagnosis</span>        
+        <% end %>
+      </td>
+      <td class="status-col">
         <% if graduate.checked_in? %>
           <span class="material-symbols-outlined">done</span>
         <% end %>
       </td>
-      <td>
+      <td class="status-col">
         <% if graduate.printed? %>
           <span class="material-symbols-outlined">done</span>
-        <% end %>
-      </td>
-      <td>
-        <% if graduate.brags.any? %>
-          <span class="material-symbols-outlined">done</span>        
         <% end %>
       </td>
     </tr>

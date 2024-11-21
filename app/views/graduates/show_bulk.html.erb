@@ -1,0 +1,22 @@
+<div class="page-header flex center">
+  <div class="bulk-action-bar flex">
+     <div>
+      <% if any_remaining_to_print_for_group?(@buids) %>
+        <%= button_to 'Mark All as Printed', bulk_print_path(buids: @graduates.map(&:buid).join(','), page: { checkin: true }), { method: :patch, form: { data: { turbo: true } }, :disabled => any_remaining_to_check_in_for_group?(@buids) } %>
+      <% else %>
+        ✔ Group Printed <%= button_to "(Undo)", bulk_print_path(buids: @graduates.map(&:buid).join(','), print: "clear"), method: :patch, class: "inline-button pseudo" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+  <% @graduates.each do |graduate| %>
+    <div class="badge">
+      <%= render partial: 'badge', locals: { graduate: graduate, currentpage: "bulk" } %>
+    </div>
+  <% end %>
+
+
+  <div class="instructions">
+    Be sure to set your printer paper size to <strong>54 x 101mm</strong>
+  </div>
