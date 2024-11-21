@@ -46,17 +46,20 @@
           ✔ Checked In <%= button_to "(Undo)", checkin_graduate_path(buid: graduate.buid, checkin: "clear", currentpage: currentpage), method: 'patch', class: 'pseudo' %>
         </div>
       <% else %>
-        <%= button_to 'Check In', checkin_graduate_path(buid: graduate.buid, checkin: true, currentpage: currentpage), { method: :patch, form: { data: { turbo: true } }, :disabled => !graduate.height? } %>
+        <%= button_to 'Check In', checkin_graduate_path(buid: graduate.buid, checkin: true, currentpage: currentpage), { method: :patch, form: { data: { turbo: true } }, disabled: !graduate.orderid? && !graduate.height.present? } %>
       <% end %>
     </div>
   
-    <div>
-      <% if graduate.printed? %>
+    
+    <% if graduate.printed? %>
+      <div>
         ✔ Printed <%= button_to "(Undo)", print_graduate_path(buid: graduate.buid, print: "clear", currentpage: currentpage), method: 'patch', class: 'pseudo' %>
-      <% elsif graduate.height.present? %>
+      </div>
+    <% elsif graduate.checked_in? %>
+      <div>
         <%= button_to 'Mark as Printed', print_graduate_path(buid: graduate.buid, print: true, currentpage: currentpage), { method: :patch, form: { data: { turbo: true } }, :disabled => !graduate.checked_in? } %>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
 
   <% end %>
 </div>
