@@ -98,7 +98,8 @@ Rails.application.configure do
     "infinite-meadow-09480.herokuapp.com",
     ENV["SERVER_HOST_NAME"],
     "belmontalum.chip.fyi",
-    "capngown.chip.fyi"
+    "capngown.chip.fyi",
+    "capngown.bualum.co"
   ]
 
 end
