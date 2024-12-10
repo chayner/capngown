@@ -1,0 +1,30 @@
+<h1>Pickup Stats</h1>
+
+<h2>Students Already Printed</h2>
+<ul>
+  <li>Undergraduate: <%= @printed_undergrad %> out of <%= @total_undergrad %> (<%= @percent_printed_undergrad %>%)</li>
+  <li>Graduate: <%= @printed_grad %> out of <%= @total_grad %> (<%= @percent_printed_grad %>%)</li>
+</ul>
+
+<h2>Brag Cards</h2>
+<ul>
+  <li>Alumni with Brag Cards Picked Up: <%= @graduates_with_brag_cards %> out of <%= @total_graduates_with_brag_cards %> (<%= @percent_brag_pickedup %>%)</li>
+</ul>
+
+<h2>Printed Data Over Time</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Time</th>
+      <th>Printed Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @printed_over_time.each do |time, count| %>
+      <tr>
+        <td><%= time %></td>
+        <td><%= count %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

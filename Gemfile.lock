@@ -91,6 +91,8 @@ GEM
     erubi (1.11.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    groupdate (6.5.1)
+      activesupport (>= 7)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     importmap-rails (1.1.5)
@@ -223,6 +225,7 @@ DEPENDENCIES
   bootsnap
   capybara
   debug
+  groupdate
   importmap-rails
   jbuilder
   pg (~> 1.1)

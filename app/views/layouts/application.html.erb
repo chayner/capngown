@@ -21,7 +21,11 @@
   <body>
     <nav>
       <a href="/start" class="brand">Belmont Cap &amp; Gown</a>
-      <div class="menu"><a href="/print" class="restart">Print List</a>• <a href="/start" class="restart">Check-in</a></div>
+      <div class="menu">
+        <a href="/print" class="nav-link">Print List</a>
+        <a href="/start" class="nav-link">Check-in</a>
+        <%= link_to 'Stats', stats_graduates_path, class: 'nav-link-last' %>
+      </div>
     </nav>
     <main class="main">
     <% flash.each do |name, msg| -%>

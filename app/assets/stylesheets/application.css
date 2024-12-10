@@ -33,6 +33,17 @@ main {
   padding-bottom: 20px;
 }
 
+nav .menu>* {
+  border-right: 2px solid #FFF;
+  margin-right: 10px;
+  padding-right: 10px;
+}
+
+nav .menu .nav-link-last {
+  border-right: none;
+  margin-right: 0;
+}
+
 nav {
   background: #001D54;
   color: #fff;

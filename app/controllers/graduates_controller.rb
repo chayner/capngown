@@ -110,6 +110,33 @@ class GraduatesController < ApplicationController
     render html: html_string
   end
 
+  def stats
+    # Total counts for undergraduates and graduates
+    @total_undergrad = Graduate.where(levelcode: 'UG').count
+    @total_grad = Graduate.where("levelcode LIKE ?", "GR-%").count
+
+    # Students already printed
+    @printed_undergrad = Graduate.where.not(printed: nil).where(levelcode: 'UG').count
+    @printed_grad = Graduate.where.not(printed: nil).where("levelcode LIKE ?", "GR-%").count
+  
+    # Percentages
+    @percent_printed_undergrad = @total_undergrad.zero? ? 0 : (@printed_undergrad * 100.0 / @total_undergrad).round(1)
+    @percent_printed_grad = @total_grad.zero? ? 0 : (@printed_grad * 100.0 / @total_grad).round(1)
+    
+    # Graduates who have picked up their brag cards
+    @total_graduates_with_brag_cards = Graduate.joins(:brags).distinct.count(:buid)
+    @graduates_with_brag_cards = Graduate.joins(:brags) # Assuming brags is a relation
+                                          .where.not(printed: nil)
+                                          .distinct.count(:buid)
+    @percent_brag_pickedup = @total_graduates_with_brag_cards.zero? ? 0 : (@graduates_with_brag_cards * 100.0 / @total_graduates_with_brag_cards).round(1)
+    
+
+    # Printed data over time
+    @printed_over_time = Graduate.where.not(printed: nil)
+                              .group_by_hour(:printed, format: '%m/%d %H:00', series: false)
+                              .count
+  end
+
   private
 
   def update_graduate(graduate, field, value)

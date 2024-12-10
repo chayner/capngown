@@ -23,6 +23,9 @@ Rails.application.routes.draw do
       patch :checkin
       get :checkin
     end
+    collection do
+      get :stats
+    end
   end
 
   get '/graduates', to: redirect('/start')
