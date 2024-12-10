@@ -133,8 +133,8 @@ class GraduatesController < ApplicationController
 
     # Printed data over time
     @printed_over_time = Graduate.where.not(printed: nil)
-                              .group_by_hour(:printed, format: '%m/%d %H:00', series: false)
-                              .count
+                                 .group_by_hour(:printed, format: '%m/%d %I:%M %p', series: false, time_zone: 'Central Time (US & Canada)')
+                                 .count
   end
 
   private
