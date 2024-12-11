@@ -135,6 +135,20 @@ class GraduatesController < ApplicationController
     @printed_over_time = Graduate.where.not(printed: nil)
                                  .group_by_hour(:printed, format: '%m/%d %I:%M %p', series: false, time_zone: 'Central Time (US & Canada)')
                                  .count
+
+    @printed_undergrad_over_time = Graduate.where.not(printed: nil).where(levelcode: 'UG')
+                                 .group_by_hour(:printed, format: '%m/%d %I:%M %p', series: false, time_zone: 'Central Time (US & Canada)')
+                                 .count
+
+    @printed_grad_over_time = Graduate.where.not(printed: nil).where("levelcode LIKE ?", "GR-%")
+                                .group_by_hour(:printed, format: '%m/%d %I:%M %p', series: false, time_zone: 'Central Time (US & Canada)')
+                                .count
+
+    @brags_over_time = Graduate.joins(:brags)
+                        .where.not(printed: nil)
+                        .group_by_hour(:printed, format: '%m/%d %I:%M %p', series: false, time_zone: 'Central Time (US & Canada)')
+                        .distinct
+                        .count(:buid)
   end
 
   private

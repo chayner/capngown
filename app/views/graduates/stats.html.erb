@@ -17,6 +17,9 @@
     <tr>
       <th>Time</th>
       <th>Printed Count</th>
+      <th>Undergraduates</th>
+      <th>Graduates</th>
+      <th>Brags Handed Out</th>
     </tr>
   </thead>
   <tbody>
@@ -24,6 +27,9 @@
       <tr>
         <td><%= time %></td>
         <td><%= count %></td>
+        <td><%= @printed_undergrad_over_time[time] || 0 %></td>
+        <td><%= @printed_grad_over_time[time] || 0 %></td>
+        <td><%= @brags_over_time[time] || 0 %></td>
       </tr>
     <% end %>
   </tbody>
