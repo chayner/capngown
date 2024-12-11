@@ -8,6 +8,7 @@ module DegreeHoodTranslator
     'JD/MBA' => { hood_color: 'Purple + Light Brown/ Drab (2)', degree: 'Law / Professional MBA', level: 'Doctoral/Masters' },
     'MACC' => { hood_color: 'Light Brown/ Drab', degree: 'Master of Accountancy', level: 'Masters' },
     'MAE' => { hood_color: 'White', degree: 'Master of Art (English)', level: 'Masters' },
+    'MA' => { hood_color: 'White', degree: 'Master of Art', level: 'Masters' },
     'MAT' => { hood_color: 'Light Blue', degree: 'Master of Arts in Teaching', level: 'Masters' },
     'MBA' => { hood_color: 'Light Brown/ Drab', degree: 'Master of Business Administration', level: 'Masters' },
     'MED' => { hood_color: 'Light Blue', degree: 'Master of Education', level: 'Masters' },
