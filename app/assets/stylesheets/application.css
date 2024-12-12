@@ -49,8 +49,22 @@ nav {
   color: #fff;
 }
 
+nav .burger {
+  font-size: 1.3em;
+}
+
+nav .burger~.menu {
+  background: #001D54;
+}
+
 nav a {
   color: #fff;
+}
+
+@media (max-width: 60em) {
+  nav .menu>* {
+    border: none;
+  }
 }
 
 a {
