@@ -55,7 +55,7 @@ gem 'groupdate'
 # gem "image_processing", "~> 1.2"
 
 group :assets do
-  gem 'uglifier', '>= 1.3.0'
+  gem 'terser', '~> 1.0'
 end
 
 group :development, :test do
