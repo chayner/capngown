@@ -47,6 +47,9 @@ nav .menu .nav-link-last {
 nav {
   background: #001D54;
   color: #fff;
+  max-width: 100%;
+  width: 100vw; /* Force the nav to stay within the viewport width */
+  box-sizing: border-box; /* Include padding and border in the width */
 }
 
 nav .burger {
@@ -62,8 +65,27 @@ nav a {
 }
 
 @media (max-width: 60em) {
+  main {
+    margin: 70px 1em;
+  }
+
   nav .menu>* {
     border: none;
+  }
+
+  nav {
+    max-width: 100%; /* Ensure it doesn't extend beyond the viewport */
+  }
+
+  /* Prevent tables or wide content from affecting layout */
+  body {
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+  }
+
+  table {
+    width: 100%; /* Make tables responsive on mobile */
+    display: block; /* Ensure they don't stretch the layout */
+    overflow-x: auto; /* Allow horizontal scrolling within the table */
   }
 }
 
