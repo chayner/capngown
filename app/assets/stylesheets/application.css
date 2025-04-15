@@ -231,9 +231,10 @@ article.badge.sticker {
 
 h1.name {
   font-weight: 800;
+  font-size: 1.8em;
   margin: 0;
   padding: 0;
-  line-height: 1.2em;
+  line-height: 1.1em;
 }
 
 #inc-checkbox {
@@ -245,16 +246,39 @@ h1.name {
   padding-top: 21px;
 }
 
+.classification {
+  padding: 5px 0;
+}
+
 .classification .college {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
   font-style: italic;
+  padding-top: 0;
+  line-height: 26px;
 }
+.classification .college .material-symbols-outlined {
+  font-size: 20px;
+  line-height: 26px;
+  margin-right: 2px;
+}
+
+.classification .major {
+  font-size: 14px;
+  font-weight: 600;
+  font-style: italic;
+  padding-bottom: 0;
+}
+
 
 .classification .degree {
   font-size: 15px;
   font-weight: 800;
   font-style: italic;
+}
+
+.honors {
+  padding: 5px 0 0 0
 }
 
 .order, .height, .honors {
@@ -268,12 +292,17 @@ h1.name {
 }
 
 .badge .bottom-row {
-  font-size: 13px;
+  font-size: 11px;
+}
+
+.badge .bottom-row>* {
+  padding-bottom: 0;
 }
 
 .badge .bottom-row .material-symbols-outlined {
   font-size: 15px;
   height: 15px;
+  margin-right: 0px;
 }
 
 .action-bar, .card-action-bar, .bulk-action-bar {

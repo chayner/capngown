@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_27_203722) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_14_223752) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,6 +18,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_27_203722) do
     t.string "name"
     t.string "buid"
     t.text "message"
+  end
+
+  create_table "cords", id: false, force: :cascade do |t|
+    t.string "buid", null: false
+    t.string "cord_type", null: false
+    t.index ["buid", "cord_type"], name: "index_cords_on_buid_and_cord_type", unique: true
   end
 
   create_table "graduates", primary_key: "buid", id: { type: :string, limit: 50 }, force: :cascade do |t|
@@ -42,6 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_27_203722) do
     t.datetime "printed", precision: nil
     t.string "degstatus", limit: 50
     t.string "degstatusdesc", limit: 50
+    t.string "major"
   end
 
 end

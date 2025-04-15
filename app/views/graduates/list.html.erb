@@ -7,6 +7,7 @@
       <td colspan="8" class="icon-legend">
         <span class="material-symbols-outlined">receipt_long</span>Pre-Ordered | 
         <span class="material-symbols-outlined">workspace_premium</span>Honors Cord |
+        <span class="material-symbols-outlined">digital_wellbeing</span>WELL Core Cord |
         <span class="material-symbols-outlined">diagnosis</span>Brag Card |
         <span class="material-symbols-outlined">verified</span>Checked-In |
         <span class="material-symbols-outlined">Print</span>Printed
@@ -16,8 +17,10 @@
       <th>Name</th>
       <th>Deg</th>
       <th>College</th>
+      <th>Major</th>
       <th class="status-col"><span class="material-symbols-outlined">receipt_long</span></th>
       <th class="status-col"><span class="material-symbols-outlined">workspace_premium</span></th>
+      <th class="status-col"><span class="material-symbols-outlined">digital_wellbeing</span></th>
       <th class="status-col"><span class="material-symbols-outlined">diagnosis</span></th>
       <th class="status-col"><span class="material-symbols-outlined">verified</span></th>
       <th class="status-col"><span class="material-symbols-outlined">Print</span></th>
@@ -36,6 +39,9 @@
       <td nowrap>
         <span class="material-symbols-outlined"><%= CollegeCodeTranslator.icon(graduate.college1) %></span> <%= CollegeCodeTranslator.translate_short(graduate.college1) %>
       </td>
+      <td nowrap>
+        <%= graduate.major %>
+      </td>
       <td class="status-col">
         <% if graduate.orderid.presence %>
           <span class="material-symbols-outlined">receipt_long</span>
@@ -44,6 +50,11 @@
       <td class="status-col">
         <% if graduate.honors.presence %>
           <span class="material-symbols-outlined">workspace_premium</span>
+        <% end %>
+      </td>
+      <td class="status-col">
+        <% if graduate.cords.any? %>
+          <span class="material-symbols-outlined">digital_wellbeing</span>        
         <% end %>
       </td>
       <td class="status-col">

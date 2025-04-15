@@ -5,8 +5,8 @@
   </div> -->
   <div class="page-header flex two">
     <div>
-      <%= form.label :lastname, "Last Name:" %>
-      <%= form.text_field :lastname, value: lastname %>
+      <%= form.label :fullname, "Name (First or Last):" %>
+      <%= form.text_field :fullname, value: params[:fullname] %>
     </div>
     <div class="form-submit">
       <%= form.hidden_field "form_submitted", value: "true" %>

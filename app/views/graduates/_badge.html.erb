@@ -10,26 +10,39 @@
     </h1>
     
     <div class="classification">
-    <h4 class="college">
-      <%= CollegeCodeTranslator.translate_full(graduate.college1) %>
-    </h4>
-    <% if graduate.levelcode.start_with?("GR") %>
-      <h2 class="degree"><span class="material-symbols-outlined">school</span> <%= graduate.degree1 %> (<%= DegreeHoodTranslator.translate(graduate.degree1)[:hood_color] %>)</h2>
+    <% if graduate.major.present? %>
+      <h4 class="major">
+        <% if graduate.levelcode.start_with?("GR") %>
+        <span class="material-symbols-outlined">school</span>
+        <% end %>
+        <%=graduate.degree1 %> in <%= graduate.major %>
+      </h4>
     <% end %>
+    <h5 class="college">
+      <span class="material-symbols-outlined"><%= CollegeCodeTranslator.icon(graduate.college1) %></span> <%= CollegeCodeTranslator.translate_full(graduate.college1) %>
+    </h5>
     </div>
 
     <div class="bottom-row flex grow center">
+      <% if !graduate.orderid.present? && graduate.height.present? %>
       <div>
-        <% if graduate.orderid.present? %>
-          <h3 class="order"><span class="material-symbols-outlined">order_approve</span> Order</h3>
-        <% elsif graduate.height.present? %>
-          <h3 class="height"><span class="material-symbols-outlined">accessibility_new</span> <%= graduate.height %> <label id="height-modal" for="modal_1" class="button">Edit</label></h3>
-        <% end %>
+        <%# if graduate.orderid.present? %>
+        <!--  <h3 class="order"><span class="material-symbols-outlined">order_approve</span> Order</h3> -->
+        <%# end %>
+        
+        <h3 class="height"><span class="material-symbols-outlined">accessibility_new</span> <%= graduate.height %> <label id="height-modal" for="modal_1" class="button">Edit</label></h3>
       </div>
-
+      <% end %>
+      
       <% if graduate.honors == "Y" %>
         <div>
-          <h3 class="honors"><span class="material-symbols-outlined">new_releases</span> Cord</h3>
+          <h3 class="honors"><span class="material-symbols-outlined">new_releases</span> Hon Cord</h3>
+        </div>
+      <% end %>
+      
+      <% if graduate.cords.count > 0 %>
+        <div>
+          <h3 class="honors"><span class="material-symbols-outlined">digital_wellbeing</span> WC Cord</h3>
         </div>
       <% end %>
       

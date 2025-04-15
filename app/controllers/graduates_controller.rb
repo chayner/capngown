@@ -6,7 +6,7 @@ class GraduatesController < ApplicationController
   end
 
   def results
-    @graduate = Graduate.includes(:brags).find_sole_by(buid: params[:buid], lastname: params[:lastname])
+    @graduate = Graduate.includes(:brags).find_sole_by(buid: params[:buid], fullname: params[:fullname])
 
     if @graduate
       redirect_to action: 'confirm', buid: params[:buid]
@@ -16,11 +16,25 @@ class GraduatesController < ApplicationController
   end
 
   def list
-    lastname = params[:lastname]
+    fullname = params[:fullname]
     checkedin = params[:checkedin]
+    
     @graduates = Graduate.includes(:brags)
-                         .where('lower(lastname) LIKE lower(?)', "%" + lastname + "%")
-                         .order(:lastname, :firstname)
+    
+    if fullname.present?
+      # Split the input into individual words
+      words = fullname.strip.split(/\s+/)
+      # Build a query for each word to match across all relevant fields
+      words.each do |word|
+        @graduates = @graduates.where(
+          'lower(lastname) LIKE :word OR lower(firstname) LIKE :word OR lower(preferredlast) LIKE :word OR lower(preferredfirst) LIKE :word',
+          word: "%#{word.downcase}%"
+        )
+      end
+    end
+  
+    @graduates = @graduates.order(:lastname, :firstname)
+    
     if checkedin != "show"
       @graduates = @graduates.where('checked_in IS NULL')
     end

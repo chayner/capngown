@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  buid: MyString
+  type: 
+
+two:
+  buid: MyString
+  type: 
