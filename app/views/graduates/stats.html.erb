@@ -3,13 +3,36 @@
 <h2>Students Already Printed</h2>
 <ul>
   <li>Undergraduate: <%= @printed_undergrad %> out of <%= @total_undergrad %> (<%= @percent_printed_undergrad %>%)</li>
-  <li>Graduate: <%= @printed_grad %> out of <%= @total_grad %> (<%= @percent_printed_grad %>%)</li>
+  <li>Master: <%= @printed_master %> out of <%= @total_master %> (<%= @percent_printed_master %>%)</li>
+  <li>Doctorate: <%= @printed_doctorate %> out of <%= @total_doctorate %> (<%= @percent_printed_doctorate %>%)</li>
 </ul>
 
 <h2>Brag Cards</h2>
 <ul>
   <li>Alumni with Brag Cards Picked Up: <%= @graduates_with_brag_cards %> out of <%= @total_graduates_with_brag_cards %> (<%= @percent_brag_pickedup %>%)</li>
 </ul>
+
+<h2>Colleges</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Picked Up</th>
+      <th>Total</th>
+      <th>Percent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @college_stats.each do |college| %>
+      <tr>
+        <td><%= college[:college_name] %></td>
+        <td><%= college[:printed] %></td>
+        <td><%= college[:total] %></td>
+        <td><%= college[:percent] %>%</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <h2>Printed Data Over Time</h2>
 <table>
@@ -18,7 +41,8 @@
       <th>Time</th>
       <th>Total</th>
       <th>UG</th>
-      <th>GR</th>
+      <th>MA</th>
+      <th>DR</th>
       <th>Brags</th>
     </tr>
   </thead>
@@ -28,7 +52,8 @@
         <td><%= time %></td>
         <td><%= count %></td>
         <td><%= @printed_undergrad_over_time[time] || 0 %></td>
-        <td><%= @printed_grad_over_time[time] || 0 %></td>
+        <td><%= @printed_master_over_time[time] || 0 %></td>
+        <td><%= @printed_doctorate_over_time[time] || 0 %></td>
         <td><%= @brags_over_time[time] || 0 %></td>
       </tr>
     <% end %>

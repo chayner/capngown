@@ -149,15 +149,18 @@ class GraduatesController < ApplicationController
   def stats
     # Total counts for undergraduates and graduates
     @total_undergrad = Graduate.where(levelcode: 'UG').count
-    @total_grad = Graduate.where("levelcode LIKE ?", "GR-%").count
+    @total_master = Graduate.where(levelcode: 'GR-M').count
+    @total_doctorate = Graduate.where(levelcode: 'GR-D').count
 
     # Students already printed
     @printed_undergrad = Graduate.where.not(printed: nil).where(levelcode: 'UG').count
-    @printed_grad = Graduate.where.not(printed: nil).where("levelcode LIKE ?", "GR-%").count
+    @printed_master = Graduate.where.not(printed: nil).where(levelcode: 'GR-M').count
+    @printed_doctorate = Graduate.where.not(printed: nil).where(levelcode: 'GR-D').count
   
     # Percentages
     @percent_printed_undergrad = @total_undergrad.zero? ? 0 : (@printed_undergrad * 100.0 / @total_undergrad).round(1)
-    @percent_printed_grad = @total_grad.zero? ? 0 : (@printed_grad * 100.0 / @total_grad).round(1)
+    @percent_printed_master = @total_master.zero? ? 0 : (@printed_master * 100.0 / @total_master).round(1)
+    @percent_printed_doctorate = @total_doctorate.zero? ? 0 : (@printed_doctorate * 100.0 / @total_doctorate).round(1)
     
     # Graduates who have picked up their brag cards
     @total_graduates_with_brag_cards = Graduate.joins(:brags).distinct.count(:buid)
@@ -166,6 +169,21 @@ class GraduatesController < ApplicationController
                                           .distinct.count(:buid)
     @percent_brag_pickedup = @total_graduates_with_brag_cards.zero? ? 0 : (@graduates_with_brag_cards * 100.0 / @total_graduates_with_brag_cards).round(1)
     
+
+    @college_stats = Graduate.group(:college1).pluck(:college1).map do |college_code|
+      full_name = CollegeCodeTranslator.translate_full(college_code)
+    
+      total = Graduate.where(college1: college_code).count
+      printed = Graduate.where(college1: college_code).where.not(printed: nil).count
+      percent = total.zero? ? 0 : ((printed.to_f / total) * 100).round(1)
+      {
+        college_code: college_code,
+        college_name: full_name,
+        printed: printed,
+        total: total,
+        percent: percent
+      }
+    end.sort_by { |college| college[:college_name] }
 
     # Printed data over time
     @printed_over_time = Graduate.where.not(printed: nil)
@@ -176,9 +194,13 @@ class GraduatesController < ApplicationController
                                  .group_by_hour(:printed, format: '%m/%d %l%P', series: false, time_zone: 'Central Time (US & Canada)')
                                  .count
 
-    @printed_grad_over_time = Graduate.where.not(printed: nil).where("levelcode LIKE ?", "GR-%")
+    @printed_master_over_time = Graduate.where.not(printed: nil).where(levelcode: 'GR-M')
                                 .group_by_hour(:printed, format: '%m/%d %l%P', series: false, time_zone: 'Central Time (US & Canada)')
                                 .count
+    
+    @printed_doctorate_over_time = Graduate.where.not(printed: nil).where(levelcode: 'GR-D')
+    .group_by_hour(:printed, format: '%m/%d %l%P', series: false, time_zone: 'Central Time (US & Canada)')
+    .count
 
     @brags_over_time = Graduate.joins(:brags)
                         .where.not(printed: nil)
