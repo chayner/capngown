@@ -53,7 +53,7 @@
         <% end %>
       </td>
       <td class="status-col">
-        <% if graduate.cords.any? %>
+        <% if @cords_by_buid[graduate.buid] %>
           <span class="material-symbols-outlined">digital_wellbeing</span>        
         <% end %>
       </td>

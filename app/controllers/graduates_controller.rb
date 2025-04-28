@@ -7,7 +7,7 @@ class GraduatesController < ApplicationController
 
   def results
     @graduate = Graduate.includes(:brags).find_sole_by(buid: params[:buid], fullname: params[:fullname])
-
+    
     if @graduate
       redirect_to action: 'confirm', buid: params[:buid]
     else
@@ -18,8 +18,12 @@ class GraduatesController < ApplicationController
   def list
     fullname = params[:fullname]
     checkedin = params[:checkedin]
+    program = params[:program]
+    degree = params[:degree]
+    college = params[:college]
     
     @graduates = Graduate.includes(:brags)
+    
     
     if fullname.present?
       # Split the input into individual words
@@ -32,6 +36,21 @@ class GraduatesController < ApplicationController
         )
       end
     end
+
+     # Program filter
+    if program.present?
+      @graduates = @graduates.where('major ILIKE ?', "%#{params[:program]}%")
+    end
+  
+    # degree filter
+    if degree.present?
+      @graduates = @graduates.where(degree1: degree)
+    end
+
+    # College filter
+    if college.present?
+      @graduates = @graduates.where(college1: college)
+    end
   
     @graduates = @graduates.order(:lastname, :firstname)
     
@@ -39,6 +58,9 @@ class GraduatesController < ApplicationController
       @graduates = @graduates.where('checked_in IS NULL')
     end
      # buid: buid, firstname: firstname, lastname: lastname)
+
+    # Preload all cords for the graduates
+    @cords_by_buid = Cord.where(buid: @graduates.pluck(:buid)).index_by(&:buid)
   end
 
   def to_print

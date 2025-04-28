@@ -4,10 +4,29 @@
     <%= form.text_field :buid %>
   </div> -->
   <div class="page-header flex two">
-    <div>
+    <div class="half">
       <%= form.label :fullname, "Name (First or Last):" %>
       <%= form.text_field :fullname, value: params[:fullname] %>
     </div>
+    <details class="full">
+      <summary>More Filters</summary>
+      <div class="full">
+        <div class="half">
+          <%= form.label :program, "Major:" %>
+          <%= select_tag :program, grouped_options_for_select(program_options_grouped_by_college, params[:program]), include_blank: "" %>
+        </div>
+      </div>
+      <div class="full">
+        <div class="fourth">
+          <%= form.label :degree, "Degree:" %>
+          <%= select_tag :degree, options_for_select(degree_options, params[:degree]), include_blank: "" %>
+        </div>
+        <div class="fourth">
+          <%= form.label :college, "College:" %>
+          <%= select_tag :college, options_for_select(college_options, params[:college]), include_blank: "All Colleges" %>
+        </div>
+      </div>
+    </details>
     <div class="form-submit">
       <%= form.hidden_field "form_submitted", value: "true" %>
       <%= form.submit "Search" %>

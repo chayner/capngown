@@ -1,0 +1,34 @@
+# .slugignore or .zipignore
+
+# macOS and system files
+.DS_Store
+
+# Logs and temp
+log/*
+tmp/*
+*.swp
+
+# Tests
+test/
+spec/
+coverage/
+
+# System and IDE config
+.ruby-lsp/
+.vscode/
+.idea/
+
+# Build artifacts
+node_modules/
+public/assets/
+vendor/
+storage/
+output.css
+
+# Git and credentials
+.git/
+.gitignore
+config/master.key
+
+# Optional: remove unused local dev files
+Procfile.dev

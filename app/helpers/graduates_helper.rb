@@ -1,5 +1,30 @@
 module GraduatesHelper
+  def program_options_grouped_by_college
+    programs_by_college = Graduate.all.group_by(&:college1).transform_keys do |college_code|
+      CollegeCodeTranslator.translate_full(college_code)
+    end
+  
+    programs_by_college.transform_values do |graduates|
+      graduates.map { |g| g.major&.split('/')&.first }
+               .compact
+               .map(&:strip) # remove extra spaces
+               .uniq
+               .sort
+    end
+  end
 
+  def degree_options
+    Graduate.where.not(degree1: nil).pluck(:degree1).uniq.sort
+  end
+
+  def college_options
+    Graduate.where.not(college1: nil)
+          .pluck(:college1)
+          .uniq
+          .map { |code| [CollegeCodeTranslator.translate_full(code), code] }
+          .sort_by { |label, _code| label }
+  end
+  
   # Count the number of graduates in a group who are print
   def printed_graduates_count_for_group(buids)
     Graduate.where(buid: buids)
