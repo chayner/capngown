@@ -161,7 +161,11 @@ class GraduatesController < ApplicationController
     @percent_printed_undergrad = @total_undergrad.zero? ? 0 : (@printed_undergrad * 100.0 / @total_undergrad).round(1)
     @percent_printed_master = @total_master.zero? ? 0 : (@printed_master * 100.0 / @total_master).round(1)
     @percent_printed_doctorate = @total_doctorate.zero? ? 0 : (@printed_doctorate * 100.0 / @total_doctorate).round(1)
-    
+
+    @total_printed = Graduate.where.not(printed: nil).count
+    @total_graduates = Graduate.count
+    @percent_printed = @total_graduates.zero? ? 0 : (@total_printed * 100.0 / @total_graduates).round(1)
+
     # Graduates who have picked up their brag cards
     @total_graduates_with_brag_cards = Graduate.joins(:brags).distinct.count(:buid)
     @graduates_with_brag_cards = Graduate.joins(:brags) # Assuming brags is a relation
