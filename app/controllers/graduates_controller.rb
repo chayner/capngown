@@ -183,7 +183,7 @@ class GraduatesController < ApplicationController
         total: total,
         percent: percent
       }
-    end.sort_by { |college| college[:college_name] }
+    end.sort_by { |college| -college[:percent] }
 
     # Printed data over time
     @printed_over_time = Graduate.where.not(printed: nil)
