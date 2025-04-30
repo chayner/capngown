@@ -205,11 +205,11 @@ class GraduatesController < ApplicationController
                                            .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
                                            .count
 
-    @printed_master_over_time = Graduate.where(levelcode: "MA").where.not(printed: nil)
+    @printed_master_over_time = Graduate.where(levelcode: "GR-M").where.not(printed: nil)
                                         .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
                                         .count
 
-    @printed_doctorate_over_time = Graduate.where(levelcode: "DR").where.not(printed: nil)
+    @printed_doctorate_over_time = Graduate.where(levelcode: "GR-D").where.not(printed: nil)
                                            .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
                                            .count
 
