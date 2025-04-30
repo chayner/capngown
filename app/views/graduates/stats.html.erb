@@ -35,28 +35,48 @@
   </tbody>
 </table>
 
-<h2>Printed Data Over Time</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Time</th>
-      <th>Total</th>
-      <th>UG</th>
-      <th>MA</th>
-      <th>DR</th>
-      <th>Brags</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @printed_over_time.each do |time, count| %>
+<% if @printed_over_time.present? %>
+  <h2>Printed Data Over Time</h2>
+  <p>
+    View by:
+    <%= link_to "Hour", stats_graduates_path(interval: "hour") %> |
+    <%= link_to "15 Minutes", stats_graduates_path(interval: "15min") %>
+  </p>
+  <table>
+    <thead>
       <tr>
-        <td><%= time %></td>
-        <td><%= count %></td>
-        <td><%= @printed_undergrad_over_time[time] || 0 %></td>
-        <td><%= @printed_master_over_time[time] || 0 %></td>
-        <td><%= @printed_doctorate_over_time[time] || 0 %></td>
-        <td><%= @brags_over_time[time] || 0 %></td>
+        <th>Time</th>
+        <th>Total</th>
+        <th>UG</th>
+        <th>MA</th>
+        <th>DR</th>
+        <th>Brags</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @printed_over_time.each do |time, count| %>
+        <% ug = @printed_undergrad_over_time[time] || 0 %>
+        <% ma = @printed_master_over_time[time] || 0 %>
+        <% dr = @printed_doctorate_over_time[time] || 0 %>
+        <% brags = @brags_over_time[time] || 0 %>
+
+        <% unless count == 0 && ug == 0 && ma == 0 && dr == 0 && brags == 0 %>
+          <tr>
+            <td>
+              <% if params[:interval] == "15min" %>
+                <%= time.in_time_zone("Central Time (US & Canada)").strftime("%m/%d %l:%M%P") %>
+              <% else %>
+                <%= time.in_time_zone("Central Time (US & Canada)").strftime("%m/%d %l%P").strip %>
+              <% end %>
+            </td>
+            <td><%= count %></td>
+            <td><%= ug %></td>
+            <td><%= ma %></td>
+            <td><%= dr %></td>
+            <td><%= brags %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

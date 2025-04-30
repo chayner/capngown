@@ -156,7 +156,7 @@ class GraduatesController < ApplicationController
     @printed_undergrad = Graduate.where.not(printed: nil).where(levelcode: 'UG').count
     @printed_master = Graduate.where.not(printed: nil).where(levelcode: 'GR-M').count
     @printed_doctorate = Graduate.where.not(printed: nil).where(levelcode: 'GR-D').count
-  
+
     # Percentages
     @percent_printed_undergrad = @total_undergrad.zero? ? 0 : (@printed_undergrad * 100.0 / @total_undergrad).round(1)
     @percent_printed_master = @total_master.zero? ? 0 : (@printed_master * 100.0 / @total_master).round(1)
@@ -168,15 +168,14 @@ class GraduatesController < ApplicationController
 
     # Graduates who have picked up their brag cards
     @total_graduates_with_brag_cards = Graduate.joins(:brags).distinct.count(:buid)
-    @graduates_with_brag_cards = Graduate.joins(:brags) # Assuming brags is a relation
-                                          .where.not(printed: nil)
-                                          .distinct.count(:buid)
+    @graduates_with_brag_cards = Graduate.joins(:brags)
+                                         .where.not(printed: nil)
+                                         .distinct.count(:buid)
     @percent_brag_pickedup = @total_graduates_with_brag_cards.zero? ? 0 : (@graduates_with_brag_cards * 100.0 / @total_graduates_with_brag_cards).round(1)
-    
 
+    # College-level stats
     @college_stats = Graduate.group(:college1).pluck(:college1).map do |college_code|
       full_name = CollegeCodeTranslator.translate_full(college_code)
-    
       total = Graduate.where(college1: college_code).count
       printed = Graduate.where(college1: college_code).where.not(printed: nil).count
       percent = total.zero? ? 0 : ((printed.to_f / total) * 100).round(1)
@@ -189,28 +188,52 @@ class GraduatesController < ApplicationController
       }
     end.sort_by { |college| -college[:percent] }
 
-    # Printed data over time
+    # Printed stats over time
+    interval_param = params[:interval] == "15min" ? :group_by_minute : :group_by_hour
+    format_str = interval_param == :group_by_minute ? "%m/%d %l:%M %P" : "%m/%d %l %P"
+
     @printed_over_time = Graduate.where.not(printed: nil)
-                                 .group_by_hour(:printed, format: '%m/%d %l%P', series: false, time_zone: 'Central Time (US & Canada)')
+                                 .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
                                  .count
 
-    @printed_undergrad_over_time = Graduate.where.not(printed: nil).where(levelcode: 'UG')
-                                 .group_by_hour(:printed, format: '%m/%d %l%P', series: false, time_zone: 'Central Time (US & Canada)')
-                                 .count
+    @printed_undergrad_over_time = Graduate.where(levelcode: "UG").where.not(printed: nil)
+                                           .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
+                                           .count
 
-    @printed_master_over_time = Graduate.where.not(printed: nil).where(levelcode: 'GR-M')
-                                .group_by_hour(:printed, format: '%m/%d %l%P', series: false, time_zone: 'Central Time (US & Canada)')
-                                .count
-    
-    @printed_doctorate_over_time = Graduate.where.not(printed: nil).where(levelcode: 'GR-D')
-    .group_by_hour(:printed, format: '%m/%d %l%P', series: false, time_zone: 'Central Time (US & Canada)')
-    .count
+    @printed_master_over_time = Graduate.where(levelcode: "MA").where.not(printed: nil)
+                                        .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
+                                        .count
 
-    @brags_over_time = Graduate.joins(:brags)
-                        .where.not(printed: nil)
-                        .group_by_hour(:printed, format: '%m/%d %l%P', series: false, time_zone: 'Central Time (US & Canada)')
-                        .distinct
-                        .count(:buid)
+    @printed_doctorate_over_time = Graduate.where(levelcode: "DR").where.not(printed: nil)
+                                           .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
+                                           .count
+
+    @brags_over_time = Brag.joins(:graduate)
+                           .where.not(graduates: { printed: nil })
+                           .public_send(interval_param, "graduates.printed", time_zone: "Central Time (US & Canada)")
+                           .count
+
+    if params[:interval] == "15min"
+      @printed_over_time = @printed_over_time.group_by do |time, _|
+        Time.at((time.to_i / 900) * 900) # round down to nearest 15 min
+      end.transform_values { |entries| entries.sum { |_, count| count } }
+
+      @printed_undergrad_over_time = @printed_undergrad_over_time.group_by do |time, _|
+        Time.at((time.to_i / 900) * 900) # round down to nearest 15 min
+      end.transform_values { |entries| entries.sum { |_, count| count } }
+
+      @printed_master_over_time = @printed_master_over_time.group_by do |time, _|
+        Time.at((time.to_i / 900) * 900) # round down to nearest 15 min
+      end.transform_values { |entries| entries.sum { |_, count| count } }
+
+      @printed_doctorate_over_time = @printed_doctorate_over_time.group_by do |time, _|
+        Time.at((time.to_i / 900) * 900) # round down to nearest 15 min
+      end.transform_values { |entries| entries.sum { |_, count| count } }
+
+      @brags_over_time = @brags_over_time.group_by do |time, _|
+        Time.at((time.to_i / 900) * 900) # round down to nearest 15 min
+      end.transform_values { |entries| entries.sum { |_, count| count } }
+    end
   end
 
   private
