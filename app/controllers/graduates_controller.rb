@@ -173,6 +173,11 @@ class GraduatesController < ApplicationController
                                          .distinct.count(:buid)
     @percent_brag_pickedup = @total_graduates_with_brag_cards.zero? ? 0 : (@graduates_with_brag_cards * 100.0 / @total_graduates_with_brag_cards).round(1)
 
+    # Graduates receiving cords
+    @total_with_cords = Cord.distinct.count(:buid)
+    @printed_with_cords = Graduate.where.not(printed: nil).where(buid: Cord.select(:buid)).distinct.count(:buid)
+    @percent_printed_with_cords = @total_with_cords.zero? ? 0 : (@printed_with_cords * 100.0 / @total_with_cords).round(1)
+    
     # College-level stats
     @college_stats = Graduate.group(:college1).pluck(:college1).map do |college_code|
       full_name = CollegeCodeTranslator.translate_full(college_code)
