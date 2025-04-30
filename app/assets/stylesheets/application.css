@@ -314,6 +314,19 @@ h1.name {
   margin-right: 0px;
 }
 
+.full-grad-info {
+  font-size: .8em;
+  max-width: 500px;
+  margin: 1.5em auto;
+  padding: 15px;
+  background: #efefef;
+  border: 1px solid #999;
+}
+
+.full-grad-info h3 {
+  padding: 0
+}
+
 .action-bar, .card-action-bar, .bulk-action-bar {
   margin: 10px auto;
   text-align: center;
@@ -345,7 +358,7 @@ h1.name {
 
 @media print {
   nav, #back, #height-modal, .page-header, .action-bar, .notice, .card, .modal,
-  .card-action-bar, .bulk-action-bar, .instructions, .printed-badge, .checkedin-banner {
+  .card-action-bar, .bulk-action-bar, .instructions, .printed-badge, .checkedin-banner, .full-grad-info {
     display: none;
   }
 

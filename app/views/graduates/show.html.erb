@@ -1,4 +1,4 @@
-<div c id="back">
+<div id="back">
   <% if params[:print] %>
     <%= link_to "Back to Print List", print_path %>
   <% elsif params[:lastname] %>
@@ -14,3 +14,18 @@
   Be sure to set your printer paper size to <strong>54 x 101mm / 99014 Shipping</strong>
 </div>
 
+<div class="full-grad-info">
+  <div class="full-info-content">
+    <h3>Full Grad Info</h3>
+    <ul>
+      <li><strong>First Name:</strong> <%= @graduate.firstname %></li>
+      <li><strong>Last Name:</strong> <%= @graduate.lastname %></li>
+      <li><strong>Preferred First Name:</strong> <%= @graduate.preferredfirst %></li>
+      <li><strong>Preferred Last Name:</strong> <%= @graduate.preferredlast %></li>
+      <li><strong>Height:</strong> <%= @graduate.height %></li>
+      <li><strong>Degree Status:</strong> <%= @graduate.degstatus %></li>
+      <li><strong>Degree Status Description:</strong> <%= @graduate.degstatusdesc %></li>
+      <li><strong>Checked In:</strong> <%= @graduate.checked_in&.in_time_zone('Central Time (US & Canada)') %></li>
+      <li><strong>Printed:</strong> <%= @graduate.printed&.in_time_zone('Central Time (US & Canada)') %></li>
+  </div>
+</div>
