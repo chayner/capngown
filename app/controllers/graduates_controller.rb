@@ -21,6 +21,8 @@ class GraduatesController < ApplicationController
     program = params[:program]
     degree = params[:degree]
     college = params[:college]
+    has_brag = params[:has_brag]
+    has_cord = params[:has_cord]
     
     @graduates = Graduate.includes(:brags)
     
@@ -50,6 +52,16 @@ class GraduatesController < ApplicationController
     # College filter
     if college.present?
       @graduates = @graduates.where(college1: college)
+    end
+
+    # Filter by graduates who have at least one brag card
+    if has_brag == "true"
+      @graduates = @graduates.joins(:brags)
+    end
+
+    # Filter by graduates who have at least one cord
+    if has_cord == "true"
+      @graduates = @graduates.joins("INNER JOIN cords ON cords.buid = graduates.buid")
     end
   
     @graduates = @graduates.order(:lastname, :firstname)

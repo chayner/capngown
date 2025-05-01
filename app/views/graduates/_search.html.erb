@@ -26,7 +26,23 @@
           <%= select_tag :college, options_for_select(college_options, params[:college]), include_blank: "All Colleges" %>
         </div>
       </div>
+
+      <div class="full">
+        <div class="fourth">
+          <label id="brag-checkbox">
+            <input type="checkbox" name="has_brag" value="true" <%= params[:has_brag] == 'true' ? "checked" : "" %>>
+            <span class="checkable">Has Brag Card</span>
+          </label>
+        </div>
+        <div class="fourth">
+          <label id="cord-checkbox">
+            <input type="checkbox" name="has_cord" value="true" <%= params[:has_cord] == 'true' ? "checked" : "" %>>
+            <span class="checkable">Has Cord</span>
+          </label>
+        </div>
+      </div>
     </details>
+
     <div class="form-submit">
       <%= form.hidden_field "form_submitted", value: "true" %>
       <%= form.submit "Search" %>
