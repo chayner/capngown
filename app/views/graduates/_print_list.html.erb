@@ -14,17 +14,16 @@
   </div>
 </div>
 
+<div class="icon-legend">
+  <span class="material-symbols-outlined">receipt_long</span>Pre-Ordered | 
+  <span class="material-symbols-outlined">workspace_premium</span>Honors Cord |
+  <span class="material-symbols-outlined">diagnosis</span>Brag Card |
+  <span class="material-symbols-outlined">verified</span>Checked-In |
+  <span class="material-symbols-outlined">Print</span>Printed
+</div>
+
 <table class="primary">
   <thead>
-    <tr>
-      <td colspan="8" class="icon-legend">
-        <span class="material-symbols-outlined">receipt_long</span>Pre-Ordered | 
-        <span class="material-symbols-outlined">workspace_premium</span>Honors Cord |
-        <span class="material-symbols-outlined">diagnosis</span>Brag Card |
-        <span class="material-symbols-outlined">verified</span>Checked-In |
-        <span class="material-symbols-outlined">Print</span>Printed
-      </td>
-    </tr>
     <tr>
       <th>Name</th>
       <th>Deg</th>
@@ -37,7 +36,7 @@
     <tr>
   </thead>
   <% graduates.each do |graduate| %>
-    <tr>
+    <tr class="graduate-row <%= graduate.checked_in? ? 'checked-in' : '' %> <%= graduate.printed? ? 'printed' : '' %>" id="graduate-<%= graduate.buid %>">
       <td class="name-col" nowrap>
         <%= link_to "#{graduate.preferredlast.presence || graduate.lastname}, #{graduate.preferredfirst.presence || graduate.firstname}",
               graduate_path(buid: graduate.buid, lastname: params.fetch(:lastname, nil)) %>

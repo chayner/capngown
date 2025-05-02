@@ -130,6 +130,16 @@ a:hover {
   padding-bottom: 1.2em;
 }
 
+table.primary {
+  background: #Fff;  
+}
+
+#to-print table.primary{
+  margin: 0 auto;
+  padding: 5px;
+  border: 1px solid #999;
+}
+
 table th {
   background-color: #2874AF;
 }
@@ -146,7 +156,7 @@ th.status-col, td.status-col {
   padding: .3em .4em;
 }
 
-table.primary .icon-legend {
+.icon-legend {
   font-size: .8em;
   text-align: center;
   padding: .3em .4em;
@@ -347,7 +357,7 @@ h1.name {
 
 .instructions {
   color: #C8102E;
-  background-color: #c8102f18;
+  background-color: #c6f26d18;
   border: 1px solid #C8102E;
   max-width: 500px;
   margin: 0 auto;

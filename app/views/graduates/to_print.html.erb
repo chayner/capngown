@@ -7,28 +7,26 @@
   const POLL_INTERVAL_MS = 5000;
   let lastUpdatedAt = null;
 
-  setInterval(() => {
-    // Only poll the server if there's new data to fetch
-    let show_print = document.getElementById('show-printed').checked == true ? 'show' : 'hide'
-    // if (lastUpdatedAt) {
-      fetch(`/get_print?updated_since=${lastUpdatedAt}&printed=`+show_print)
-        .then(response => response.text())
-        .then(html => {
-          document.getElementById('to-print').innerHTML = html;
-        })
-        .catch(error => console.error(error));
-    <%# } %>
-  }, POLL_INTERVAL_MS);
-
-
-  document.getElementById('show-printed').addEventListener('click', function() {
-    let show_print = document.getElementById('show-printed').checked == true ? 'show' : 'hide'
-    fetch(`/get_print?updated_since=${lastUpdatedAt}&printed=`+show_print)
+  function updatePrintList() {
+    let show_print = document.getElementById('show-printed').checked == true ? 'show' : 'hide';
+    fetch(`/get_print?updated_since=${lastUpdatedAt}&printed=` + show_print)
       .then(response => response.text())
       .then(html => {
-        document.getElementById('to-print').innerHTML = html;
+        const container = document.getElementById('to-print');
+        container.innerHTML = html;
+
+        // Check if there is at least one .graduate-row present
+        const hasResults = container.querySelectorAll('.graduate-row').length > 0;
+
+        // Update background color
+        document.body.style.backgroundColor = hasResults ? '#E1EBCA' : ''; // Light yellow if results, reset if none
+        document.body.style.border = hasResults ? '4px solid #808578' : ''; // Green border if results, reset if none
+        // alert('Results: ' + hasResults);
       })
       .catch(error => console.error(error));
-  });
+  }
 
+  setInterval(updatePrintList, POLL_INTERVAL_MS);
+
+  document.getElementById('show-printed').addEventListener('click', updatePrintList);
 </script>
