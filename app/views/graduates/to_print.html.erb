@@ -3,30 +3,44 @@
 </div>
 
 <script>
-  // Poll the server for updated data every 5 seconds
-  const POLL_INTERVAL_MS = 5000;
-  let lastUpdatedAt = null;
-
-  function updatePrintList() {
-    let show_print = document.getElementById('show-printed').checked == true ? 'show' : 'hide';
-    fetch(`/get_print?updated_since=${lastUpdatedAt}&printed=` + show_print)
-      .then(response => response.text())
-      .then(html => {
-        const container = document.getElementById('to-print');
-        container.innerHTML = html;
-
-        // Check if there is at least one .graduate-row present
-        const hasResults = container.querySelectorAll('.graduate-row').length > 0;
-
-        // Update background color
-        document.body.style.backgroundColor = hasResults ? '#E1EBCA' : ''; // Light yellow if results, reset if none
-        document.body.style.border = hasResults ? '4px solid #808578' : ''; // Green border if results, reset if none
-        // alert('Results: ' + hasResults);
-      })
-      .catch(error => console.error(error));
+  if (window.pollIntervalId) {
+    clearInterval(window.pollIntervalId);
   }
 
-  setInterval(updatePrintList, POLL_INTERVAL_MS);
+  document.addEventListener("turbo:load", function () {
+  
+    function updatePrintList() {
+      const toggle = document.getElementById('show-printed');
+      if (!toggle) return;
 
-  document.getElementById('show-printed').addEventListener('click', updatePrintList);
+      let show_print = toggle.checked ? 'show' : 'hide';
+
+      fetch(`/get_print?printed=${show_print}`)
+        .then(response => response.text())
+        .then(html => {
+          const container = document.getElementById('to-print');
+          if (container) {
+            container.innerHTML = html;
+            const hasResults = container.querySelectorAll('.graduate-row').length > 0;
+            document.body.style.backgroundColor = hasResults ? '#E1EBCA' : '';
+          }
+        })
+        .catch(error => console.error(error));
+    }
+    
+    const toggle = document.getElementById('show-printed');
+    if (toggle) {
+      toggle.addEventListener('click', updatePrintList);
+      updatePrintList();
+      window.pollIntervalId = setInterval(updatePrintList, 5000);
+    }
+
+  });
+
+  document.addEventListener("turbo:before-cache", function () {
+    if (window.pollIntervalId) {
+      clearInterval(window.pollIntervalId);
+      window.pollIntervalId = null;
+    }
+  });
 </script>
