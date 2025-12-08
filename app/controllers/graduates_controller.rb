@@ -190,18 +190,33 @@ class GraduatesController < ApplicationController
     @printed_with_cords = Graduate.where.not(printed: nil).where(buid: Cord.select(:buid)).distinct.count(:buid)
     @percent_printed_with_cords = @total_with_cords.zero? ? 0 : (@printed_with_cords * 100.0 / @total_with_cords).round(1)
     
-    # College-level stats
+    # College-level stats with program breakdown
     @college_stats = Graduate.group(:college1).pluck(:college1).map do |college_code|
       full_name = CollegeCodeTranslator.translate_full(college_code)
       total = Graduate.where(college1: college_code).count
       printed = Graduate.where(college1: college_code).where.not(printed: nil).count
       percent = total.zero? ? 0 : ((printed.to_f / total) * 100).round(1)
+
+      # Program breakdown within each college
+      programs = Graduate.where(college1: college_code).group(:major).pluck(:major).compact.map do |major|
+        program_total = Graduate.where(college1: college_code, major: major).count
+        program_printed = Graduate.where(college1: college_code, major: major).where.not(printed: nil).count
+        program_percent = program_total.zero? ? 0 : ((program_printed.to_f / program_total) * 100).round(1)
+        {
+          major: major,
+          printed: program_printed,
+          total: program_total,
+          percent: program_percent
+        }
+      end.sort_by { |p| -p[:percent] }
+
       {
         college_code: college_code,
         college_name: full_name,
         printed: printed,
         total: total,
-        percent: percent
+        percent: percent,
+        programs: programs
       }
     end.sort_by { |college| -college[:percent] }
 

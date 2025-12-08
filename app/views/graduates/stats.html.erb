@@ -15,6 +15,10 @@
 </ul>
 
 <h2>Colleges</h2>
+<p>
+  <a href="#" id="expand-all">Expand All</a> |
+  <a href="#" id="collapse-all">Collapse All</a>
+</p>
 <table>
   <thead>
     <tr>
@@ -25,16 +29,89 @@
     </tr>
   </thead>
   <tbody>
-    <% @college_stats.each do |college| %>
-      <tr>
-        <td><%= college[:college_name] %></td>
+    <% @college_stats.each_with_index do |college, index| %>
+      <tr class="college-row" data-college-index="<%= index %>">
+        <td>
+          <% if college[:programs].present? %>
+            <span class="toggle-icon" style="cursor: pointer; margin-right: 5px; font-size: 0.6em;">▶</span>
+          <% end %>
+          <%= college[:college_name] %>
+        </td>
         <td><%= college[:printed] %></td>
         <td><%= college[:total] %></td>
         <td><%= college[:percent] %>%</td>
       </tr>
+      <% college[:programs]&.each do |program| %>
+        <tr class="program-row program-<%= index %>" style="display: none;">
+          <td style="padding-left: 30px; font-style: italic;"><%= program[:major] %></td>
+          <td><%= program[:printed] %></td>
+          <td><%= program[:total] %></td>
+          <td><%= program[:percent] %>%</td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
+
+<script>
+  (function() {
+    function initCollegeToggle() {
+      // Toggle individual college
+      document.querySelectorAll('.college-row').forEach(function(row) {
+        row.style.cursor = 'pointer';
+        row.onclick = function() {
+          var index = this.dataset.collegeIndex;
+          var programRows = document.querySelectorAll('.program-' + index);
+          var icon = this.querySelector('.toggle-icon');
+          
+          programRows.forEach(function(programRow) {
+            if (programRow.style.display === 'none') {
+              programRow.style.display = 'table-row';
+              if (icon) icon.textContent = '▼';
+            } else {
+              programRow.style.display = 'none';
+              if (icon) icon.textContent = '▶';
+            }
+          });
+        };
+      });
+
+      // Expand all
+      var expandAll = document.getElementById('expand-all');
+      if (expandAll) {
+        expandAll.onclick = function(e) {
+          e.preventDefault();
+          document.querySelectorAll('.program-row').forEach(function(row) {
+            row.style.display = 'table-row';
+          });
+          document.querySelectorAll('.toggle-icon').forEach(function(icon) {
+            icon.textContent = '▼';
+          });
+        };
+      }
+
+      // Collapse all
+      var collapseAll = document.getElementById('collapse-all');
+      if (collapseAll) {
+        collapseAll.onclick = function(e) {
+          e.preventDefault();
+          document.querySelectorAll('.program-row').forEach(function(row) {
+            row.style.display = 'none';
+          });
+          document.querySelectorAll('.toggle-icon').forEach(function(icon) {
+            icon.textContent = '▶';
+          });
+        };
+      }
+    }
+
+    // Run immediately since script is at bottom of content
+    initCollegeToggle();
+    
+    // Also listen for Turbo events in case of navigation
+    document.addEventListener('turbo:load', initCollegeToggle);
+  })();
+</script>
 
 <% if @printed_over_time.present? %>
   <h2>Printed Data Over Time</h2>
