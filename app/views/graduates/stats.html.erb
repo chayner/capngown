@@ -30,7 +30,7 @@
   </thead>
   <tbody>
     <% @college_stats.each_with_index do |college, index| %>
-      <tr class="college-row" data-college-index="<%= index %>">
+      <tr class="college-row" data-college-index="<%= index %>" style="background-color: white;">
         <td>
           <% if college[:programs].present? %>
             <span class="toggle-icon" style="cursor: pointer; margin-right: 5px; font-size: 0.6em;">▶</span>
@@ -41,8 +41,8 @@
         <td><%= college[:total] %></td>
         <td><%= college[:percent] %>%</td>
       </tr>
-      <% college[:programs]&.each do |program| %>
-        <tr class="program-row program-<%= index %>" style="display: none;">
+      <% college[:programs]&.each_with_index do |program, prog_index| %>
+        <tr class="program-row program-<%= index %>" style="display: none; background-color: <%= prog_index.even? ? '#f3f3f3' : 'white' %>;">
           <td style="padding-left: 30px; font-style: italic;"><%= program[:major] %></td>
           <td><%= program[:printed] %></td>
           <td><%= program[:total] %></td>
