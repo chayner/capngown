@@ -1,0 +1,70 @@
+# AI_06 — Current State vs Future State
+
+This file is the **source of truth for phase status**. Update it as phases land.
+
+---
+
+## Current State (as of bringing the app up to AI-assisted standards)
+
+### What Works Today
+- Graduate lookup by BUID and name (`GraduatesController#start`, `#list`)
+- Single check-in / clear check-in (`#checkin`)
+- Single print / clear print (`#print`)
+- Bulk show + bulk print (`#show_bulk`, `#bulk_print`)
+- To-print queue (`#to_print`, `#get_print_html`)
+- Stats dashboard with college / level / brag / cord breakdowns (`#stats`)
+- Brag card display
+- Honor cord display
+- Picnic CSS layout with responsive nav
+
+### What's Missing
+- **Authentication** — every action is public
+- **Tests** — `test/` is essentially empty
+- **CI** — no GitHub Actions
+- **Background jobs** — no Sidekiq
+- **Audit log** — no record of who did what
+- **Stack upgrade** — currently on `heroku-22`, target `heroku-24`
+- **Postgres upgrade** — currently on PG 15.17, target PG 16
+
+---
+
+## Phases
+
+### Phase 0 — AI Bootstrapping
+**Status:** Complete
+**Goal:** Bring the app up to AI-assisted-development standards.
+**Deliverables:**
+- [x] `CLAUDE.md` and `.github/copilot-instructions.md`
+- [x] `.claude/skills/` set
+- [x] `docs/` scaffolding
+
+### Phase 1 — Heroku Cleanup
+**Status:** Complete
+**Goal:** Remove Railway-era artifacts and document the live Heroku setup.
+**Deliverables:**
+- [x] Remove `rails_12factor` gem
+- [x] Clean `config/database.yml` production block (no hardcoded credentials)
+- [x] Add explicit `Procfile` with web + release commands
+- [x] Update docs to reflect live Heroku state
+
+### Phase 2 — Postgres 15 → 16 Upgrade
+**Status:** Planned
+See `docs/planning/phases/PHASE_2_POSTGRES_16_UPGRADE.md`.
+
+### Phase 3 — Heroku Stack 22 → 24 Upgrade
+**Status:** Planned
+See `docs/planning/phases/PHASE_3_HEROKU_24_UPGRADE.md`.
+
+### Phase 4 — Devise Auth (Admin + Volunteer)
+**Status:** Planned
+See `docs/planning/phases/PHASE_4_DEVISE_AUTH.md`.
+
+### Phase 5 — Admin Interface (User Mgmt + File Imports)
+**Status:** Planned
+See `docs/planning/phases/PHASE_5_ADMIN_INTERFACE.md`.
+
+---
+
+## Future State (Direction)
+
+A multi-user, role-aware, tested, CI'd Rails app deployed to Heroku, ready to support Belmont's commencement weeks reliably year over year. Stats and audit visibility for coordinators. Easy onboarding for new volunteers.
