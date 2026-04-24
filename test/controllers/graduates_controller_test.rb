@@ -5,6 +5,7 @@ class GraduatesControllerTest < ActionDispatch::IntegrationTest
     @graduate = graduates(:alice)
     @checked_in = graduates(:bob)
     @printed = graduates(:carol)
+    sign_in users(:volunteer)
   end
 
   # --- Lookup / list ---

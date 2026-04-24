@@ -28,7 +28,11 @@
       <div class="menu">
         <a href="/start" class="nav-link">Check-in</a>
         <a href="/print" class="nav-link">Print List</a>
-        <%= link_to 'Stats', stats_graduates_path, class: 'nav-link nav-link-last' %>
+        <%= link_to 'Stats', stats_graduates_path, class: 'nav-link' %>
+        <% if user_signed_in? %>
+          <span class="nav-link nav-user"><%= current_user.email %></span>
+          <%= button_to 'Sign out', destroy_user_session_path, method: :delete, class: 'nav-link nav-link-last pseudo button' %>
+        <% end %>
       </div>
     </nav>
     <main class="main">

@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  # Invite-only: no public registrations. Admin creates accounts via rake task.
+  # Invite-only: no public registrations.
+  # Note: :passwords routes are kept (Devise references new_user_password_path
+  # internally on failed sign-in flash), but no link is exposed in the UI.
+  # Real password resets happen via `bin/rails admin:reset_password`.
   devise_for :users, skip: [:registrations]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -59,7 +59,7 @@ When the user says any of these phrases, invoke the corresponding skill:
 - **Database:** PostgreSQL
 - **Frontend:** Picnic CSS (via CDN), Sprockets asset pipeline, Turbo/Hotwire
 - **JS:** Import maps (no bundler), Stimulus
-- **Auth:** None today — Devise + role-based access planned (see "Role Hierarchy" below for future state)
+- **Auth:** Devise (Phase 4) — site-wide `authenticate_user!`, two roles (`Admin`, `Volunteer`), invite-only via rake tasks. See `docs/development/ADMIN_USER_MANAGEMENT.md`.
 - **Background Jobs:** None today — Sidekiq + Redis would be the planned addition
 - **Hosting:** Heroku — live at `belmont-cap-and-gown` (https://bucapandgown.com). Web command comes from the `heroku/ruby` buildpack default unless overridden by `Procfile`.
 - **Dev debug:** `pry-rails`, `debug` gem, `bin/rails console`
@@ -106,18 +106,18 @@ Primary flows:
 
 ---
 
-## Role Hierarchy (Future State — Devise Not Yet Installed)
+## Role Hierarchy
 
-The app is currently open (no auth). When auth is added (Phase 4), the planned hierarchy is **two roles**:
+Devise auth is **enforced site-wide** (Phase 4 complete). Two roles:
 
 | Role | Access | Guards |
 |------|--------|--------|
-| **Volunteer** | Look up graduates, check-in, mark printed, bulk operations, stats dashboard | `before_action :authenticate_user!` |
-| **Admin** | Everything Volunteer can do + user management + file imports | `before_action :require_admin!` |
+| **Volunteer** | Look up graduates, check-in, mark printed, bulk operations, stats dashboard | `before_action :authenticate_user!` (default in `ApplicationController`) |
+| **Admin** | Everything Volunteer can do + user management + file imports (Phase 5) | `before_action :require_admin!` |
 
-`current_user.volunteer?` returns true for both volunteers and admins (admin is a superset).
+`current_user.volunteer?` returns true for both volunteers and admins (admin is a superset). `current_user.admin?` is true only for admins.
 
-> Until auth lands, treat every controller action as publicly reachable. Do NOT rely on "no one will see this view" as a security boundary.
+Account creation and password resets are admin-only via rake tasks (see `docs/development/ADMIN_USER_MANAGEMENT.md`). There is no public sign-up.
 
 ---
 

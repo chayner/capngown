@@ -20,11 +20,12 @@ This file is the **source of truth for phase status**. Update it as phases land.
 - Heroku stack on `heroku-24` with runtime modernization (Ruby 3.3.10, Bundler 2.7.2, Puma 8.x, Node pinned via `engines.node`)
 
 ### What's Missing
-- **Authentication** — every action is public
-- **Tests** — `test/` is essentially empty
+- **Tests** — baseline coverage now exists (50 runs, 114 assertions); deeper feature/edge tests still TBD
 - **CI** — no GitHub Actions
 - **Background jobs** — no Sidekiq
 - **Audit log** — no record of who did what
+- **Admin UI** — user management is rake-task-only (Phase 5)
+- **Password reset email** — admin-driven only via `admin:reset_password` rake task
 - **Phase 3 follow-up** — optional Ruby patch bump to 3.3.11 and final warning-cleanup verification
 
 ---
@@ -57,7 +58,7 @@ See `docs/planning/phases/PHASE_2_POSTGRES_16_UPGRADE.md`.
 See `docs/planning/phases/PHASE_3_HEROKU_24_UPGRADE.md`.
 
 ### Phase 4 — Devise Auth (Admin + Volunteer)
-**Status:** Planned
+**Status:** Complete
 See `docs/planning/phases/PHASE_4_DEVISE_AUTH.md`.
 
 ### Phase 5 — Admin Interface (User Mgmt + File Imports)

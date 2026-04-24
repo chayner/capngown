@@ -10,7 +10,7 @@ This document guides AI coding agents working in the `Cap & Gown` Ruby on Rails 
 - **Database:** PostgreSQL
 - **Frontend:** Picnic CSS (CDN), Sprockets, Turbo/Hotwire
 - **JS:** Import maps (no bundler), Stimulus
-- **Auth:** None today — Devise planned (future state)
+- **Auth:** Devise (Phase 4 complete) — site-wide `authenticate_user!`, two roles, invite-only
 - **Background Jobs:** None today
 - **Hosting:** Heroku (live at `belmont-cap-and-gown`)
 - **Dev debug:** `pry-rails`, `debug`, `bin/rails console`
@@ -41,14 +41,16 @@ Primary flows: graduate lookup by BUID/name → check-in → sticker print queue
 
 ---
 
-## Role Hierarchy (Planned — Not Yet Implemented)
+## Role Hierarchy
+
+Devise auth is enforced site-wide (Phase 4). Two roles:
 
 | Role | Access | Guards |
 |------|--------|--------|
-| **Volunteer** | Look up graduates, check-in, mark printed, bulk ops, stats | `before_action :authenticate_user!` |
+| **Volunteer** | Look up graduates, check-in, mark printed, bulk ops, stats | `before_action :authenticate_user!` (default) |
 | **Admin** | Everything Volunteer can do + user mgmt + file imports | `before_action :require_admin!` |
 
-Admin returns `true` for all volunteer-level checks. Until Devise is installed, every controller action is publicly reachable.
+Admin returns `true` for all volunteer-level checks. Account creation and password resets are admin-only via `bin/rails admin:*` rake tasks.
 
 ---
 

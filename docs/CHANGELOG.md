@@ -45,6 +45,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced broken/orphan fixtures: deleted `students.yml` (no Student model), rewrote `cords.yml` (had `type:` instead of `cord_type:`) and `brags.yml`, added new `graduates.yml`.
 - Suite now: 28 runs, 64 assertions, 0 failures.
 
+### Phase 4.3 — Apply auth + UI + admin bootstrap (in progress)
+- `ApplicationController` enforces `authenticate_user!` site-wide; private `require_admin!` helper added.
+- Picnic-styled sign-in view; nav layout shows current user email + sign-out button when signed in.
+- Rake tasks under `lib/tasks/admin.rake`: `admin:create`, `admin:invite_volunteer`, `admin:reset_password`, `admin:promote`.
+- New docs: `docs/development/ADMIN_USER_MANAGEMENT.md` (local + Heroku command reference).
+- `docs/ai-context/AI_03_USER_ROLES_AND_PERMISSIONS.md` rewritten from "planned" to current-state.
+- New `test/integration/authentication_test.rb` covers redirect-when-signed-out for every protected route, valid/invalid sign-in, sign-out, and `require_admin!` presence.
+- Test suite: 50 runs, 114 assertions, 0 failures.
+- **Spec deviation:** kept Devise `:passwords` routes mounted (Devise references `new_user_password_path` internally); UI exposes no link to them.
+
 ### Phase 4.2 — Devise install (in progress)
 - Added `devise ~> 4.9` gem.
 - `User` model with email + password + `role` enum (`volunteer: 0`, `admin: 1`, default volunteer).

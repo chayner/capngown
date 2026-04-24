@@ -19,8 +19,10 @@ When an item is picked up, move it to a phase spec and remove from this list (or
 
 ## Auth / Security
 
-- [ ] **Devise + role-based access** — Add `Volunteer`, `Coordinator`, `Admin` roles per the planned hierarchy in `CLAUDE.md`. Until then, every action is publicly reachable.
-- [ ] **Rate limiting** — Once auth lands, consider rack-attack on lookup endpoints.
+- [x] ~~**Devise + role-based access**~~ — Done in Phase 4. Two-role hierarchy (`Volunteer`, `Admin`) is now enforced site-wide; account creation is invite-only via rake tasks. See `docs/development/ADMIN_USER_MANAGEMENT.md`.
+- [ ] **Email-based password reset** — Currently admin-only via `bin/rails admin:reset_password`. When a mailer is wired up, expose Devise's `:passwords` flow with a "Forgot password" link on the sign-in page.
+- [ ] **Audit log** — No record of who checked in / printed which graduate. Add when the team needs accountability.
+- [ ] **Rate limiting** — Now that auth lands, consider rack-attack on lookup endpoints.
 
 ## Features
 
