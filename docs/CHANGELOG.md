@@ -45,6 +45,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced broken/orphan fixtures: deleted `students.yml` (no Student model), rewrote `cords.yml` (had `type:` instead of `cord_type:`) and `brags.yml`, added new `graduates.yml`.
 - Suite now: 28 runs, 64 assertions, 0 failures.
 
+### Phase 4.2 — Devise install (in progress)
+- Added `devise ~> 4.9` gem.
+- `User` model with email + password + `role` enum (`volunteer: 0`, `admin: 1`, default volunteer).
+- Role hierarchy: `User#volunteer?` returns true for admins as well as volunteers.
+- Devise initializer: `mailer_sender = no-reply@bucapandgown.com`, `password_length = 8..128`.
+- Sign-up disabled (`:registerable` module skipped, `devise_for :users, skip: [:registrations]`) — accounts are invite-only.
+- 8 user model tests; total suite now 36 runs, 84 assertions, 0 failures.
+- Restored `degstatus` and `degstatusdesc` columns on `graduates` (existed in production but missing from dev DB; idempotent migration).
+
 ### Known follow-ups (post-Phase 3)
 Remaining from the Phase 3 release build (Heroku, release v58):
 - Informational warning that Bundler changed from `2.3.7` to `2.7.2`.

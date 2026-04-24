@@ -68,14 +68,14 @@ Phase 4 is split into three sub-phases so we can land the auth work safely on to
 - [x] All tests green (28 runs, 64 assertions, 0 failures)
 
 ### Phase 4.2 — Devise install
-- [ ] `devise` added to Gemfile, `bundle install`
-- [ ] `bin/rails g devise:install`
-- [ ] Devise initializer configured (mailer sender, min password length 8)
-- [ ] `User` model with email + encrypted_password + role enum
-- [ ] Migration: `users` table with `role` integer column, default 0 (volunteer)
-- [ ] `User#admin?` returns true for admins; `User#volunteer?` returns true for both admins and volunteers (hierarchy)
-- [ ] User model tests
-- [ ] Disable public registration (`devise_for :users, skip: [:registrations]`)
+- [x] `devise` added to Gemfile, `bundle install`
+- [x] `bin/rails g devise:install`
+- [x] Devise initializer configured (mailer sender, min password length 8)
+- [x] `User` model with email + encrypted_password + role enum
+- [x] Migration: `users` table with `role` integer column, default 0 (volunteer)
+- [x] `User#admin?` returns true for admins; `User#volunteer?` returns true for both admins and volunteers (hierarchy)
+- [x] User model tests
+- [x] Disable public registration (`devise_for :users, skip: [:registrations]`)
 
 ### Phase 4.3 — Apply auth + UI + bootstrap
 - [ ] `ApplicationController#before_action :authenticate_user!`
@@ -107,6 +107,18 @@ Phase 4 is split into three sub-phases so we can land the auth work safely on to
 - Model tests for `Graduate`, `Brag`, `Cord`.
 - Fixed: `config.hosts << "15ltws037665pmo.local"` was in `config/application.rb`, activating host authorization in test env (every request was 403). Moved to `config/environments/development.rb`.
 - Test suite: **28 runs, 64 assertions, 0 failures**.
+
+### Phase 4.2 (complete)
+- Added `devise ~> 4.9` to Gemfile.
+- `rails g devise:install` — initializer + locale.
+- Configured `config.mailer_sender = 'no-reply@bucapandgown.com'`.
+- Bumped `config.password_length` from `6..128` to `8..128`.
+- `rails g devise User` + edited migration to add `role` integer column (default 0) with index. Ran migration.
+- `User` model: enum `role: { volunteer: 0, admin: 1 }`. `volunteer?` overridden so admins also report `true` (role hierarchy).
+- Skipped `:registerable` module + `devise_for :users, skip: [:registrations]` (invite-only).
+- 8 user model tests covering enum, default role, validations, hierarchy.
+- Discovered + fixed pre-existing schema drift: `degstatus`/`degstatusdesc` columns existed in production and in `db/schema.rb` but never had a Rails migration. Dev DB never grew them; once `db:migrate` regenerated `schema.rb` from dev DB state, the columns vanished from schema. Added idempotent migration `RestoreDegstatusToGraduates`.
+- Test suite: **36 runs, 84 assertions, 0 failures**.
 
 ## Spec Deviations
 _(Add immediately when implementation differs.)_
