@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Heroku Postgres upgraded from PG 15.17 (`postgresql-acute-23495`) to PG 16.13 (`postgresql-crystalline-90781`) via provision-copy-promote path. Maintenance window ~10 minutes. All 5 tables and 487 graduates / 59 brags / 0 cords verified equal post-copy.
 - AI agent customization scaffolding: `CLAUDE.md`, `.github/copilot-instructions.md`, and `.claude/skills/` (debug, patterns, testing, deploy, performance, check-docs, phase-plan, phase-wrap).
 - Documentation scaffolding under `docs/`: CHANGELOG, BACKLOG, PHASE_PROCESS, AI context bundle (AI_00–AI_07), DESIGN-GUIDELINES, LANGUAGE_STYLE_GUIDE.
 - Phase specs for upcoming work (Postgres 16 upgrade, Heroku-24 stack upgrade + runtime modernization, Devise auth, admin interface).

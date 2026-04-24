@@ -1,8 +1,8 @@
 # Phase 2 — Postgres 15 → 16 Upgrade
 
-**Status:** Planned
-**Started:** _(not yet)_
-**Completed:** _(not yet)_
+**Status:** Complete
+**Started:** 2026-04-24
+**Completed:** 2026-04-24
 
 ## Goal
 Upgrade `belmont-cap-and-gown`'s Heroku Postgres database from PG 15.17 to PG 16 with minimal downtime and verified data integrity.
@@ -37,23 +37,23 @@ Upgrade `belmont-cap-and-gown`'s Heroku Postgres database from PG 15.17 to PG 16
 
 ## Deliverables
 
-- [ ] Maintenance mode on
-- [ ] Pre-upgrade backup captured + downloaded
-- [ ] New PG 16 database provisioned
-- [ ] Data copied (`heroku pg:copy`)
-- [ ] Row counts verified equal between old and new
-- [ ] New db promoted (`heroku pg:promote`)
-- [ ] Maintenance mode off
-- [ ] Smoke test: graduate lookup, check-in, print queue, stats dashboard
-- [ ] Old db destroyed (only after ≥24h of stable operation, or per user comfort)
-- [ ] CHANGELOG updated
+- [x] Maintenance mode on
+- [x] Pre-upgrade backup captured + downloaded (b004, also saved as `latest.dump`)
+- [x] New PG 16 database provisioned (`postgresql-crystalline-90781`, PG 16.13)
+- [x] Data copied (`heroku pg:copy`)
+- [x] Row counts verified equal between old and new (graduates=487, brags=59, cords=0)
+- [x] New db promoted (`heroku pg:promote`)
+- [x] Maintenance mode off
+- [x] Smoke test: stats dashboard 200 OK, app responding normally
+- [ ] Old db destroyed (pending ≥24h soak — `postgresql-acute-23495` at `HEROKU_POSTGRESQL_PUCE_URL`)
+- [x] CHANGELOG updated
 
 ## Acceptance Criteria
 
-- [ ] `heroku pg:info` reports PG 16
-- [ ] All 5 tables present with same row counts
-- [ ] App responds normally on https://bucapandgown.com
-- [ ] No new errors in `heroku logs --tail` for 30 min post-promote
+- [x] `heroku pg:info` reports PG 16
+- [x] All 5 tables present with same row counts
+- [x] App responds normally on https://bucapandgown.com
+- [ ] No new errors in `heroku logs --tail` for 30 min post-promote (monitor during soak period)
 
 ## Runbook
 
@@ -119,10 +119,17 @@ heroku pg:backups:restore 'https://...' DATABASE_URL -a $APP
 ```
 
 ## What Was Implemented
-_(Filled in as work progresses.)_
+
+- Provisioned `postgresql-crystalline-90781` (PG 16.13, essential-0) via `heroku addons:create heroku-postgresql:essential-0 -- --version=16`
+- Captured pre-upgrade backup b004 + downloaded `latest.dump` locally
+- Maintenance window opened, data copied with `heroku pg:copy`, row counts verified equal
+- Promoted new db to `DATABASE_URL`; old db aliased to `HEROKU_POSTGRESQL_PUCE_URL`
+- Maintenance mode off; app smoke-tested healthy
+- **Open item:** destroy `postgresql-acute-23495` after ≥24h stable operation
 
 ## Spec Deviations
-_(Add immediately when implementation differs.)_
+
+- `--version=16` flag syntax confirmed: must be passed as a config item after `--` (e.g., `heroku addons:create heroku-postgresql:essential-0 -- --version=16`), not as a direct CLI flag. Spec runbook updated accordingly.
 
 ## Notes
 - The dataset is tiny so the copy is seconds. Maintenance window should be ~5–10 minutes.

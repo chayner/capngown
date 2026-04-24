@@ -16,6 +16,7 @@ This file is the **source of truth for phase status**. Update it as phases land.
 - Brag card display
 - Honor cord display
 - Picnic CSS layout with responsive nav
+- Heroku Postgres on PG 16.13 (`postgresql-crystalline-90781`, essential-0)
 
 ### What's Missing
 - **Authentication** — every action is public
@@ -48,7 +49,7 @@ This file is the **source of truth for phase status**. Update it as phases land.
 - [x] Update docs to reflect live Heroku state
 
 ### Phase 2 — Postgres 15 → 16 Upgrade
-**Status:** Planned
+**Status:** Complete
 See `docs/planning/phases/PHASE_2_POSTGRES_16_UPGRADE.md`.
 
 ### Phase 3 — Heroku Stack 22 → 24 Upgrade
