@@ -45,9 +45,6 @@ gem "bootsnap", require: false
 # Use Sass to process CSS
 # gem "sassc-rails"
 
-# Required by Railway
-gem 'rails_12factor', group: :production
-
 # Grouping dates
 gem 'groupdate'
 
