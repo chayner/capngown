@@ -44,6 +44,12 @@ Rails.application.configure do
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    stdout_logger = ActiveSupport::Logger.new($stdout)
+    stdout_logger.formatter = config.log_formatter
+    config.logger = ActiveSupport::TaggedLogging.new(stdout_logger)
+  end
+
   # Raise exceptions for disallowed deprecations.
   config.active_support.disallowed_deprecation = :raise
 
@@ -70,4 +76,10 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+  # Keep default development hosts (localhost, etc.) and allow custom local domain.
+  config.hosts << "dev.bucapandgown.com"
+
+  # Optional local HTTPS support. Enable by running with DEV_SSL=true.
+  config.force_ssl = ENV["DEV_SSL"] == "true"
 end

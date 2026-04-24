@@ -5,12 +5,18 @@ if ! gem list foreman -i --silent; then
   gem install foreman
 fi
 
-# Default to port 3000 if not specified
-export PORT="${PORT:-3000}"
+# Default to port 3002 if not specified
+export PORT="${PORT:-3002}"
 
 # Let the debug gem allow remote connections,
 # but avoid loading until `debugger` is called
 export RUBY_DEBUG_OPEN="true"
 export RUBY_DEBUG_LAZY="true"
+
+# Enable HTTPS in local development by default when certs are present.
+export DEV_SSL="${DEV_SSL:-true}"
+
+# Show Rails request logs in the bin/dev terminal.
+export RAILS_LOG_TO_STDOUT="${RAILS_LOG_TO_STDOUT:-true}"
 
 exec foreman start -f Procfile.dev "$@"

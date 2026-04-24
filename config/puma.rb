@@ -13,9 +13,8 @@ threads min_threads_count, max_threads_count
 #
 worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
 
-# Specifies the `port` that Puma will listen on to receive requests; default is 3000.
-#
-port ENV.fetch("PORT") { 3000 }
+default_port = 3002
+dev_ssl = ENV["DEV_SSL"] == "true"
 
 # Specifies the `environment` that Puma will run in.
 #
@@ -41,3 +40,25 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
+
+if dev_ssl
+	# Optional local HTTPS support for development.
+	app_root = File.expand_path("..", __dir__)
+	cert_path = ENV.fetch("SSL_CERT_PATH", File.join(app_root, "config", "ssl", "dev.bucapandgown.com.pem"))
+	key_path = ENV.fetch("SSL_KEY_PATH", File.join(app_root, "config", "ssl", "dev.bucapandgown.com-key.pem"))
+	ssl_port = ENV.fetch("SSL_PORT", ENV.fetch("PORT", default_port))
+
+	if File.exist?(cert_path) && File.exist?(key_path)
+		ssl_bind ENV.fetch("BINDING", "0.0.0.0"), ssl_port, {
+			cert: cert_path,
+			key: key_path,
+			verify_mode: "none"
+		}
+	else
+		warn "DEV_SSL=true but SSL cert/key were not found. Expected #{cert_path} and #{key_path}. Falling back to HTTP."
+		port ENV.fetch("PORT", default_port)
+	end
+else
+	# Specifies the `port` that Puma will listen on to receive requests; default is 3002.
+	port ENV.fetch("PORT", default_port)
+end

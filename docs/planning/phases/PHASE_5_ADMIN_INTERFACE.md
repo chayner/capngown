@@ -34,10 +34,15 @@ Each semester, a preparation process produces several files that need to be load
 - Import errors shown clearly; partial-success handling
 - Import history log (when, who, what file, row count, success/error)
 
+### Distribution Reporting Export
+- `/admin/reports/graduates` page with CSV export actions
+- Export checked-in list, not-checked-in list, and all graduates
+- Include key columns for operations: `buid`, name fields, degree/level fields, `checked_in`, `printed`
+- Filters support current semester/event roster scope (as defined by loaded data)
+
 **Out (deferred):**
 - Background job processing (Sidekiq) — start synchronous, move to async only if file sizes warrant
 - Scheduled / automated imports (e.g., from S3 dropbox)
-- CSV export of distribution data
 - Audit log beyond import history (separate phase)
 
 ## Pre-Flight Checks
@@ -67,6 +72,13 @@ Each semester, a preparation process produces several files that need to be load
 - [ ] `ImportLog` model: `user_id`, `import_type`, `filename`, `row_count`, `succeeded`, `error_message`, `created_at`
 - [ ] Upload uses Active Storage (already wired up in Rails 7.1)
 - [ ] Tests per importer using fixture files
+
+### Reporting Export
+- [ ] `Admin::ReportsController#graduates` page with export controls
+- [ ] CSV endpoint(s) for checked-in, not-checked-in, and all graduates
+- [ ] Export service or query object to keep CSV generation logic out of controllers
+- [ ] CSV includes deterministic column order and header row
+- [ ] Tests for CSV content, filtering, and admin-only access
 - [ ] CHANGELOG updated
 
 ## Acceptance Criteria
@@ -77,6 +89,8 @@ Each semester, a preparation process produces several files that need to be load
 - [ ] Admin can confirm import and see the result reflected in `Graduate.count` etc.
 - [ ] Failed import does not partially mutate the database (use a transaction)
 - [ ] Import history shows the last N imports with outcome
+- [ ] Admin can export CSV for checked-in and not-checked-in graduates
+- [ ] Exported CSV data matches database state at export time
 - [ ] All tests pass
 
 ## Open Questions
@@ -93,6 +107,8 @@ These need to be answered during Phase 5 planning, after the semester prep proce
 - **Headers:** consistent column names across semesters, or will the importer need flexibility?
 - **Validation rules:** what makes a row invalid (missing BUID? bad college code?) and what should happen — skip, error, or admin review?
 - **Dry-run / undo:** is "preview" enough or do we also need "undo last import"?
+- **CSV shape:** exact headers/order expected by operations team?
+- **Export location:** should exports live under `/admin/reports` only, or also be linked from volunteer-facing views?
 
 ## What Was Implemented
 _(Filled in as work progresses.)_
