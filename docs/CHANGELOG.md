@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 	- Bundler lock metadata upgraded from `2.3.7` to `2.7.2`
 	- Puma constraint raised to `>= 7.0.3` and lockfile now resolves Puma `8.0.0`
 	- Local runtime validation completed (`bin/rails test`, boot check, Puma boot, production assets precompile)
+- Heroku stack/runtime deployment completed for Phase 3:
+	- Buildpack order is now `heroku/nodejs` then `heroku/ruby`
+	- App stack switched to `heroku-24` (release `v58`)
+	- Deployed runtime verified on dyno: Ruby `3.3.10`, Bundler `2.7.2`, Node `22.22.2` via `engines.node: 22.x`
 
 ### Removed
 - `rails_12factor` gem (functionality is built into Rails 5+; `RAILS_LOG_TO_STDOUT` and `RAILS_SERVE_STATIC_FILES` already set in env).
@@ -33,11 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - _(none yet)_
 
 ### Known build warnings (deferred to Phase 3)
-From the Phase 1 release deploy log (Heroku, release v50):
-- Bundler `2.3.7` is older than the previously deployed `2.3.25`; recommend bumping to a current bundler.
-- Ruby `3.2.3` is approaching EOL (Dec 25, 2026); upgrade to `3.3.x`.
-- Heroku recommends Puma `7.0.3+` for Router 2.0 compatibility (currently resolves `6.5.0`).
-- Node default version drifted (22.11.0 → 24.13.0); pin via `heroku/nodejs` buildpack.
-- Stack `heroku-22` upgrade available (target: `heroku-24`).
+Remaining from the Phase 3 release build (Heroku, release v58):
+- Informational warning that Bundler changed from `2.3.7` to `2.7.2`.
+- Heroku suggests upgrading to Ruby `3.3.11` (currently deployed `3.3.10`).
 
-All five are tracked in [PHASE_3_HEROKU_24_UPGRADE.md](planning/phases/PHASE_3_HEROKU_24_UPGRADE.md).
+Tracked in [PHASE_3_HEROKU_24_UPGRADE.md](planning/phases/PHASE_3_HEROKU_24_UPGRADE.md).

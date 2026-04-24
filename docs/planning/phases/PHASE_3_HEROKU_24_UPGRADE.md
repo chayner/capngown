@@ -63,7 +63,7 @@ These four items are deeply entwined with the stack move (heroku-24 supports new
 - [x] Review `config/puma.rb` for any deprecations
 
 ### Node pinning
-- [ ] Add `heroku/nodejs` buildpack ahead of `heroku/ruby`:
+- [x] Add `heroku/nodejs` buildpack ahead of `heroku/ruby`:
   ```bash
   heroku buildpacks:add --index 1 heroku/nodejs -a belmont-cap-and-gown
   ```
@@ -71,17 +71,17 @@ These four items are deeply entwined with the stack move (heroku-24 supports new
 - [x] Verify `package.json` doesn't break the asset precompile
 
 ### Stack
-- [ ] `heroku stack:set heroku-24 -a belmont-cap-and-gown`
-- [ ] Empty commit + push to trigger rebuild
+- [x] `heroku stack:set heroku-24 -a belmont-cap-and-gown`
+- [x] Empty commit + push to trigger rebuild
 - [ ] Build succeeds with no warnings
 - [ ] Smoke test passes (graduate lookup, check-in, print queue, stats)
-- [ ] CHANGELOG updated
+- [x] CHANGELOG updated
 
 ## Acceptance Criteria
 
-- [ ] `heroku apps:info` reports `Stack: heroku-24`
+- [x] `heroku apps:info` reports `Stack: heroku-24`
 - [ ] Build log shows no warnings about bundler, Ruby EOL, Puma version, or Node default
-- [ ] App responds normally on https://bucapandgown.com
+- [x] App responds normally on https://bucapandgown.com
 - [ ] No new errors in `heroku logs --tail` for 30 min post-deploy
 - [ ] All tests pass locally and (when CI exists) in CI
 
@@ -186,6 +186,13 @@ gem "puma", "~> 6.5"
   - `bundle _2.7.2_ exec bin/rails runner 'puts "boot-ok"'`
   - `bundle _2.7.2_ exec bin/rails server -p 3999` booted cleanly
   - `RAILS_ENV=production SECRET_KEY_BASE_DUMMY=1 bundle _2.7.2_ exec bin/rails assets:precompile` succeeded
+- Deployed runtime and stack changes to Heroku:
+  - Added Node buildpack ahead of Ruby buildpack
+  - Switched app stack to `heroku-24`
+  - Released `v58` from commit `88b4eda`
+  - Verified runtime on dyno: `ruby 3.3.10`, `bundler 2.7.2`
+  - Verified app response: `https://bucapandgown.com` redirects to `/start` successfully
 
 ## Spec Deviations
-_(Add immediately when implementation differs.)_
+
+- Runbook step 9 used `git push heroku main` deployment directly (same commit) instead of an empty commit, because stack/buildpack changes require a new release and this environment's `origin` remote was unreachable.
