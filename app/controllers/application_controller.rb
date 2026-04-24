@@ -1,9 +1,14 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
+  layout :resolve_layout
 
   helper_method :current_user, :user_signed_in?
 
   private
+
+  def resolve_layout
+    devise_controller? ? "devise" : "application"
+  end
 
   # Use as `before_action :require_admin!` on admin-only actions/controllers.
   def require_admin!

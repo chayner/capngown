@@ -48,12 +48,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Phase 4.3 — Apply auth + UI + admin bootstrap (in progress)
 - `ApplicationController` enforces `authenticate_user!` site-wide; private `require_admin!` helper added.
 - Picnic-styled sign-in view; nav layout shows current user email + sign-out button when signed in.
+- Dedicated `app/views/layouts/devise.html.erb` for unauthenticated pages (no main nav, focused sign-in card).
+- `ApplicationController#resolve_layout` switches Devise controllers to the `devise` layout automatically.
+- `config.scoped_views = true` so Devise renders our custom `users/sessions/new`.
+- Mobile hamburger menu fixed: scoped flex layout to desktop only; mobile dropdown now stacks items full-width.
+- Flash message styling unified (`.flash-notice`, `.flash-alert`) across both layouts.
 - Rake tasks under `lib/tasks/admin.rake`: `admin:create`, `admin:invite_volunteer`, `admin:reset_password`, `admin:promote`.
 - New docs: `docs/development/ADMIN_USER_MANAGEMENT.md` (local + Heroku command reference).
 - `docs/ai-context/AI_03_USER_ROLES_AND_PERMISSIONS.md` rewritten from "planned" to current-state.
 - New `test/integration/authentication_test.rb` covers redirect-when-signed-out for every protected route, valid/invalid sign-in, sign-out, and `require_admin!` presence.
+- `config/application.rb` requires `devise` explicitly before `Bundler.require` to avoid dev-reload route ordering issues.
 - Test suite: 50 runs, 114 assertions, 0 failures.
 - **Spec deviation:** kept Devise `:passwords` routes mounted (Devise references `new_user_password_path` internally); UI exposes no link to them.
+
+### Phase 4.2 — Devise install (in progress)
 
 ### Phase 4.2 — Devise install (in progress)
 - Added `devise ~> 4.9` gem.

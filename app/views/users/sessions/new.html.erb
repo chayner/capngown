@@ -1,27 +1,23 @@
 <div class="card signin-card">
-  <h2>Belmont Cap &amp; Gown</h2>
-  <p class="muted">Sign in to continue</p>
+  <h2>Sign in</h2>
+  <p class="muted">Enter your Belmont Cap &amp; Gown credentials.</p>
 
   <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "signin-form" }) do |f| %>
-    <label>
-      <%= f.label :email %>
-      <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true %>
-    </label>
+    <%= f.label :email %>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true %>
 
-    <label>
-      <%= f.label :password %>
-      <%= f.password_field :password, autocomplete: "current-password", required: true %>
-    </label>
+    <%= f.label :password %>
+    <%= f.password_field :password, autocomplete: "current-password", required: true %>
 
     <% if devise_mapping.rememberable? %>
-      <label class="checkbox">
+      <label class="signin-remember">
         <%= f.check_box :remember_me %>
-        <%= f.label :remember_me, "Remember me on this device" %>
+        <span>Remember me on this device</span>
       </label>
     <% end %>
 
-    <%= f.submit "Sign in", class: "button success" %>
+    <%= f.submit "Sign in", class: "button success signin-submit" %>
   <% end %>
 
-  <p class="muted small">Forgot your password? Ask an admin to reset it.</p>
+  <p class="muted small signin-help">Forgot your password? Ask an admin to reset it for you.</p>
 </div>
