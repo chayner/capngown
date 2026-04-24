@@ -15,10 +15,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation scaffolding under `docs/`: CHANGELOG, BACKLOG, PHASE_PROCESS, AI context bundle (AI_00–AI_07), DESIGN-GUIDELINES, LANGUAGE_STYLE_GUIDE.
 - Phase specs for upcoming work (Postgres 16 upgrade, Heroku-24 stack upgrade + runtime modernization, Devise auth, admin interface).
 - Explicit `Procfile` (`web` + `release: db:migrate`).
+- Minimal `package.json` for Heroku Node pinning with `engines.node: 22.x`.
 
 ### Changed
 - `config/database.yml` production block simplified to use `DATABASE_URL` only (removed hardcoded Heroku creds).
 - Apex DNS for `bucapandgown.com` switched from wildcard CNAME to apex `ALIAS` at Squarespace; both apex and `www` now resolve directly to Heroku and serve the app (no www redirect).
+- Phase 3 runtime modernization started locally:
+	- Ruby upgraded from `3.2.3` to `3.3.10` (`.ruby-version`, `Gemfile`, lockfile Ruby metadata)
+	- Bundler lock metadata upgraded from `2.3.7` to `2.7.2`
+	- Puma constraint raised to `>= 7.0.3` and lockfile now resolves Puma `8.0.0`
+	- Local runtime validation completed (`bin/rails test`, boot check, Puma boot, production assets precompile)
 
 ### Removed
 - `rails_12factor` gem (functionality is built into Rails 5+; `RAILS_LOG_TO_STDOUT` and `RAILS_SERVE_STATIC_FILES` already set in env).

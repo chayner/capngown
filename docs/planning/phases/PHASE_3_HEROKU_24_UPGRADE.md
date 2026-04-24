@@ -1,7 +1,7 @@
 # Phase 3 — Heroku Stack 22 → 24 + Runtime Modernization
 
-**Status:** Planned
-**Started:** _(not yet)_
+**Status:** In Progress
+**Started:** 2026-04-24
 **Completed:** _(not yet)_
 
 ## Goal
@@ -38,37 +38,37 @@ These four items are deeply entwined with the stack move (heroku-24 supports new
 - [ ] Phase 2 (PG upgrade) complete and stable
 - [ ] Not in distribution week
 - [ ] Confirm latest Ruby `3.3.x` patch supported on heroku-24 (Heroku dev center)
-- [ ] Confirm Puma 7.x compatibility with our config (`config/puma.rb` is stock — should be fine)
+- [x] Confirm Puma 7.x compatibility with our config (`config/puma.rb` is stock — should be fine)
 - [ ] PG backup captured (`heroku pg:backups:capture`) as a precaution
-- [ ] Local `rbenv install 3.3.x` works
+- [x] Local `rbenv install 3.3.x` works
 
 ## Deliverables
 
 ### Bundler
-- [ ] `gem install bundler && bundle update --bundler`
-- [ ] Verify `BUNDLED WITH` line in `Gemfile.lock` updated
-- [ ] `bin/rails test` passes locally
+- [x] `gem install bundler && bundle update --bundler`
+- [x] Verify `BUNDLED WITH` line in `Gemfile.lock` updated
+- [x] `bin/rails test` passes locally
 
 ### Ruby
-- [ ] `rbenv install 3.3.x`; update `.ruby-version`
-- [ ] Update `ruby "3.3.x"` line in `Gemfile`
-- [ ] `bundle install` clean
-- [ ] `bin/rails test` passes locally
-- [ ] `bin/rails server` starts cleanly
+- [x] `rbenv install 3.3.x`; update `.ruby-version`
+- [x] Update `ruby "3.3.x"` line in `Gemfile`
+- [x] `bundle install` clean
+- [x] `bin/rails test` passes locally
+- [x] `bin/rails server` starts cleanly
 
 ### Puma
-- [ ] Bump `gem "puma", ">= 7.0.3"` in `Gemfile`
-- [ ] `bundle update puma`
-- [ ] `bin/rails server` starts cleanly under new Puma
-- [ ] Review `config/puma.rb` for any deprecations
+- [x] Bump `gem "puma", ">= 7.0.3"` in `Gemfile`
+- [x] `bundle update puma`
+- [x] `bin/rails server` starts cleanly under new Puma
+- [x] Review `config/puma.rb` for any deprecations
 
 ### Node pinning
 - [ ] Add `heroku/nodejs` buildpack ahead of `heroku/ruby`:
   ```bash
   heroku buildpacks:add --index 1 heroku/nodejs -a belmont-cap-and-gown
   ```
-- [ ] Add minimal `package.json` with `engines.node` pinned (e.g., `"node": "22.x"`)
-- [ ] Verify `package.json` doesn't break the asset precompile
+- [x] Add minimal `package.json` with `engines.node` pinned (e.g., `"node": "22.x"`)
+- [x] Verify `package.json` doesn't break the asset precompile
 
 ### Stack
 - [ ] `heroku stack:set heroku-24 -a belmont-cap-and-gown`
@@ -166,12 +166,26 @@ gem "puma", "~> 6.5"
 ```
 
 ## Open Questions
-- Pick exact Ruby patch (`3.3.x`) — recommend latest stable at upgrade time.
-- Pick exact Node pin (`22.x` is current LTS; `24.x` matches the buildpack default but moves faster).
+- Pick exact Ruby patch (`3.3.x`) — resolved to `3.3.10`.
+- Pick exact Node pin (`22.x` is current LTS; `24.x` matches the buildpack default but moves faster) — resolved to `22.x`.
 - Should we batch all four (bundler/Ruby/Puma/Node) in one PR or stage them? Recommend one PR per step so CI catches regressions cleanly.
 
 ## What Was Implemented
-_(Filled in as work progresses.)_
+
+- Updated local runtime declarations for Heroku prep:
+  - `.ruby-version` set to `3.3.10`
+  - `Gemfile` Ruby updated to `3.3.10`
+  - `Gemfile` Puma floor raised to `>= 7.0.3`
+- Updated lockfile runtime metadata and dependencies:
+  - `Gemfile.lock` now reports `ruby 3.3.10`
+  - `BUNDLED WITH` updated to `2.7.2`
+  - Puma resolved to `8.0.0`
+- Added `package.json` with pinned Node engine (`22.x`) for deterministic Heroku Node buildpack behavior.
+- Verified local checks:
+  - `bundle _2.7.2_ exec bin/rails test` (0 failures)
+  - `bundle _2.7.2_ exec bin/rails runner 'puts "boot-ok"'`
+  - `bundle _2.7.2_ exec bin/rails server -p 3999` booted cleanly
+  - `RAILS_ENV=production SECRET_KEY_BASE_DUMMY=1 bundle _2.7.2_ exec bin/rails assets:precompile` succeeded
 
 ## Spec Deviations
 _(Add immediately when implementation differs.)_
