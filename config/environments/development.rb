@@ -77,8 +77,9 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  # Keep default development hosts (localhost, etc.) and allow custom local domain.
+  # Keep default development hosts (localhost, etc.) and allow custom local domains.
   config.hosts << "dev.bucapandgown.com"
+  config.hosts << "15ltws037665pmo.local"
 
   # Optional local HTTPS support. Enable by running with DEV_SSL=true.
   config.force_ssl = ENV["DEV_SSL"] == "true"

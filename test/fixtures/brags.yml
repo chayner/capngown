@@ -1,11 +1,4 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  name: MyString
-  buid: MyString
-  message: MyText
-
-two:
-  name: MyString
-  buid: MyString
-  message: MyText
+alice_brag:
+  name: Alice's Award
+  buid: B00100001
+  message: Outstanding student

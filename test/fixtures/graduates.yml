@@ -1,0 +1,50 @@
+# Graduate fixtures use BUID as primary key (string).
+# Set primary key explicitly so Rails doesn't auto-generate an id.
+
+alice:
+  buid: B00100001
+  firstname: Alice
+  lastname: Smith
+  fullname: Alice Smith
+  preferredfirst: Alice
+  preferredlast: Smith
+  levelcode: UG
+  college1: CL
+  collegedesc: College of Liberal Arts
+  degree1: BA
+  hoodcolor: White
+  major: English
+  campusemail: alice@example.edu
+
+bob:
+  buid: B00100002
+  firstname: Bob
+  lastname: Jones
+  fullname: Bob Jones
+  preferredfirst: Bob
+  preferredlast: Jones
+  levelcode: GR-M
+  college1: MB
+  collegedesc: Massey College of Business
+  degree1: MBA
+  hoodcolor: Drab
+  major: Business Administration
+  campusemail: bob@example.edu
+  checked_in: 2026-04-20 10:00:00
+
+carol:
+  buid: B00100003
+  firstname: Carol
+  lastname: Davis
+  fullname: Carol Davis
+  preferredfirst: Carol
+  preferredlast: Davis
+  levelcode: GR-D
+  college1: CL
+  collegedesc: College of Liberal Arts
+  degree1: PhD
+  hoodcolor: Gold
+  major: Philosophy
+  campusemail: carol@example.edu
+  checked_in: 2026-04-20 11:00:00
+  printed: 2026-04-20 11:05:00

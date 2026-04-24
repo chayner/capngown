@@ -35,7 +35,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `rails_12factor` gem (functionality is built into Rails 5+; `RAILS_LOG_TO_STDOUT` and `RAILS_SERVE_STATIC_FILES` already set in env).
 
 ### Fixed
-- _(none yet)_
+- `config.hosts << "15ltws037665pmo.local"` was set globally in `config/application.rb`, which activated host authorization in the test environment and caused all integration tests to return 403. Moved to `config/environments/development.rb`.
+
+### Phase 4.1 — Baseline test coverage (in progress)
+- Replaced empty stub tests with real coverage:
+	- `GraduatesControllerTest` — 26 smoke + behavior tests covering `start`, `list` (filters), `show`, `update`, `checkin`, `to_print`, `print`, `get_print_html`, `show_bulk`, `bulk_print`, `stats`.
+	- `PagesControllerTest` — `welcome` and root redirect.
+	- Model tests for `Graduate`, `Brag`, `Cord` (associations + validations).
+- Replaced broken/orphan fixtures: deleted `students.yml` (no Student model), rewrote `cords.yml` (had `type:` instead of `cord_type:`) and `brags.yml`, added new `graduates.yml`.
+- Suite now: 28 runs, 64 assertions, 0 failures.
 
 ### Known follow-ups (post-Phase 3)
 Remaining from the Phase 3 release build (Heroku, release v58):
