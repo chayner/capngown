@@ -13,6 +13,7 @@ When an item is picked up, move it to a phase spec and remove from this list (or
 - [ ] **Test coverage** — The current test suite is essentially empty. Add baseline model + controller tests as a first sub-phase.
 - [ ] **Strong params on `GraduatesController#update`** — Currently reads `params[:graduate][:height]` directly. Consider permit-allowlist.
 - [ ] **Audit `config/environments/production.rb` hosts list** — Several legacy domains (`infinite-meadow-09480.herokuapp.com`, `belmontalum.chip.fyi`, `capngown.bualum.co`). Verify which are still in use; remove the rest.
+- [ ] **Runtime modernization (Phase 3)** — Bundler bump, Ruby 3.2.3 → 3.3.x, Puma → 7.0.3+, pin Node, stack heroku-22 → heroku-24. See [PHASE_3](planning/phases/PHASE_3_HEROKU_24_UPGRADE.md).
 
 ## Auth / Security
 
