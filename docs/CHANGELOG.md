@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 	- Buildpack order is now `heroku/nodejs` then `heroku/ruby`
 	- App stack switched to `heroku-24` (release `v58`)
 	- Deployed runtime verified on dyno: Ruby `3.3.10`, Bundler `2.7.2`, Node `22.22.2` via `engines.node: 22.x`
+	- Phase 3 marked complete with deferred follow-up validation and warning cleanup tracked in backlog
 
 ### Removed
 - `rails_12factor` gem (functionality is built into Rails 5+; `RAILS_LOG_TO_STDOUT` and `RAILS_SERVE_STATIC_FILES` already set in env).
@@ -36,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - _(none yet)_
 
-### Known build warnings (deferred to Phase 3)
+### Known follow-ups (post-Phase 3)
 Remaining from the Phase 3 release build (Heroku, release v58):
 - Informational warning that Bundler changed from `2.3.7` to `2.7.2`.
 - Heroku suggests upgrading to Ruby `3.3.11` (currently deployed `3.3.10`).

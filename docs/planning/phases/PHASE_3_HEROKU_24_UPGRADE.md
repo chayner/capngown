@@ -1,8 +1,8 @@
 # Phase 3 — Heroku Stack 22 → 24 + Runtime Modernization
 
-**Status:** In Progress
+**Status:** Complete
 **Started:** 2026-04-24
-**Completed:** _(not yet)_
+**Completed:** 2026-04-24
 
 ## Goal
 Move `belmont-cap-and-gown` from `heroku-22` to `heroku-24` and clear the runtime warnings reported in the most recent build log:
@@ -196,3 +196,6 @@ gem "puma", "~> 6.5"
 ## Spec Deviations
 
 - Runbook step 9 used `git push heroku main` deployment directly (same commit) instead of an empty commit, because stack/buildpack changes require a new release and this environment's `origin` remote was unreachable.
+- Phase closed with two non-blocking follow-ups intentionally deferred:
+  - Heroku informational warnings still present for Bundler version change (`2.3.7` -> `2.7.2`) and newer Ruby patch availability (`3.3.11`).
+  - Acceptance checks for a full 30-minute log tail and full manual flow smoke test are deferred to backlog follow-up work.

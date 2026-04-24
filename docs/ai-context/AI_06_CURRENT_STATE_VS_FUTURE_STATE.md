@@ -17,6 +17,7 @@ This file is the **source of truth for phase status**. Update it as phases land.
 - Honor cord display
 - Picnic CSS layout with responsive nav
 - Heroku Postgres on PG 16.13 (`postgresql-crystalline-90781`, essential-0)
+- Heroku stack on `heroku-24` with runtime modernization (Ruby 3.3.10, Bundler 2.7.2, Puma 8.x, Node pinned via `engines.node`)
 
 ### What's Missing
 - **Authentication** — every action is public
@@ -24,8 +25,7 @@ This file is the **source of truth for phase status**. Update it as phases land.
 - **CI** — no GitHub Actions
 - **Background jobs** — no Sidekiq
 - **Audit log** — no record of who did what
-- **Stack upgrade** — currently on `heroku-22`, target `heroku-24`
-- **Postgres upgrade** — currently on PG 15.17, target PG 16
+- **Phase 3 follow-up** — optional Ruby patch bump to 3.3.11 and final warning-cleanup verification
 
 ---
 
@@ -53,7 +53,7 @@ This file is the **source of truth for phase status**. Update it as phases land.
 See `docs/planning/phases/PHASE_2_POSTGRES_16_UPGRADE.md`.
 
 ### Phase 3 — Heroku Stack 22 → 24 Upgrade
-**Status:** Planned
+**Status:** Complete
 See `docs/planning/phases/PHASE_3_HEROKU_24_UPGRADE.md`.
 
 ### Phase 4 — Devise Auth (Admin + Volunteer)
