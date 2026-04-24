@@ -95,6 +95,7 @@ Rails.application.configure do
   config.hosts = [
     "*.herokuapp.com",
     "bucapandgown.com",
+    "www.bucapandgown.com",
     "belmont-cap-and-gown-ed8fb27c409f.herokuapp.com",
     "infinite-meadow-09480.herokuapp.com",
     ENV["SERVER_HOST_NAME"],
