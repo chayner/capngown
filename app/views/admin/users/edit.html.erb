@@ -1,0 +1,5 @@
+<h2>Edit user</h2>
+
+<%= render "form", user: @user, url: admin_user_path(@user), method: :patch %>
+
+<p><%= link_to "Back to users", admin_users_path %></p>

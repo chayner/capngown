@@ -1,0 +1,30 @@
+<h2>Graduate reports</h2>
+
+<%= form_with(url: admin_reports_graduates_path, method: :get, local: true) do %>
+  <label>
+    Scope
+    <select name="scope">
+      <option value="all" <%= "selected" if @scope == "all" %>>All graduates</option>
+      <option value="checked_in" <%= "selected" if @scope == "checked_in" %>>Checked in</option>
+      <option value="not_checked_in" <%= "selected" if @scope == "not_checked_in" %>>Not checked in</option>
+    </select>
+  </label>
+  <label>
+    Graduation term
+    <select name="graduation_term">
+      <option value="">All terms</option>
+      <% @existing_terms.each do |t| %>
+        <option value="<%= t %>" <%= "selected" if t == @term %>><%= t %></option>
+      <% end %>
+    </select>
+  </label>
+  <button type="submit" class="button">Apply</button>
+<% end %>
+
+<p><strong><%= @count %></strong> graduates match.</p>
+
+<p>
+  <%= link_to "Download CSV",
+        admin_reports_graduates_path(format: :csv, scope: @scope, graduation_term: @term),
+        class: "button success" %>
+</p>

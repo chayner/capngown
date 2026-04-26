@@ -28,15 +28,7 @@ class GraduatesController < ApplicationController
     
     
     if fullname.present?
-      # Split the input into individual words
-      words = fullname.strip.split(/\s+/)
-      # Build a query for each word to match across all relevant fields
-      words.each do |word|
-        @graduates = @graduates.where(
-          'lower(lastname) LIKE :word OR lower(firstname) LIKE :word OR lower(preferredlast) LIKE :word OR lower(preferredfirst) LIKE :word',
-          word: "%#{word.downcase}%"
-        )
-      end
+      @graduates = GraduateSearch.search(@graduates, fullname)
     end
 
      # Program filter

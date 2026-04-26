@@ -18,4 +18,14 @@ class User < ApplicationRecord
   def volunteer?
     admin? || role == "volunteer"
   end
+
+  # Soft-deactivate: prevent inactive users from signing in while preserving
+  # their record (and any future audit trail).
+  def active_for_authentication?
+    super && active?
+  end
+
+  def inactive_message
+    active? ? super : :account_deactivated
+  end
 end

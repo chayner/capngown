@@ -1,0 +1,17 @@
+<div class="term-picker">
+  <label>
+    Existing term
+    <select name="graduation_term">
+      <% @existing_terms.each do |t| %>
+        <option value="<%= t %>" <%= "selected" if t == @default_term %>><%= t %></option>
+      <% end %>
+      <option value="__new__" <%= "selected" if @existing_terms.empty? %>>+ New term…</option>
+    </select>
+  </label>
+
+  <label class="new-term">
+    New term code
+    <input type="text" name="graduation_term_new" placeholder="e.g., 202620" autocomplete="off" />
+    <small class="muted">Used as the value for every imported row.</small>
+  </label>
+</div>

@@ -4,7 +4,10 @@ Rails.application.routes.draw do
   # internally on failed sign-in flash), but no link is exposed in the UI.
   # Real password resets happen via `bin/rails admin:reset_password`.
   devise_for :users, skip: [:registrations]
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+
+  # Forced-password-change flow (set when an admin creates/resets a user).
+  resource :password_change, only: [:edit, :update],
+    controller: "users/password_changes"
 
   # Defines the root path route ("/")
   root to: redirect('/start')
@@ -34,4 +37,15 @@ Rails.application.routes.draw do
   end
 
   get '/graduates', to: redirect('/start')
+
+  namespace :admin do
+    resources :users
+    resources :imports, only: [:index, :create] do
+      collection do
+        post :preview
+      end
+    end
+    resource  :roster, only: [:destroy], controller: "rosters"
+    get "reports/graduates" => "reports#graduates", as: :reports_graduates
+  end
 end

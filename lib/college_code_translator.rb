@@ -2,6 +2,7 @@ module CollegeCodeTranslator
   COLLEGE_CODE_MAP = {
     'CB' => { full_name: 'Massey College of Business', short_name: 'Business', icon: 'monitoring' },
     'CE' => { full_name: 'Curb College of Entertainment & Music Business', short_name: 'Curb', icon: 'album' },
+    'CI' => { full_name: 'Interdisciplinary Studies', short_name: 'Interdisciplinary', icon: 'school' },
     'CL' => { full_name: 'College of Law', short_name: 'Law', icon: 'gavel' },
     'CM' => { full_name: 'College of Sciences & Math', short_name: 'Sci & Math', icon: 'biotech' },
     'CN' => { full_name: 'Inman College of Nursing', short_name: 'Nursing', icon: 'ecg' },

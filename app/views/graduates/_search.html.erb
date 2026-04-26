@@ -5,8 +5,8 @@
   </div> -->
   <div class="page-header flex two">
     <div class="half">
-      <%= form.label :fullname, "Name (First or Last):" %>
-      <%= form.text_field :fullname, value: params[:fullname] %>
+      <%= form.label :fullname, "Search:" %>
+      <%= form.text_field :fullname, value: params[:fullname], placeholder: "", autocomplete: "off" %>
     </div>
     <details class="full">
       <summary>More Filters</summary>

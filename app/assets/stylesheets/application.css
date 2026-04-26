@@ -80,6 +80,50 @@ nav .menu .button_to .button:hover {
   text-decoration: underline;
 }
 
+/* Admin dropdown (uses native <details>/<summary>) */
+nav .menu .nav-dropdown {
+  position: relative;
+  display: inline-block;
+}
+nav .menu .nav-dropdown > summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-block;
+}
+nav .menu .nav-dropdown > summary::-webkit-details-marker { display: none; }
+nav .menu .nav-dropdown > summary::after {
+  content: " \25BE"; /* small down-arrow */
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+nav .menu .nav-dropdown[open] > summary::after {
+  content: " \25B4"; /* up-arrow when open */
+}
+nav .menu .nav-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 50;
+  background: #001D54;
+  border: 1px solid #1a3568;
+  border-radius: 4px;
+  padding: 6px 0;
+  min-width: 160px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+}
+nav .menu .nav-dropdown-item {
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 14px;
+  white-space: nowrap;
+}
+nav .menu .nav-dropdown-item:hover {
+  background: #1a3568;
+  text-decoration: underline;
+}
+
 nav {
   background: #001D54;
   color: #fff;
@@ -578,3 +622,74 @@ h1.name {
   color: #6b6b6b;
   text-align: center;
 }
+
+/* ===== Admin imports form ===== */
+.imports-form { max-width: 720px; }
+.imports-fieldset {
+  border: 1px solid #d6d6d6;
+  border-radius: 6px;
+  padding: 14px 18px 18px;
+  margin: 0 0 18px;
+  background: #fafafa;
+}
+.imports-fieldset legend {
+  padding: 0 6px;
+  font-weight: 600;
+  color: #333;
+}
+.imports-fieldset label {
+  display: block;
+  margin: 10px 0;
+}
+.imports-fieldset small.muted { display: block; margin-top: 4px; }
+.muted { color: #6b6b6b; font-size: 0.9em; }
+
+/* Hide each typeSection unless the matching radio is checked.
+   :has() lets this work without JavaScript. JS controller adds belt-and-suspenders. */
+.imports-form .needs-term,
+.imports-form .needs-file,
+.imports-form .cords-only { display: none; }
+.imports-form:has(input[name="import_type"][value="graduates"]:checked) .needs-term,
+.imports-form:has(input[name="import_type"][value="brags"]:checked)     .needs-term,
+.imports-form:has(input[name="import_type"]:checked)                    .needs-file { display: block; }
+.imports-form:has(input[name="import_type"][value="cords"]:checked)     .cords-only { display: block; }
+
+.import-type-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+.import-type-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 2px solid #d6d6d6;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  margin: 0 !important;
+  transition: border-color 0.1s, background 0.1s;
+}
+.import-type-option:hover { border-color: #888; }
+.import-type-option:has(input:checked) {
+  border-color: #1da1f2;
+  background: #eaf6fe;
+}
+.import-type-option input[type="radio"] {
+  margin: 4px 0 0;
+  flex: 0 0 auto;
+}
+.import-type-option .option-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.import-type-option strong { font-size: 1em; }
+.import-type-option .muted { font-size: 0.82em; }
+
+.imports-actions { margin-top: 8px; }
+
+/* Term picker: only show the "new term code" input when "+ New term…" is selected */
+.term-picker .new-term { display: none; }
+.term-picker:has(select option[value="__new__"]:checked) .new-term { display: block; }

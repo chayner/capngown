@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Phase 5 — Admin interface (in progress)
+- **Friendly graduate search** (`lib/graduate_search.rb`): single search box on `/start` accepts BUID, email, or name. Name search is two-pass: precise ILIKE first (with nickname expansion + spelling-prefix substitutions); falls back to fuzzy SOUNDEX + trigram similarity only when the precise pass returns no rows. Nicknames table (~80 pairs, both directions). Prefix-substitution table covers Kris↔Chris↔Cris, Cathy↔Kathy, Phil↔Fil. Single-term searches deliberately exclude the `fullname` column (which contains middle names) to avoid false positives. Three new PG extensions enabled via `enable_fuzzy_search_extensions` migration: `unaccent`, `pg_trgm`, `fuzzystrmatch`.
+- **Admin nav dropdown**: Admin links collapsed into a `<details>`/`<summary>` dropdown in both main and admin layouts. Picnic-friendly CSS in `application.css`; closes when another item is clicked.
+- **Importer hardening from real Belmont data**:
+  - `relax_graduate_string_limits` migration drops the legacy 50-char limit on 18 columns (production data exceeded several limits, causing `PG::StringDataRightTruncation`).
+  - `GraduateImporter` builds `orderid` as `"<last-6-of-buid>-<jostens_height>"` when Jostens Height is present; splits separate `height_ft` / `height_in` columns; new `parse_feet_inches` helper.
+- **System test infrastructure**: removed conflicting `webdrivers` gem; Selenium 4's bundled Selenium Manager handles driver downloads. `application_system_test_case.rb` switched to headless Chrome.
+- **User management** (`Admin::UsersController`): index/new/create/edit/update/destroy; admin-set temporary passwords flagged with `must_change_password`; soft-deactivation via `users.active`; admins cannot deactivate themselves.
+- **Forced password change**: `ApplicationController#enforce_password_change!` redirects flagged users to `Users::PasswordChangesController#edit` until they set a new password (uses `update_with_password`, then `bypass_sign_in`).
+- **Devise `active_for_authentication?`**: deactivated users cannot sign in (locale message `account_deactivated`).
+- **File imports** (`Admin::ImportsController`): preview-then-confirm flow for graduate/brag/cord rosters, capped at 2,500 rows per file (CSV + XLSX via `roo`).
+- **Importer service layer** (new `app/services/`): `BaseImporter` lifecycle (preview + import! + ImportLog), `GraduateImporter` (header aliases for main/3+3/late-add shapes; full-college-name → 2-letter code resolver), `BragImporter` (delete-by-buid + insert; gap report), `CordImporter` (`cord_type` from filename or override; BUID lookup by email then exact name).
+- **Roster reset** (`Admin::RostersController`): typed-confirmation reset (`"RESET ROSTER"`); supports scope=all and scope=term; logged as `ImportLog#import_type = "reset"`.
+- **CSV reporting** (`Admin::ReportsController`): graduate export with scope filters (`all|checked_in|not_checked_in`) and graduation_term filter; streamed via `find_each(batch_size: 500)`.
+- **`ImportLog` model**: tracks every import + reset (user, import_type, filename, row_count, inserts/updates/skipped, graduation_term, success flag, error_message, JSON-serialized warnings).
+- **`graduates.graduation_term`** added (string + index) so imports can stamp records and admin tools can filter by term.
+- **Spreadsheet parser** (`lib/spreadsheet_parser.rb`): unified CSV/XLSX reader with header normalization, alias mapping, and 2,500-row cap.
+- New tests across importers, admin controllers, password-change flow, user management, and graduate search — suite at 105 runs, 298 assertions, 0 failures.
+- New gems: `roo ~> 2.10`, `csv ~> 3.3` (pinned to silence Ruby 3.4 stdlib warning).
+- Backlog: brag uniqueness differentiator column to enable proper update detection (currently delete-by-buid + reinsert).
+
 ### Added
 - Heroku Postgres upgraded from PG 15.17 (`postgresql-acute-23495`) to PG 16.13 (`postgresql-crystalline-90781`) via provision-copy-promote path. Maintenance window ~10 minutes. All 5 tables and 487 graduates / 59 brags / 0 cords verified equal post-copy.
 - AI agent customization scaffolding: `CLAUDE.md`, `.github/copilot-instructions.md`, and `.claude/skills/` (debug, patterns, testing, deploy, performance, check-docs, phase-plan, phase-wrap).

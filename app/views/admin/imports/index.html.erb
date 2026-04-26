@@ -1,0 +1,118 @@
+<h2>Imports</h2>
+
+<p class="muted">
+  Each importer accepts CSV or XLSX files (max 2,500 rows). Imports are upserts keyed on BUID — re-uploading the same file will not create duplicates.
+</p>
+
+<%= form_with(url: preview_admin_imports_path, method: :post, local: true,
+              multipart: true, data: { turbo: false },
+              class: "imports-form") do %>
+
+  <fieldset class="imports-fieldset">
+    <legend>1. What are you importing?</legend>
+    <div class="import-type-options">
+      <label class="import-type-option">
+        <input type="radio" name="import_type" value="graduates" required />
+        <span class="option-body">
+          <strong>Graduate roster</strong>
+          <span class="muted">Main term, 3+3 UG, or late-add roster.</span>
+        </span>
+      </label>
+      <label class="import-type-option">
+        <input type="radio" name="import_type" value="brags" />
+        <span class="option-body">
+          <strong>Brag cards</strong>
+          <span class="muted">Recognition cards keyed on BUID.</span>
+        </span>
+      </label>
+      <label class="import-type-option">
+        <input type="radio" name="import_type" value="cords" />
+        <span class="option-body">
+          <strong>Honor cords</strong>
+          <span class="muted">Cord type derived from filename (overridable).</span>
+        </span>
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset class="imports-fieldset needs-term">
+    <legend>2. Graduation term</legend>
+    <%= render "term_picker" %>
+  </fieldset>
+
+  <fieldset class="imports-fieldset cords-only">
+    <legend>2. Cord details</legend>
+    <label>
+      Cord type override
+      <input type="text" name="cord_type" placeholder="e.g., Honors" />
+      <small class="muted">Leave blank to derive from the filename (e.g., <code>Honors Cords.xlsx</code> &rarr; <code>Honors</code>).</small>
+    </label>
+  </fieldset>
+
+  <fieldset class="imports-fieldset needs-file">
+    <legend>3. File</legend>
+    <%= render "file_picker" %>
+  </fieldset>
+
+  <div class="imports-actions">
+    <button type="submit" class="button success">
+      Preview import
+    </button>
+  </div>
+<% end %>
+
+<hr />
+
+<h3>Recent imports</h3>
+<table>
+  <thead>
+    <tr>
+      <th>When</th><th>Type</th><th>Term</th><th>File</th><th>Rows</th><th>+/~/skip</th><th>Result</th><th>By</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @recent_imports.each do |log| %>
+      <tr>
+        <td><%= log.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+        <td><%= log.import_type %></td>
+        <td><%= log.graduation_term %></td>
+        <td><%= log.filename %></td>
+        <td><%= log.row_count %></td>
+        <td><%= "#{log.inserts}/#{log.updates}/#{log.skipped}" %></td>
+        <td><%= log.succeeded? ? "OK" : "FAIL: #{log.error_message}" %></td>
+        <td><%= log.user&.email %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr />
+
+<h3>Roster reset</h3>
+<p class="flash flash-alert">
+  Destructive! Type <code>RESET ROSTER</code> to confirm. This deletes graduates and cascades to brags/cords.
+</p>
+
+<%= form_with(url: admin_roster_path, method: :delete, local: true, data: { turbo: false }) do %>
+  <label>
+    Scope
+    <select name="scope">
+      <option value="all">All graduates (every term)</option>
+      <option value="term">Only one graduation term</option>
+    </select>
+  </label>
+  <label>
+    Term (only if scope = term)
+    <select name="graduation_term">
+      <option value="">— Select —</option>
+      <% @existing_terms.each do |t| %>
+        <option value="<%= t %>"><%= t %></option>
+      <% end %>
+    </select>
+  </label>
+  <label>
+    Type RESET ROSTER to confirm
+    <input type="text" name="confirmation" autocomplete="off" />
+  </label>
+  <button type="submit" class="button error">Reset</button>
+<% end %>

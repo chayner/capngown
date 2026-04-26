@@ -1,0 +1,51 @@
+<h2>Preview: <%= @import_type %></h2>
+
+<p><strong>File:</strong> <%= @filename %></p>
+<p><strong>Term:</strong> <%= @graduation_term.presence || "(unset)" %>
+  <% if @preview[:file_term].present? && @preview[:file_term] != @graduation_term %>
+    <span class="flash flash-alert">⚠ File contains term <code><%= @preview[:file_term] %></code> which differs from selected term.</span>
+  <% end %>
+</p>
+
+<dl>
+  <dt>Total rows</dt><dd><%= @preview[:row_count] %></dd>
+  <dt>Will insert</dt><dd><%= @preview[:inserts] %></dd>
+  <dt>Will update</dt><dd><%= @preview[:updates] %></dd>
+  <dt>Will skip</dt><dd><%= @preview[:skipped] %></dd>
+</dl>
+
+<% if @preview[:gaps]&.any? %>
+  <h3>Gap report (<%= @preview[:gaps].size %> unmatched)</h3>
+  <p>The following entries do not match any graduate in the database for this term and will be skipped:</p>
+  <ul>
+    <% @preview[:gaps].first(50).each do |gap| %>
+      <li><code><%= gap %></code></li>
+    <% end %>
+  </ul>
+  <% if @preview[:gaps].size > 50 %><p>(and <%= @preview[:gaps].size - 50 %> more…)</p><% end %>
+<% end %>
+
+<% if @preview[:warnings].any? %>
+  <h3>Warnings</h3>
+  <ul>
+    <% @preview[:warnings].first(50).each do |w| %>
+      <li><%= w %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<h3>Sample rows</h3>
+<pre><%= JSON.pretty_generate(@preview[:sample_rows]) %></pre>
+
+<%= form_with(url: admin_imports_path, method: :post, local: true, multipart: true, data: { turbo: false }) do %>
+  <input type="hidden" name="import_type" value="<%= @import_type %>" />
+  <input type="hidden" name="graduation_term" value="<%= @graduation_term %>" />
+  <input type="hidden" name="cord_type" value="<%= @cord_type %>" />
+  <p><em>Note: the file must be re-uploaded to commit (this avoids server-side temp storage).</em></p>
+  <label>
+    File (re-upload to confirm)
+    <input type="file" name="file" accept=".csv,.xlsx" required />
+  </label>
+  <button type="submit" class="button success">Confirm import</button>
+  <%= link_to "Cancel", admin_imports_path, class: "button pseudo" %>
+<% end %>

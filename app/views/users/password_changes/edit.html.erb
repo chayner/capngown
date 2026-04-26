@@ -1,0 +1,18 @@
+<h2>Change your password</h2>
+<p>An admin has asked you to set a new password before continuing.</p>
+
+<%= form_with(model: current_user, url: password_change_path, method: :patch, local: true) do |f| %>
+  <label>
+    Current (temporary) password
+    <%= f.password_field :current_password, autocomplete: "current-password", autofocus: true, required: true %>
+  </label>
+  <label>
+    New password
+    <%= f.password_field :password, autocomplete: "new-password", required: true, minlength: 8 %>
+  </label>
+  <label>
+    Confirm new password
+    <%= f.password_field :password_confirmation, autocomplete: "new-password", required: true, minlength: 8 %>
+  </label>
+  <%= f.submit "Update password", class: "button success" %>
+<% end %>

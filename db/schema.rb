@@ -10,9 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_24_205544) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_26_160000) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "fuzzystrmatch"
+  enable_extension "pg_trgm"
   enable_extension "plpgsql"
+  enable_extension "unaccent"
 
   create_table "brags", force: :cascade do |t|
     t.string "name"
@@ -27,28 +30,49 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_24_205544) do
   end
 
   create_table "graduates", primary_key: "buid", id: { type: :string, limit: 50 }, force: :cascade do |t|
-    t.string "lastname", limit: 50
-    t.string "suffix", limit: 50
-    t.string "firstname", limit: 50
-    t.string "middlename", limit: 50
-    t.string "preferredlast", limit: 50
-    t.string "preferredfirst", limit: 50
-    t.string "honors", limit: 50
-    t.string "levelcode", limit: 50
-    t.string "college1", limit: 50
-    t.string "collegedesc", limit: 50
-    t.string "degree1", limit: 50
-    t.string "hoodcolor", limit: 50
-    t.string "campusemail", limit: 50
-    t.string "fullname", limit: 50
-    t.string "buid2", limit: 50
-    t.string "orderid", limit: 50
+    t.string "lastname"
+    t.string "suffix"
+    t.string "firstname"
+    t.string "middlename"
+    t.string "preferredlast"
+    t.string "preferredfirst"
+    t.string "honors"
+    t.string "levelcode"
+    t.string "college1"
+    t.string "collegedesc"
+    t.string "degree1"
+    t.string "hoodcolor"
+    t.string "campusemail"
+    t.string "fullname"
+    t.string "buid2"
+    t.string "orderid"
     t.integer "height"
     t.datetime "checked_in", precision: nil
     t.datetime "printed", precision: nil
     t.string "major"
-    t.string "degstatus", limit: 50
-    t.string "degstatusdesc", limit: 50
+    t.string "degstatus"
+    t.string "degstatusdesc"
+    t.string "graduation_term"
+    t.index ["graduation_term"], name: "index_graduates_on_graduation_term"
+  end
+
+  create_table "import_logs", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "import_type", null: false
+    t.string "filename"
+    t.integer "row_count", default: 0, null: false
+    t.integer "inserts", default: 0, null: false
+    t.integer "updates", default: 0, null: false
+    t.integer "skipped", default: 0, null: false
+    t.string "graduation_term"
+    t.boolean "succeeded", default: false, null: false
+    t.text "error_message"
+    t.text "warnings"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_import_logs_on_created_at"
+    t.index ["import_type"], name: "index_import_logs_on_import_type"
+    t.index ["user_id"], name: "index_import_logs_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -60,9 +84,12 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_24_205544) do
     t.integer "role", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: true, null: false
+    t.boolean "must_change_password", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_users_on_role"
   end
 
+  add_foreign_key "import_logs", "users"
 end

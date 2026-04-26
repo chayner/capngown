@@ -14,8 +14,6 @@ gem "pg", "~> 1.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 7.0.3"
-
-# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
@@ -38,6 +36,11 @@ gem "jbuilder"
 
 # Authentication
 gem "devise", "~> 4.9"
+
+# Spreadsheet parsing for admin imports (XLSX/CSV)
+gem "roo", "~> 2.10"
+# CSV is moving out of stdlib in Ruby 3.4; pin explicitly (also used by roo).
+gem "csv", "~> 3.3"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
@@ -78,5 +81,4 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
-  gem "webdrivers"
 end

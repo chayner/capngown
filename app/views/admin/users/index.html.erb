@@ -1,0 +1,34 @@
+<h2>Users</h2>
+
+<p><%= link_to "+ New user", new_admin_user_path, class: "button" %></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Status</th>
+      <th>Must change pw</th>
+      <th>Created</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.email %></td>
+        <td><%= user.role %></td>
+        <td><%= user.active? ? "Active" : "Deactivated" %></td>
+        <td><%= user.must_change_password? ? "Yes" : "" %></td>
+        <td><%= user.created_at.to_date %></td>
+        <td>
+          <%= link_to "Edit", edit_admin_user_path(user), class: "button pseudo" %>
+          <% if user.active? && user != current_user %>
+            <%= button_to "Deactivate", admin_user_path(user), method: :delete, class: "button warning",
+                form: { data: { turbo_confirm: "Deactivate #{user.email}?" } } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
