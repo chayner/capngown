@@ -703,6 +703,36 @@ h1.name {
 
 .imports-actions { margin-top: 8px; }
 
+/* ===== Admin users form ===== */
+.admin-user-form {
+  max-width: 760px;
+}
+
+.admin-user-form > label {
+  display: block;
+  margin: 0 0 12px;
+}
+
+.admin-user-form > label:has(input[type="checkbox"]) {
+  margin: 4px 0 14px;
+}
+
+.admin-user-form .imports-fieldset {
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.admin-user-form .imports-fieldset p {
+  margin: 4px 0 12px;
+}
+
+.admin-user-form .form-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 /* Term picker: only show the "new term code" input when "+ New term…" is selected */
 .term-picker .new-term { display: none; }
 .term-picker:has(select option[value="__new__"]:checked) .new-term { display: block; }

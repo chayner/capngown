@@ -1,4 +1,4 @@
-<%= form_with(model: user, url: url, method: local_assigns.fetch(:method, :post), local: true) do |f| %>
+<%= form_with(model: user, url: url, method: local_assigns.fetch(:method, :post), local: true, html: { class: "admin-user-form" }) do |f| %>
   <% if user.errors.any? %>
     <div class="flash flash-alert">
       <ul>
@@ -20,12 +20,12 @@
   </label>
 
   <label>
-    <%= f.check_box :active %> Active (uncheck to deactivate)
+    <%= f.check_box :active %> <span class="checkable">Active (uncheck to deactivate)</span>
   </label>
 
-  <fieldset>
+  <fieldset class="imports-fieldset">
     <legend><%= user.persisted? ? "Reset password (optional)" : "Temporary password" %></legend>
-    <p><small>User will be prompted to change this on next sign-in. Minimum 8 characters.</small></p>
+    <p><small class="muted">User will be prompted to change this on next sign-in. Minimum 8 characters.</small></p>
     <label>
       Password
       <%= f.password_field :password, autocomplete: "new-password", minlength: 8, required: !user.persisted? %>
@@ -36,6 +36,8 @@
     </label>
   </fieldset>
 
-  <%= f.submit (user.persisted? ? "Save" : "Create user"), class: "button success" %>
-  <%= link_to "Cancel", admin_users_path, class: "button pseudo" %>
+  <div class="form-actions">
+    <%= f.submit (user.persisted? ? "Save" : "Create user"), class: "button success" %>
+    <%= link_to "Cancel", admin_users_path, class: "button pseudo" %>
+  </div>
 <% end %>
