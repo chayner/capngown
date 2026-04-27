@@ -370,6 +370,19 @@ h1.name {
   line-height: 1.1em;
 }
 
+/* Smaller "formal" name printed under the preferred name on the sticker.
+   Bag stuffers match this against the printed bag label; volunteers call
+   the graduate by the larger preferred name above. */
+.formal-name {
+  font-size: 0.7em;
+  font-weight: 500;
+  font-style: italic;
+  color: #555;
+  line-height: 1.1em;
+  margin-top: 2px;
+  padding: 0;
+}
+
 #inc-checkbox {
   margin: 0;
   display: block;

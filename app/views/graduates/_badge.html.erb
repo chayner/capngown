@@ -5,9 +5,14 @@
     <% end %>
   <div class="badge-content">
     <h1 class="name">
-      <%= (graduate.preferredlast.presence || graduate.lastname).upcase %>, 
-      <%= (graduate.preferredfirst.presence || graduate.firstname).upcase %>
+      <%= graduate.display_preferred_last.to_s.upcase %>, 
+      <%= graduate.display_preferred_first.to_s.upcase %>
     </h1>
+    <% if graduate.formal_name_differs_from_preferred? %>
+      <div class="formal-name">
+        <%= graduate.lastname.to_s.upcase %>, <%= graduate.firstname.to_s.upcase %>
+      </div>
+    <% end %>
     
     <div class="classification">
     <% if graduate.major.present? %>

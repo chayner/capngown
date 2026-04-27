@@ -113,4 +113,46 @@ class GraduateImporterTest < ActiveSupport::TestCase
   ensure
     csv&.close!
   end
+
+  test "import! backfills preferredfirst from campus email when missing" do
+    Graduate.where(graduation_term: "NICK20").delete_all
+    csv = Tempfile.new(["nick", ".csv"])
+    csv.write("BUID,SHBGAPP_FirstName,SHBGAPP_LastName,Preferred Name,LevelCode,CAMP_Email\n")
+    # Row 1: no preferred, email-derived nickname differs from formal -> backfilled
+    csv.write("B00777001,Christopher,Adams,,UG,chris.adams@bruins.belmont.edu\n")
+    # Row 2: no preferred, email matches firstname -> stays nil
+    csv.write("B00777002,Alice,Brown,,UG,alice.brown@bruins.belmont.edu\n")
+    # Row 3: explicit preferred wins over email
+    csv.write("B00777003,Robert,Carter,Bobby,UG,robert.carter@bruins.belmont.edu\n")
+    csv.flush
+    result = GraduateImporter.new(file: csv.path, graduation_term: "NICK20").import!(user: users(:admin))
+    assert result.succeeded, "expected import to succeed, got: #{result.error_message}"
+
+    assert_equal "Chris", Graduate.find_by(buid: "B00777001").preferredfirst
+    assert_nil   Graduate.find_by(buid: "B00777002").preferredfirst
+    assert_equal "Bobby", Graduate.find_by(buid: "B00777003").preferredfirst
+  ensure
+    csv&.close!
+  end
+
+  test "import! strips duplicated surname from preferredfirst" do
+    Graduate.where(graduation_term: "DUP20").delete_all
+    csv = Tempfile.new(["dup", ".csv"])
+    csv.write("BUID,SHBGAPP_FirstName,SHBGAPP_LastName,Preferred Name,Preferred Last,LevelCode\n")
+    csv.write("B00888001,Cameron,Bateman,Cameron Bateman,,UG\n")
+    csv.write("B00888002,Cameron,Bateman,Cam Bateman,,UG\n")
+    csv.write("B00888003,Cameron,Bateman,Cameron,Bateman,UG\n")
+    csv.flush
+    result = GraduateImporter.new(file: csv.path, graduation_term: "DUP20").import!(user: users(:admin))
+    assert result.succeeded, "expected import to succeed, got: #{result.error_message}"
+
+    assert_equal "Cameron", Graduate.find_by(buid: "B00888001").preferredfirst,
+                 "trailing surname should be stripped"
+    assert_equal "Cam",     Graduate.find_by(buid: "B00888002").preferredfirst,
+                 "trailing surname should be stripped from a real nickname"
+    assert_equal "Cameron", Graduate.find_by(buid: "B00888003").preferredfirst,
+                 "clean values should be preserved"
+  ensure
+    csv&.close!
+  end
 end

@@ -38,7 +38,7 @@
   <% graduates.each do |graduate| %>
     <tr class="graduate-row <%= graduate.checked_in? ? 'checked-in' : '' %> <%= graduate.printed? ? 'printed' : '' %>" id="graduate-<%= graduate.buid %>">
       <td class="name-col" nowrap>
-        <%= link_to "#{graduate.preferredlast.presence || graduate.lastname}, #{graduate.preferredfirst.presence || graduate.firstname}",
+        <%= link_to "#{graduate.display_preferred_last}, #{graduate.display_preferred_first}",
               graduate_path(buid: graduate.buid, lastname: params.fetch(:lastname, nil)) %>
       </td>
       <td nowrap>

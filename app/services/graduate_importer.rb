@@ -117,14 +117,22 @@ class GraduateImporter < BaseImporter
       hood_color = mapped[:hood_color] unless mapped[:hood_color] == "Unknown"
     end
 
+    firstname      = presence(raw["firstname"])
+    lastname       = presence(raw["lastname"])
+    campusemail    = presence(raw["campusemail"])
+    preferredlast  = Graduate.sanitize_preferred_last(presence(raw["preferredlast"]), firstname)
+    preferredfirst = presence(raw["preferredfirst"]) ||
+                     Graduate.preferred_first_from_email(campusemail, firstname)
+    preferredfirst = Graduate.sanitize_preferred_first(preferredfirst, lastname, preferredlast)
+
     {
       buid: raw["buid"].to_s.strip,
-      firstname: presence(raw["firstname"]),
-      lastname:  presence(raw["lastname"]),
+      firstname: firstname,
+      lastname:  lastname,
       middlename: presence(raw["middlename"]),
       suffix: suffix,
-      preferredfirst: presence(raw["preferredfirst"]),
-      preferredlast: presence(raw["preferredlast"]),
+      preferredfirst: preferredfirst,
+      preferredlast: preferredlast,
       fullname: presence(raw["fullname"]),
       honors: presence(raw["honors"]),
       levelcode: presence(raw["levelcode"]),
@@ -132,7 +140,7 @@ class GraduateImporter < BaseImporter
       collegedesc: college_desc,
       degree1: degree_code,
       hoodcolor: hood_color,
-      campusemail: presence(raw["campusemail"]),
+      campusemail: campusemail,
       major: presence(raw["major"]),
       height: height,
       orderid: orderid,
