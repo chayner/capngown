@@ -1,15 +1,20 @@
 # Brag importer.
 #
-# Strategy: delete-all-by-buid then insert. The brags table currently has no
-# differentiator column to support per-row upsert; until that lands (see
-# docs/BACKLOG.md "Brag differentiator column"), each upload replaces every
-# brag row whose buid appears in the file with the rows from the file.
+# Strategy: upsert by `transaction_id`. Each row in the Bruin Brag export has
+# a unique Transaction ID, so the same row uploaded twice updates in place
+# instead of duplicating, and a row removed from the latest export does NOT
+# get nuked (we never delete on import).
+#
+# Rows missing a Transaction ID are skipped with a warning. Rows whose BUID
+# is not in the graduates table are skipped and reported as gaps so the user
+# can re-upload after loading the missing graduate.
 class BragImporter < BaseImporter
   HEADER_ALIASES = {
-    "buid"      => ["buid", "student buid"],
-    "firstname" => ["student first", "first name", "firstname"],
-    "lastname"  => ["student last", "last name", "lastname"],
-    "message"   => ["message", "brag", "brag message", "notes"]
+    "buid"           => ["buid", "student buid"],
+    "firstname"      => ["student first", "first name", "firstname"],
+    "lastname"       => ["student last", "last name", "lastname"],
+    "message"        => ["note", "message", "brag", "brag message", "notes"],
+    "transaction_id" => ["transaction id", "transactionid", "txn id", "txnid"]
   }.freeze
 
   def import_type
@@ -22,21 +27,36 @@ class BragImporter < BaseImporter
     valid_rows = []
     skipped = 0
     samples = []
+    seen_txn_ids = {}
 
     valid_grad_buids = Graduate.where(buid: rows.map { |r| r["buid"].to_s.strip }.reject(&:blank?))
                                .pluck(:buid).to_set
 
     rows.each_with_index do |raw, idx|
-      buid = raw["buid"].to_s.strip
+      buid  = raw["buid"].to_s.strip
       first = raw["firstname"].to_s.strip
       last  = raw["lastname"].to_s.strip
-      name = [first, last].reject(&:empty?).join(" ").presence
+      name  = [first, last].reject(&:empty?).join(" ").presence
+      txn   = presence(raw["transaction_id"])
 
       if buid.blank?
         skipped += 1
         warn!("Row #{idx + 2}: skipped (missing BUID)")
         next
       end
+
+      if txn.blank?
+        skipped += 1
+        warn!("Row #{idx + 2} (BUID #{buid}): skipped (missing Transaction ID)")
+        next
+      end
+
+      if seen_txn_ids.key?(txn)
+        skipped += 1
+        warn!("Row #{idx + 2} (BUID #{buid}): skipped (duplicate Transaction ID #{txn} also on row #{seen_txn_ids[txn] + 2})")
+        next
+      end
+      seen_txn_ids[txn] = idx
 
       unless valid_grad_buids.include?(buid)
         @gap_buids << buid
@@ -45,17 +65,15 @@ class BragImporter < BaseImporter
         next
       end
 
-      attrs = { buid: buid, name: name, message: presence(raw["message"]) }
+      attrs = { buid: buid, name: name, message: presence(raw["message"]), transaction_id: txn }
       valid_rows << attrs
       samples << attrs if samples.size < 5
     end
 
-    # All "valid_rows" are inserts (we delete by buid first), but for the UI
-    # we report which buids already had brags as "updates" and the rest as
-    # "inserts".
-    pre_existing = Brag.where(buid: valid_rows.map { |r| r[:buid] }).distinct.pluck(:buid).to_set
-    insert_count = valid_rows.count { |r| !pre_existing.include?(r[:buid]) }
-    update_count = valid_rows.count { |r| pre_existing.include?(r[:buid]) }
+    pre_existing = Brag.where(transaction_id: valid_rows.map { |r| r[:transaction_id] })
+                       .pluck(:transaction_id).to_set
+    insert_count = valid_rows.count { |r| !pre_existing.include?(r[:transaction_id]) }
+    update_count = valid_rows.count { |r|  pre_existing.include?(r[:transaction_id]) }
 
     {
       insert_count: insert_count,
@@ -74,8 +92,6 @@ class BragImporter < BaseImporter
   def write_records!(plan)
     return if plan[:rows].empty?
 
-    buids = plan[:rows].map { |r| r[:buid] }.uniq
-    Brag.where(buid: buids).delete_all
-    Brag.insert_all(plan[:rows], record_timestamps: false)
+    Brag.upsert_all(plan[:rows], unique_by: :index_brags_on_transaction_id, record_timestamps: false)
   end
 end

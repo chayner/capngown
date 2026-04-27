@@ -2,3 +2,4 @@ alice_brag:
   name: Alice's Award
   buid: B00100001
   message: Outstanding student
+  transaction_id: TXN-FIXTURE-1

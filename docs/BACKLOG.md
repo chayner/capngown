@@ -30,8 +30,8 @@ When an item is picked up, move it to a phase spec and remove from this list (or
 
 ## Tech Debt
 
-- [ ] **Brag differentiator column** — `Brag` currently has no natural unique key, so the Phase 5 importer uses a delete-all-by-buid + reinsert strategy for each upload. Add a differentiator (e.g., a `kind`, `category`, or richer `message` column) so brag rows can be upserted per-row instead of nuked-and-replaced.
-- [ ] **`brags.buid` index** — `cords` has an index on `[buid, cord_type]` but `brags` has no index. If brag lookups become hot, add `add_index :brags, :buid`.
+- [x] **Brag differentiator column** — DONE (April 2026). `brags.transaction_id` (string, unique) added; `BragImporter` upserts by `transaction_id` and no longer delete-all-by-buid, so re-uploading a smaller export no longer wipes earlier brags.
+- [x] **`brags.buid` index** — DONE (April 2026). Added alongside `transaction_id` in the same migration.
 - [ ] **`pages_controller` / `pages_helper` purpose unclear** — audit whether the `welcome` route and pages controller are still used; remove if dead code.
 - [ ] **`vendor/javascript/`** — verify pinned files match what's actually imported.
 

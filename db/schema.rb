@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_26_160000) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_27_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "pg_trgm"
@@ -21,6 +21,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_26_160000) do
     t.string "name"
     t.string "buid"
     t.text "message"
+    t.string "transaction_id"
+    t.index ["buid"], name: "index_brags_on_buid"
+    t.index ["transaction_id"], name: "index_brags_on_transaction_id", unique: true
   end
 
   create_table "cords", id: false, force: :cascade do |t|
