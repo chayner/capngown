@@ -175,6 +175,8 @@ Account creation and password resets are admin-only via rake tasks (see `docs/de
 - **`button_to` data attributes:** `data: { turbo: false }` on `button_to` applies to the **button**, not the **form**. Use `form: { data: { turbo: false } }` instead.
 - **Idempotent actions don't need POST:** For "test connection" or health checks, use GET + `link_to`. No form = no CSRF = no Turbo form issues.
 - **Model methods ≠ database columns:** Never use model methods in `.where()` clauses. Always verify the column exists in `db/schema.rb` before adding `.where(column: value)`.
+- **`graduates.fullname` contains middle names** (it's the diploma name). Single-term ILIKE on `fullname` produces false positives — search single terms against `firstname`/`lastname`/`preferredfirst`/`preferredlast` only. Two-term `fullname ILIKE '%a %b%'` is safe (both terms required).
+- **PG `soundex()` does not bridge K↔C swaps** (`SOUNDEX("Kris")=K620`, `SOUNDEX("Chris")=C620`). Use a prefix-substitution table (see `lib/graduate_search.rb`) for sound-alike spellings.
 
 ---
 

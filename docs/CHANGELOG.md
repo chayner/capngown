@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Phase 5 — Admin interface (in progress)
+- **Operational doc** `docs/development/SEMESTER_PREP_PROCESS.md` — step-by-step playbook for loading a new graduation term (reset → graduates → brags → cords → verify), with troubleshooting table.
 - **Friendly graduate search** (`lib/graduate_search.rb`): single search box on `/start` accepts BUID, email, or name. Name search is two-pass: precise ILIKE first (with nickname expansion + spelling-prefix substitutions); falls back to fuzzy SOUNDEX + trigram similarity only when the precise pass returns no rows. Nicknames table (~80 pairs, both directions). Prefix-substitution table covers Kris↔Chris↔Cris, Cathy↔Kathy, Phil↔Fil. Single-term searches deliberately exclude the `fullname` column (which contains middle names) to avoid false positives. Three new PG extensions enabled via `enable_fuzzy_search_extensions` migration: `unaccent`, `pg_trgm`, `fuzzystrmatch`.
 - **Admin nav dropdown**: Admin links collapsed into a `<details>`/`<summary>` dropdown in both main and admin layouts. Picnic-friendly CSS in `application.css`; closes when another item is clicked.
 - **Importer hardening from real Belmont data**:

@@ -1,8 +1,8 @@
 # Phase 5 — Admin Interface (User Management + File Imports)
 
-**Status:** In Progress
+**Status:** Complete
 **Started:** 2026-04-26
-**Completed:** _(not yet)_
+**Completed:** 2026-04-26
 
 ## Goal
 Build an admin-only interface that handles:
@@ -58,67 +58,68 @@ Each semester, a preparation process produces several files that need to be load
 ## Pre-Flight Checks
 
 - [x] Phase 4 (Devise) complete
-- [ ] Semester prep process documented in `docs/development/SEMESTER_PREP_PROCESS.md`
-- [ ] Sample files of each type committed to `test/fixtures/files/imports/` (sanitized — already provided: main term roster, 3+3 UG, late-add, brags, cords)- [x] Decision made on import strategy per file type — **upsert by `buid` across the board**
-- [ ] Migration written: add `graduation_term` (string) to `graduates`, indexed; ensure `brags`/`cords` cascade-delete on graduate destroy
-- [ ] `roo` gem added to Gemfile (XLSX parsing)
+- [x] Semester prep process documented in `docs/development/SEMESTER_PREP_PROCESS.md`
+- [x] Sample files of each type committed to `test/fixtures/files/` (sanitized): main term roster, 3+3 UG, late-add, brags, cords
+- [x] Decision made on import strategy per file type — **upsert by `buid` across the board**
+- [x] Migration written: add `graduation_term` (string) to `graduates`, indexed; ensure `brags`/`cords` cascade-delete on graduate destroy
+- [x] `roo` gem added to Gemfile (XLSX parsing)
 - [x] Sample files staged in `test/fixtures/files/` (sanitize before commit if needed)
 
 ## Deliverables
 
 ### Foundation
-- [ ] `Admin::BaseController` with `before_action :require_admin!`
-- [ ] `app/views/admin/` view directory + admin layout (or shared with main)
-- [ ] Admin nav (separate from volunteer nav)
-- [ ] Routes namespaced under `/admin`
+- [x] `Admin::BaseController` with `before_action :require_admin!`
+- [x] `app/views/admin/` view directory + admin layout (or shared with main)
+- [x] Admin nav (separate from volunteer nav)
+- [x] Routes namespaced under `/admin`
 
 ### Users
-- [ ] `Admin::UsersController` (index, new, create, edit, update, destroy/deactivate)
-- [ ] Forms with Picnic CSS styling
-- [ ] Tests for all admin actions + authorization
+- [x] `Admin::UsersController` (index, new, create, edit, update, destroy/deactivate)
+- [x] Forms with Picnic CSS styling
+- [x] Tests for all admin actions + authorization
 
 ### Imports
-- [ ] `Admin::ImportsController#index` (lists each upload widget + recent history + reset controls)
-- [ ] One service per file type (`GraduateImporter`, `BragImporter`, `CordImporter`) in `app/services/`
-- [ ] Shared `SpreadsheetParser` (or similar) wrapping CSV/XLSX reading and header normalization
-- [ ] Each importer has: `parse(file)`, `preview` (returns counts + samples + warnings + insert/update split + gap report), `import!(graduation_term:)` (commits in a transaction)
-- [ ] All importers use `upsert_all` (or per-row `find_or_initialize_by(buid:)`) keyed on `buid` (graduates) or `[buid, cord_type]` (cords)
-- [ ] Brag and Cord importers emit a **gap report** listing BUIDs in the upload that are not present in `graduates` for the selected term — admin can choose to import-only-matched or abort
-- [ ] 2,500-row cap enforced before any DB write
-- [ ] `ImportLog` model: `user_id`, `import_type`, `filename`, `row_count`, `inserts`, `updates`, `graduation_term`, `succeeded`, `error_message`, `created_at`
-- [ ] Upload uses Active Storage (already wired up in Rails 7.1)
-- [ ] Tests per importer using fixture files (CSV + XLSX variants; main, 3+3, late-add)
+- [x] `Admin::ImportsController#index` (lists each upload widget + recent history + reset controls)
+- [x] One service per file type (`GraduateImporter`, `BragImporter`, `CordImporter`) in `app/services/`
+- [x] Shared `SpreadsheetParser` (or similar) wrapping CSV/XLSX reading and header normalization
+- [x] Each importer has: `parse(file)`, `preview` (returns counts + samples + warnings + insert/update split + gap report), `import!(graduation_term:)` (commits in a transaction)
+- [x] All importers use `upsert_all` (or per-row `find_or_initialize_by(buid:)`) keyed on `buid` (graduates) or `[buid, cord_type]` (cords)
+- [x] Brag and Cord importers emit a **gap report** listing BUIDs in the upload that are not present in `graduates` for the selected term — admin can choose to import-only-matched or abort _(deviation: implementation imports only matched rows; abort-on-gap deferred)_
+- [x] 2,500-row cap enforced before any DB write
+- [x] `ImportLog` model: `user_id`, `import_type`, `filename`, `row_count`, `inserts`, `updates`, `graduation_term`, `succeeded`, `error_message`, `created_at`
+- [ ] Upload uses Active Storage (already wired up in Rails 7.1) _(deviation: in-memory uploads, see Spec Deviations)_
+- [x] Tests per importer using fixture files (CSV + XLSX variants; main, 3+3, late-add)
 
 ### Roster Reset
-- [ ] `Admin::RostersController#destroy` (or action on `ImportsController`) with typed-confirmation safeguard
-- [ ] Supports `scope=all` and `scope=term&graduation_term=...`
-- [ ] Cascading delete verified for brags + cords
-- [ ] Records destructive event in `ImportLog` (`import_type: "reset"`)
-- [ ] Tests for both scopes + admin-only access
+- [x] `Admin::RostersController#destroy` (or action on `ImportsController`) with typed-confirmation safeguard
+- [x] Supports `scope=all` and `scope=term&graduation_term=...`
+- [x] Cascading delete verified for brags + cords
+- [x] Records destructive event in `ImportLog` (`import_type: "reset"`)
+- [x] Tests for both scopes + admin-only access
 
 ### Reporting Export
-- [ ] `Admin::ReportsController#graduates` page with export controls
-- [ ] CSV endpoint(s) for checked-in, not-checked-in, and all graduates
-- [ ] Export service or query object to keep CSV generation logic out of controllers
-- [ ] CSV includes deterministic column order and header row
-- [ ] Tests for CSV content, filtering, and admin-only access
-- [ ] CHANGELOG updated
+- [x] `Admin::ReportsController#graduates` page with export controls
+- [x] CSV endpoint(s) for checked-in, not-checked-in, and all graduates
+- [x] Export service or query object to keep CSV generation logic out of controllers
+- [x] CSV includes deterministic column order and header row
+- [x] Tests for CSV content, filtering, and admin-only access
+- [x] CHANGELOG updated
 
 ## Acceptance Criteria
 
-- [ ] Volunteer hitting `/admin/*` is rejected (redirect or 403)
-- [ ] Admin can create another admin
-- [ ] Admin can upload each of the three file types (CSV or XLSX) and see a preview
-- [ ] Re-uploading the same file does **not** create duplicates — existing rows are updated, new rows inserted
-- [ ] Preview shows accurate insert vs update counts and any gap warnings (brags/cords without matching graduate)
-- [ ] Files over 2,500 rows are rejected with a clear message
-- [ ] Admin can confirm import and see the result reflected in `Graduate.count` etc.
-- [ ] Failed import does not partially mutate the database (use a transaction)
-- [ ] Admin can reset all graduates (with typed confirmation) AND reset a single graduation term
-- [ ] Import history shows the last N imports with outcome (including resets)
-- [ ] Admin can export CSV for checked-in and not-checked-in graduates, filterable by graduation term
-- [ ] Exported CSV data matches database state at export time
-- [ ] All tests pass
+- [x] Volunteer hitting `/admin/*` is rejected (redirect or 403)
+- [x] Admin can create another admin
+- [x] Admin can upload each of the three file types (CSV or XLSX) and see a preview
+- [x] Re-uploading the same file does **not** create duplicates — existing rows are updated, new rows inserted
+- [x] Preview shows accurate insert vs update counts and any gap warnings (brags/cords without matching graduate)
+- [x] Files over 2,500 rows are rejected with a clear message
+- [x] Admin can confirm import and see the result reflected in `Graduate.count` etc.
+- [x] Failed import does not partially mutate the database (use a transaction)
+- [x] Admin can reset all graduates (with typed confirmation) AND reset a single graduation term
+- [x] Import history shows the last N imports with outcome (including resets)
+- [x] Admin can export CSV for checked-in and not-checked-in graduates, filterable by graduation term
+- [x] Exported CSV data matches database state at export time
+- [x] All tests pass
 
 ## Resolved Questions
 
@@ -232,6 +233,7 @@ _Answered 2026-04-26 (kickoff):_
 
 ## Spec Deviations
 - **Active Storage not used.** Uploads are processed in-memory from the multipart `Tempfile`; nothing is persisted. Spec listed Active Storage but the synchronous-import design makes persisted blobs unnecessary.
+- **Gap report has no "abort" option.** Brag and Cord importers always import only the matched rows and skip gaps with warnings; the spec mentioned letting the admin choose to abort. Deferred — the warnings + gap list are surfaced in preview, so the admin can still decide whether to proceed.
 
 ## Notes
 - This is the first phase that will introduce `app/services/` to the project. Update `/patterns` skill when the directory is created.

@@ -120,6 +120,8 @@ Admin returns `true` for all volunteer-level checks. Account creation and passwo
 - **Idempotent actions don't need POST:** Use GET + `link_to` for read-only actions like health checks.
 - **Model methods ≠ database columns:** Never use model methods in `.where()`. Verify the column in `db/schema.rb` first.
 - **Polymorphic / heterogeneous data in views:** Guard with `respond_to?` when different record types may have different methods.
+- **`graduates.fullname` contains middle names** (it's the diploma name). Single-term ILIKE on `fullname` produces false positives. For single-term name searches use `firstname` / `lastname` / `preferredfirst` / `preferredlast` only.
+- **PG `soundex()` does not bridge K↔C swaps** (`SOUNDEX("Kris")=K620`, `SOUNDEX("Chris")=C620`). Use a prefix-substitution table (see `lib/graduate_search.rb`) for sound-alike spellings.
 
 ---
 
