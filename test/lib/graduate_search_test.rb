@@ -135,4 +135,44 @@ class GraduateSearchTest < ActiveSupport::TestCase
     assert_includes results, kathy.buid
     assert_includes results, kate.buid
   end
+
+  test "ay/ae infix substitution: Kayla matches Kaela" do
+    kaela = Graduate.create!(buid: "B00200050", firstname: "Kaela", lastname: "Brown", fullname: "Kaela Brown")
+    results = GraduateSearch.search(Graduate.all, "kayla").pluck(:buid)
+    assert_includes results, kaela.buid
+  end
+
+  test "ai/ay/ei infix substitution: Caitlin matches Kaitlyn and Caetlyn variants" do
+    kaitlyn = Graduate.create!(buid: "B00200051", firstname: "Kaitlyn", lastname: "Reed",  fullname: "Kaitlyn Reed")
+    katelyn = Graduate.create!(buid: "B00200052", firstname: "Caetlyn", lastname: "Hayes", fullname: "Caetlyn Hayes")
+    results = GraduateSearch.search(Graduate.all, "caitlyn").pluck(:buid)
+    assert_includes results, kaitlyn.buid, "expected ai\u2194ay infix swap"
+    assert_includes results, katelyn.buid, "expected ai\u2194ae infix swap"
+  end
+
+  test "ie/y infix substitution: Sophie matches Sophy" do
+    sophy = Graduate.create!(buid: "B00200053", firstname: "Sophy", lastname: "Lane", fullname: "Sophy Lane")
+    results = GraduateSearch.search(Graduate.all, "sophie").pluck(:buid)
+    assert_includes results, sophy.buid
+  end
+
+  test "j/g prefix substitution: Jiana matches Giana" do
+    giana = Graduate.create!(buid: "B00200054", firstname: "Giana", lastname: "Costa", fullname: "Giana Costa")
+    results = GraduateSearch.search(Graduate.all, "jiana").pluck(:buid)
+    assert_includes results, giana.buid
+  end
+
+  test "x/ks substitution: Xander matches Ksander" do
+    ksander = Graduate.create!(buid: "B00200055", firstname: "Ksander", lastname: "Volkov", fullname: "Ksander Volkov")
+    results = GraduateSearch.search(Graduate.all, "xander").pluck(:buid)
+    assert_includes results, ksander.buid
+  end
+
+  test "infix substitutions do not surface unrelated names" do
+    Graduate.create!(buid: "B00200056", firstname: "Maya",   lastname: "Patel", fullname: "Maya Patel")
+    Graduate.create!(buid: "B00200057", firstname: "Logan",  lastname: "Reed",  fullname: "Logan Reed")
+    results = GraduateSearch.search(Graduate.all, "kayla").pluck(:buid)
+    refute_includes results, "B00200056"
+    refute_includes results, "B00200057"
+  end
 end

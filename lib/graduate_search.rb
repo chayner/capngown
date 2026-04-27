@@ -104,6 +104,18 @@ module GraduateSearch
     %w[ph f],           # Phil↔Fil, Phyllis↔Fillis
     %w[st sth],         # Stephen↔Sthephen (rare but harmless)
     %w[s sh],           # Sean↔Shaun (partial)
+    %w[j g],            # Jiana↔Giana, Jorge↔Giorge
+    %w[x ks],           # Xander↔Ksander
+  ].freeze
+
+  # Phonetic substitutions applied *anywhere* in the name (one swap per variant).
+  # Curated for first-name spelling drift; kept short to avoid noise.
+  # Source: FamilySearch Phonetic Substitutes Table (curated subset).
+  INFIX_SUBSTITUTIONS = [
+    %w[ay ae ai ei],    # Kayla↔Kaela, Caitlin↔Kaitlyn↔Keitlin, Aydan↔Aidan
+    %w[ie y],           # Kiera↔Kyra, Sophie↔Sophy
+    %w[ph f],           # Stephanie↔Stefanie (also covered as prefix)
+    %w[ks x],           # Alexander↔Aleksander
   ].freeze
 
   # Public entry point. Returns an ActiveRecord::Relation.
@@ -194,6 +206,17 @@ module GraduateSearch
       out.concat(REVERSE_NICKNAMES[variant]) if REVERSE_NICKNAMES[variant]
     end
 
+    # Apply infix substitutions (in-word phonetic swaps) on the original name
+    # and on each prefix variant. Single-swap only — keeps variant count small.
+    seeds = out.dup
+    seeds.each do |seed|
+      apply_infix_substitutions(seed).each do |variant|
+        out << variant
+        out.concat(NICKNAMES[variant])         if NICKNAMES[variant]
+        out.concat(REVERSE_NICKNAMES[variant]) if REVERSE_NICKNAMES[variant]
+      end
+    end
+
     out.uniq
   end
 
@@ -208,6 +231,27 @@ module GraduateSearch
         group.each do |sub|
           next if sub == prefix
           variants << "#{sub}#{rest}"
+        end
+      end
+    end
+    variants.uniq
+  end
+
+  # For each infix group, swap a single occurrence of any group member with
+  # each of its alternates (one swap per variant). Skips the leading character
+  # so we don't double-cover prefix substitutions.
+  def self.apply_infix_substitutions(name)
+    variants = []
+    INFIX_SUBSTITUTIONS.each do |group|
+      group.each do |token|
+        # Search starting at index 1 to avoid duplicating prefix work.
+        idx = name.index(token, 1)
+        next unless idx
+        before = name[0...idx]
+        after  = name[(idx + token.length)..]
+        group.each do |sub|
+          next if sub == token
+          variants << "#{before}#{sub}#{after}"
         end
       end
     end
