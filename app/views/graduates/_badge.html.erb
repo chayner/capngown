@@ -18,9 +18,11 @@
     <% if graduate.major.present? %>
       <h4 class="major">
         <% if graduate.levelcode.start_with?("GR") %>
-        <span class="material-symbols-outlined">school</span>
+          <span class="material-symbols-outlined">school</span>
+          <%= graduate.degree_code %> in <%= graduate.major %>
+        <% else %>
+          <%= graduate.major %>
         <% end %>
-        <%=graduate.degree1 %> in <%= graduate.major %>
       </h4>
     <% end %>
     <h5 class="college">
@@ -37,6 +39,12 @@
         
         <h3 class="height"><span class="material-symbols-outlined">accessibility_new</span> <%= graduate.height %> <label id="height-modal" for="modal_1" class="button">Edit</label></h3>
       </div>
+      <% end %>
+
+      <% if !graduate.orderid.present? && graduate.levelcode.to_s.start_with?("GR") && graduate.hoodcolor.present? %>
+        <div>
+          <h3 class="hood-color"><span class="material-symbols-outlined">palette</span> <%= graduate.hoodcolor %></h3>
+        </div>
       <% end %>
       
       <% if graduate.honors == "Y" %>

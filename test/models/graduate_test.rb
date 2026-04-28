@@ -111,4 +111,23 @@ class GraduateTest < ActiveSupport::TestCase
     refute g.formal_name_differs_from_preferred?,
            "after sanitizing, the duplicated-surname row should match the formal name"
   end
+
+  test "degree_code returns the value as-is when it's already a known code" do
+    assert_equal "MBA", Graduate.new(degree1: "MBA").degree_code
+    assert_equal "DPT", Graduate.new(degree1: "dpt").degree_code
+  end
+
+  test "degree_code reverse-looks-up the code from the full degree name" do
+    assert_equal "MBA", Graduate.new(degree1: "Master of Business Administration").degree_code
+    assert_equal "DPT", Graduate.new(degree1: "doctor of physical therapy").degree_code
+  end
+
+  test "degree_code returns nil when degree1 is blank" do
+    assert_nil Graduate.new(degree1: nil).degree_code
+    assert_nil Graduate.new(degree1: "  ").degree_code
+  end
+
+  test "degree_code falls back to the raw value when no mapping matches" do
+    assert_equal "Some Other Degree", Graduate.new(degree1: "Some Other Degree").degree_code
+  end
 end

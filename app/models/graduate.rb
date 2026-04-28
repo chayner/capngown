@@ -85,4 +85,15 @@ class Graduate < ApplicationRecord
     last_diff  = pref_last.present?  && pref_last.casecmp(formal_last)  != 0
     first_diff || last_diff
   end
+
+  # Returns a short degree code (e.g. "MBA", "DPT") for display on the sticker.
+  # `degree1` may already be a code, or may be the full name from some rosters
+  # (e.g. "Master of Business Administration") — reverse-lookup in that case.
+  def degree_code
+    raw = degree1.to_s.strip
+    return nil if raw.empty?
+    return raw.upcase if DegreeHoodTranslator::DEGREE_HOOD_MAP.key?(raw.upcase)
+
+    DegreeHoodTranslator.code_from_name(raw) || raw
+  end
 end

@@ -18,14 +18,39 @@
   <div class="full-info-content">
     <h3>Full Grad Info</h3>
     <ul>
+      <li><strong>BUID:</strong> <%= @graduate.buid %></li>
       <li><strong>First Name:</strong> <%= @graduate.firstname %></li>
+      <li><strong>Middle Name:</strong> <%= @graduate.middlename %></li>
       <li><strong>Last Name:</strong> <%= @graduate.lastname %></li>
+      <li><strong>Suffix:</strong> <%= @graduate.suffix %></li>
       <li><strong>Preferred First Name:</strong> <%= @graduate.preferredfirst %></li>
       <li><strong>Preferred Last Name:</strong> <%= @graduate.preferredlast %></li>
+      <li><strong>Diploma Name:</strong> <%= @graduate.fullname %></li>
+      <li><strong>Campus Email:</strong> <%= @graduate.campusemail %></li>
+      <li><strong>Level:</strong> <%= @graduate.levelcode %></li>
+      <li><strong>Degree:</strong>
+        <%= @graduate.degree1 %><%
+          %><% if @graduate.degree1.present? && (info = DegreeHoodTranslator.translate(@graduate.degree1.to_s.upcase)) && info[:degree] != "Unknown" %>
+            (<%= info[:degree] %>)
+          <% end %>
+      </li>
+      <li><strong>Major:</strong> <%= @graduate.major %></li>
+      <li><strong>College:</strong>
+        <%= @graduate.college1 %><%
+          %><% if @graduate.college1.present? %>
+            (<%= CollegeCodeTranslator.translate_full(@graduate.college1) %>)
+          <% end %>
+      </li>
+      <li><strong>College Description:</strong> <%= @graduate.collegedesc %></li>
+      <li><strong>Hood Color:</strong> <%= @graduate.hoodcolor %></li>
+      <li><strong>Honors:</strong> <%= @graduate.honors %></li>
       <li><strong>Height:</strong> <%= @graduate.height %></li>
+      <li><strong>Order ID:</strong> <%= @graduate.orderid %></li>
+      <li><strong>Graduation Term:</strong> <%= @graduate.graduation_term %></li>
       <li><strong>Degree Status:</strong> <%= @graduate.degstatus %></li>
       <li><strong>Degree Status Description:</strong> <%= @graduate.degstatusdesc %></li>
-      <li><strong>Checked In:</strong> <%= @graduate.checked_in&.in_time_zone('Central Time (US & Canada)') %></li>
-      <li><strong>Printed:</strong> <%= @graduate.printed&.in_time_zone('Central Time (US & Canada)') %></li>
+      <li><strong>Checked In:</strong> <%= @graduate.checked_in&.in_time_zone('Central Time (US & Canada)')&.strftime("%b %-d, %Y %-l:%M %p") %></li>
+      <li><strong>Printed:</strong> <%= @graduate.printed&.in_time_zone('Central Time (US & Canada)')&.strftime("%b %-d, %Y %-l:%M %p") %></li>
+    </ul>
   </div>
 </div>

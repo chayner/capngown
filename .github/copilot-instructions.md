@@ -123,6 +123,7 @@ Admin returns `true` for all volunteer-level checks. Account creation and passwo
 - **`graduates.fullname` contains middle names** (it's the diploma name). Single-term ILIKE on `fullname` produces false positives. For single-term name searches use `firstname` / `lastname` / `preferredfirst` / `preferredlast` only.
 - **PG `soundex()` does not bridge K↔C swaps** (`SOUNDEX("Kris")=K620`, `SOUNDEX("Chris")=C620`). Use a prefix-substitution table (see `lib/graduate_search.rb`) for sound-alike spellings.
 - **Some rosters cram the full preferred name into `preferredfirst`** ("Cameron Bateman"), which printed as "BATEMAN, CAMERON BATEMAN". Always render names via `Graduate#display_preferred_first` / `display_preferred_last` (which sanitize); never concatenate raw `preferredlast` + `preferredfirst` in views. The importer also sanitizes at write time.
+- **`SpreadsheetParser` aliases: highest-priority alias wins, even if the file lists the lower-priority column later.** When multiple input columns alias to the same canonical key (e.g. `Degree1` and `Degree Description` both → `degree1`), only the column matching the FIRST alias in the list is mapped to the canonical key; other matching columns fall through to their normalized header name. Don't reorder existing alias arrays without considering this.
 
 ---
 

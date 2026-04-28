@@ -178,6 +178,7 @@ Account creation and password resets are admin-only via rake tasks (see `docs/de
 - **`graduates.fullname` contains middle names** (it's the diploma name). Single-term ILIKE on `fullname` produces false positives — search single terms against `firstname`/`lastname`/`preferredfirst`/`preferredlast` only. Two-term `fullname ILIKE '%a %b%'` is safe (both terms required).
 - **PG `soundex()` does not bridge K↔C swaps** (`SOUNDEX("Kris")=K620`, `SOUNDEX("Chris")=C620`). Use a prefix-substitution table (see `lib/graduate_search.rb`) for sound-alike spellings.
 - **Some rosters cram the full preferred name into `preferredfirst`** (e.g. "Cameron Bateman" with lastname "Bateman"), which printed as "BATEMAN, CAMERON BATEMAN". Always render names via `Graduate#display_preferred_first` / `display_preferred_last` (sanitizes the duplicate); the importer also strips at write time. Cleanup task: `bin/rails graduates:sanitize_preferred_names`.
+- **`SpreadsheetParser` aliases: highest-priority alias wins** even if the file lists the lower-priority column later. When multiple input columns alias to the same canonical key (e.g. `Degree1` and `Degree Description` both → `degree1`), only the column matching the FIRST alias in the list maps to the canonical key; other matching columns fall through to their normalized header name. Don't reorder existing alias arrays without considering this.
 
 ---
 

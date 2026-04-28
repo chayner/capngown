@@ -92,13 +92,28 @@ class SpreadsheetParser
   end
 
   # Builds a hash: original_header_string => canonical_key (or original normalized if no canonical match)
+  #
+  # When a file has multiple columns that all alias to the same canonical key
+  # (e.g. both "Degree1" and "Degree Description" alias to canonical "degree1"),
+  # only ONE column wins — the one matching the highest-priority alias (earliest
+  # in the alias list). Other matching columns fall through to their own
+  # normalized header name so their values don't clobber the chosen column.
   def build_canonical_lookup(headers)
-    lookup = {}
-    headers.each do |raw|
-      norm = normalize(raw)
-      canonical = @aliases.find { |_k, vs| vs.include?(norm) }&.first
-      lookup[raw] = (canonical || norm).to_s
+    norm_pairs = headers.map { |h| [h, normalize(h)] }
+    claimed = {}
+
+    @aliases.each do |canonical, alias_list|
+      alias_list.each do |alias_name|
+        match = norm_pairs.find { |_raw, norm| norm == alias_name }
+        if match
+          claimed[match.first] = canonical.to_s
+          break
+        end
+      end
     end
+
+    lookup = {}
+    norm_pairs.each { |raw, norm| lookup[raw] = claimed[raw] || norm }
     lookup
   end
 

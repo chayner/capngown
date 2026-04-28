@@ -20,7 +20,7 @@ This file is the **source of truth for phase status**. Update it as phases land.
 - Heroku stack on `heroku-24` with runtime modernization (Ruby 3.3.10, Bundler 2.7.2, Puma 8.x, Node pinned via `engines.node`)
 
 ### What's Missing
-- **Tests** — baseline + Phase 5 coverage now exists (105 runs, 298 assertions); deeper feature/edge tests still TBD
+- **Tests** — baseline + Phase 5 coverage now exists (139 runs, 389 assertions); deeper feature/edge tests still TBD
 - **CI** — no GitHub Actions
 - **Background jobs** — no Sidekiq
 - **Audit log** — import history exists; per-record (check-in/print) audit still TBD

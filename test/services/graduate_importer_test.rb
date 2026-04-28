@@ -155,4 +155,63 @@ class GraduateImporterTest < ActiveSupport::TestCase
   ensure
     csv&.close!
   end
+
+  test "import! normalizes degree1 to a code and fills hoodcolor when given the full name" do
+    Graduate.where(graduation_term: "DEG20").delete_all
+    csv = Tempfile.new(["deg", ".csv"])
+    csv.write("BUID,SHBGAPP_FirstName,SHBGAPP_LastName,Degree1,LevelCode\n")
+    # Full description should be reverse-mapped to code + hood color
+    csv.write("B00910001,Sport,Admin,Master of Sport Administration,GR-M\n")
+    # Already-a-code (lowercase) should normalize to upper and fill hood color
+    csv.write("B00910002,Master,Business,mba,GR-M\n")
+    # Unknown text should be uppercased and stored, hoodcolor stays nil
+    csv.write("B00910003,Unknown,Degree,Some Mystery Degree,GR-M\n")
+    # Aliases that don't exactly match DEGREE_HOOD_MAP[:degree] (issue 1):
+    csv.write("B00910004,Juris,Doc,Juris Doctor,GR-D\n")
+    csv.write("B00910005,Master,Arts,Master of Arts,GR-M\n")
+    csv.write("B00910006,Post,Pro,Post Professional Doctor of Occupational Therapy,GR-D\n")
+    csv.flush
+    result = GraduateImporter.new(file: csv.path, graduation_term: "DEG20").import!(user: users(:admin))
+    assert result.succeeded, "expected import to succeed, got: #{result.error_message}"
+
+    msa = Graduate.find_by(buid: "B00910001")
+    assert_equal "MSA", msa.degree1
+    assert_equal "Golden Yellow", msa.hoodcolor
+
+    mba = Graduate.find_by(buid: "B00910002")
+    assert_equal "MBA", mba.degree1
+    assert_equal "Light Brown/ Drab", mba.hoodcolor
+
+    unknown = Graduate.find_by(buid: "B00910003")
+    assert_equal "SOME MYSTERY DEGREE", unknown.degree1
+    assert_nil unknown.hoodcolor
+
+    assert_equal "JD",  Graduate.find_by(buid: "B00910004").degree1
+    assert_equal "Purple", Graduate.find_by(buid: "B00910004").hoodcolor
+    assert_equal "MA",  Graduate.find_by(buid: "B00910005").degree1
+    assert_equal "White", Graduate.find_by(buid: "B00910005").hoodcolor
+    assert_equal "DOT", Graduate.find_by(buid: "B00910006").degree1
+    assert_equal "Slate Blue", Graduate.find_by(buid: "B00910006").hoodcolor
+  ensure
+    csv&.close!
+  end
+
+  test "import! preserves Degree1 (code) over Degree Description when both columns are present" do
+    # Regression: SpreadsheetParser previously let the LAST matching column
+    # overwrite earlier ones, so `Degree Description` (e.g. "Legal Studies")
+    # clobbered the actual `Degree1` code (e.g. "BS"). Both alias to canonical
+    # "degree1"; the higher-priority alias (degree1) must win.
+    Graduate.where(graduation_term: "ALI20").delete_all
+    csv = Tempfile.new(["alias", ".csv"])
+    csv.write("BUID,SHBGAPP_FirstName,SHBGAPP_LastName,Degree1,Degree Description,LevelCode\n")
+    csv.write("B00920001,Colin,UG,BS,Legal Studies,UG\n")
+    csv.flush
+    result = GraduateImporter.new(file: csv.path, graduation_term: "ALI20").import!(user: users(:admin))
+    assert result.succeeded, "expected import to succeed, got: #{result.error_message}"
+
+    g = Graduate.find_by(buid: "B00920001")
+    assert_equal "BS", g.degree1, "Degree1 column must win over Degree Description"
+  ensure
+    csv&.close!
+  end
 end

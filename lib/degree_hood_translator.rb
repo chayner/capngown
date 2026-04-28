@@ -26,7 +26,28 @@ module DegreeHoodTranslator
     'MD' => { hood_color: 'Green', degree: 'Doctor of Medicine', level: 'Doctoral' }
   }
 
+  # Additional full-name → code mappings for degree descriptions that don't
+  # exactly match the canonical `degree:` text in DEGREE_HOOD_MAP. Add new
+  # entries here whenever an import surfaces a description we don't recognize.
+  DEGREE_NAME_ALIASES = {
+    'juris doctor'                                       => 'JD',
+    'master of arts'                                     => 'MA',
+    'post professional doctor of occupational therapy'   => 'DOT'
+  }.freeze
+
   def self.translate(degree_code)
     DEGREE_HOOD_MAP[degree_code] || { hood_color: 'Unknown', degree: 'Unknown', level: 'Unknown' }
+  end
+
+  # Reverse-lookup a degree code from a full degree name. Tries exact match
+  # against DEGREE_HOOD_MAP[:degree] first, then DEGREE_NAME_ALIASES. Returns
+  # nil when no match. Case-insensitive.
+  def self.code_from_name(name)
+    s = name.to_s.strip
+    return nil if s.empty?
+
+    lower = s.downcase
+    DEGREE_HOOD_MAP.each { |code, info| return code if info[:degree].downcase == lower }
+    DEGREE_NAME_ALIASES[lower]
   end
 end

@@ -109,7 +109,7 @@ class GraduateImporter < BaseImporter
     college_desc = raw["collegedesc"].to_s.strip.presence ||
                    (college_code ? CollegeCodeTranslator.translate_full(college_code) : nil)
 
-    degree_code = raw["degree1"].to_s.strip.presence
+    degree_code = normalize_degree_code(raw["degree1"])
     degree_code ||= reverse_degree_code(raw["degree_for_hood"])
     hood_color = nil
     if degree_code.present?
@@ -221,12 +221,21 @@ class GraduateImporter < BaseImporter
   end
 
   def reverse_degree_code(value)
+    DegreeHoodTranslator.code_from_name(value)
+  end
+
+  # `degree1` in the roster may be either a code ("MSA") or the full degree
+  # description ("Master of Sport Administration"). We always want the code so
+  # the `hoodcolor` lookup works. Returns nil for blank input, or the raw value
+  # (uppercased) when no mapping matches so we don't silently drop unknowns.
+  def normalize_degree_code(value)
     s = value.to_s.strip
     return nil if s.blank?
-    DegreeHoodTranslator::DEGREE_HOOD_MAP.each do |code, info|
-      return code if info[:degree].downcase == s.downcase
-    end
-    nil
+
+    upper = s.upcase
+    return upper if DegreeHoodTranslator::DEGREE_HOOD_MAP.key?(upper)
+
+    DegreeHoodTranslator.code_from_name(s) || upper
   end
 
   def presence(value)
