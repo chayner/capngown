@@ -15,13 +15,19 @@
     <% end %>
     
     <div class="classification">
-    <% if graduate.major.present? %>
+    <% if graduate.major.present? || graduate.degree_code.present? %>
       <h4 class="major">
-        <% if graduate.levelcode.start_with?("GR") %>
+        <% if graduate.levelcode.to_s.start_with?("GR") %>
           <span class="material-symbols-outlined">school</span>
-          <%= graduate.degree_code %> in <%= graduate.major %>
+          <% if graduate.degree_code.present? && graduate.major.present? %>
+            <%= graduate.degree_code %> in <%= graduate.major %>
+          <% elsif graduate.major.present? %>
+            <%= graduate.major %>
+          <% else %>
+            <%= graduate.degree_code %>
+          <% end %>
         <% else %>
-          <%= graduate.major %>
+          <%= graduate.major.presence || graduate.degree_code %>
         <% end %>
       </h4>
     <% end %>
