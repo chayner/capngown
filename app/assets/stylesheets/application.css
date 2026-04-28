@@ -270,6 +270,22 @@ th.status-col, td.status-col {
   padding: .3em .4em;
 }
 
+table.primary td.program-col {
+  line-height: 1.2;
+}
+
+table.primary td.program-col .program-cell {
+  display: flex;
+  align-items: center;
+  gap: .35em;
+}
+
+table.primary td.program-col .program-degree {
+  font-size: .8em;
+  color: #6b6b6b;
+  margin-top: .15em;
+}
+
 .icon-legend {
   font-size: .8em;
   text-align: center;

@@ -15,9 +15,8 @@
     </tr> 
     <tr>
       <th>Name</th>
-      <th>Deg</th>
       <th>College</th>
-      <th>Major</th>
+      <th>Program</th>
       <th class="status-col"><span class="material-symbols-outlined">receipt_long</span></th>
       <th class="status-col"><span class="material-symbols-outlined">workspace_premium</span></th>
       <th class="status-col"><span class="material-symbols-outlined">digital_wellbeing</span></th>
@@ -31,16 +30,18 @@
               graduate_path(buid: graduate.buid, lastname: params.fetch(:lastname, nil)) %>
       </td>
       <td nowrap>
-        <%= graduate.degree1 %>
-        <% if graduate.levelcode.start_with?("GR") %>
-          <span class="material-symbols-outlined">school</span>
-        <% end %>
-      </td>
-      <td nowrap>
         <span class="material-symbols-outlined"><%= CollegeCodeTranslator.icon(graduate.college1) %></span> <%= CollegeCodeTranslator.translate_short(graduate.college1) %>
       </td>
-      <td nowrap>
-        <%= graduate.major %>
+      <td class="program-col" nowrap>
+        <div class="program-cell">
+          <% if graduate.levelcode.start_with?("GR") %>
+            <span class="material-symbols-outlined program-icon">school</span>
+          <% end %>
+          <div class="program-text">
+            <div class="program-major"><%= graduate.major %></div>
+            <div class="program-degree"><%= graduate.degree1 %></div>
+          </div>
+        </div>
       </td>
       <td class="status-col">
         <% if graduate.orderid.presence %>
