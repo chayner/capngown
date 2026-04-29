@@ -99,6 +99,14 @@ class Graduate < ApplicationRecord
     first_diff || last_diff
   end
 
+  # True when a staff note has been recorded for this graduate. Used to show a
+  # "See Staff" indicator on the sticker so volunteers know to flag down a
+  # staff member (extra hood, custom order, etc.) — wording is intentionally
+  # neutral so it isn't awkward for the graduate to see.
+  def notes?
+    notes.to_s.strip.present?
+  end
+
   # Returns a short degree code (e.g. "MBA", "DPT") for display on the sticker.
   # `degree1` may already be a code, or may be the full name from some rosters
   # (e.g. "Master of Business Administration") — reverse-lookup in that case.

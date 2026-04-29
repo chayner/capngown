@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_27_120000) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_29_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "fuzzystrmatch"
   enable_extension "pg_trgm"
@@ -56,6 +56,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_27_120000) do
     t.string "degstatus"
     t.string "degstatusdesc"
     t.string "graduation_term"
+    t.text "notes"
     t.index ["graduation_term"], name: "index_graduates_on_graduation_term"
   end
 

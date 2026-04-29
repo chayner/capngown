@@ -84,6 +84,31 @@ class GraduatesControllerTest < ActionDispatch::IntegrationTest
     assert_not Graduate.exists?(buid: "B99999999")
   end
 
+  test "PATCH /graduates/:buid updates staff notes" do
+    patch graduate_url(buid: @graduate.buid), params: {
+      graduate: { notes: "Needs a second hood. See Chip." }
+    }
+    assert_redirected_to graduate_path(buid: @graduate.buid)
+    assert_equal "Needs a second hood. See Chip.", @graduate.reload.notes
+    assert @graduate.notes?
+  end
+
+  test "GET /graduates/:buid shows staff note callout when notes are present" do
+    @graduate.update!(notes: "Custom order — pick up at the table.")
+    get graduate_url(buid: @graduate.buid)
+    assert_response :success
+    assert_match "Staff note", response.body
+    assert_match "Custom order", response.body
+    assert_match "See Staff", response.body
+  end
+
+  test "GET /graduates/:buid does not show See Staff indicator when notes are blank" do
+    @graduate.update!(notes: nil)
+    get graduate_url(buid: @graduate.buid)
+    assert_response :success
+    assert_no_match "See Staff", response.body
+  end
+
   # --- Check-in ---
 
   test "PATCH checkin marks checked_in" do

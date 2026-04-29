@@ -283,7 +283,7 @@ class GraduatesController < ApplicationController
   end
 
   def graduate_params
-    params.require(:graduate).permit(:height, :firstname, :lastname, :preferredfirst, :preferredlast)
+    params.require(:graduate).permit(:height, :firstname, :lastname, :preferredfirst, :preferredlast, :notes)
   end
 
 end

@@ -10,6 +10,16 @@
 
 <%= render partial: 'badge', locals: { graduate: @graduate, currentpage: "show" } %>
 
+<% if @graduate.notes? %>
+  <div class="staff-note-callout" role="note">
+    <div class="staff-note-callout-header">
+      <span class="material-symbols-outlined">support_agent</span>
+      <strong>Staff note</strong>
+    </div>
+    <div class="staff-note-callout-body"><%= simple_format(@graduate.notes) %></div>
+  </div>
+<% end %>
+
 <div class="instructions">
   Be sure to set your printer paper size to <strong>54 x 101mm / 99014 Shipping</strong>
 </div>
@@ -54,6 +64,7 @@
       <li><strong>Degree Status Description:</strong> <%= @graduate.degstatusdesc %></li>
       <li><strong>Checked In:</strong> <%= @graduate.checked_in&.in_time_zone('Central Time (US & Canada)')&.strftime("%b %-d, %Y %-l:%M %p") %></li>
       <li><strong>Printed:</strong> <%= @graduate.printed&.in_time_zone('Central Time (US & Canada)')&.strftime("%b %-d, %Y %-l:%M %p") %></li>
+      <li><strong>Staff Note:</strong> <%= @graduate.notes.presence || content_tag(:em, "(none)") %></li>
     </ul>
   </div>
 </div>

@@ -494,6 +494,51 @@ h1.name {
   padding: 0.4em 0.9em;
 }
 
+/* Staff note callout (shown above Full Grad Info on the show page when
+   a staff note exists). Volunteers see this immediately. */
+.staff-note-callout {
+  max-width: 500px;
+  margin: 1em auto;
+  padding: 0.75em 1em;
+  background: #fff8e1;
+  border: 2px solid #f0a500;
+  border-radius: 6px;
+  color: #5b3a00;
+}
+
+.staff-note-callout-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 1.05em;
+  margin-bottom: 0.25em;
+}
+
+.staff-note-callout-header .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.staff-note-callout-body {
+  margin: 0;
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
+.staff-note-callout-body p {
+  margin: 0 0 0.4em;
+}
+
+.staff-note-callout-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Sticker "See Staff" indicator — intentionally low-key (no color
+   alarm, plain text + agent icon) so the recipient isn't startled,
+   but distinct enough that volunteers spot it. */
+.badge .bottom-row .staff-note {
+  color: #333;
+}
+
 /* Edit graduate form */
 .edit-graduate {
   max-width: 720px;

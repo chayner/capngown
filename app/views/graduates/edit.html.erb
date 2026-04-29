@@ -57,6 +57,21 @@
       </div>
     </fieldset>
 
+    <fieldset>
+      <legend>Staff note (volunteer-only — never printed)</legend>
+
+      <div class="form-group">
+        <%= form.label :notes, "Note for staff / volunteers" %>
+        <%= form.text_area :notes, rows: 3, autocomplete: "off",
+              placeholder: "e.g. Needs second hood. See Chip for custom order." %>
+        <small class="hint">
+          When set, the sticker shows a discreet "See Staff" indicator so
+          volunteers know to flag down a staff member. Clear this field to
+          remove the indicator.
+        </small>
+      </div>
+    </fieldset>
+
     <footer class="edit-graduate-actions">
       <%= form.submit "Save Changes", class: "button" %>
       <%= link_to "Cancel", graduate_path(buid: @graduate.buid), class: "button pseudo" %>
