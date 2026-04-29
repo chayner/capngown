@@ -156,11 +156,19 @@ nav .nav-always {
 @media (max-width: 60em) {
   nav .nav-always {
     display: inline-block;
-    margin-right: 0.5em;
-    padding: 6px 12px;
-    border: 1px solid rgba(255,255,255,0.4);
+    margin-left: auto;        /* push to the right, away from brand */
+    margin-right: 0.6em;
+    padding: 6px 14px;
+    background: #1a3568;
+    border: 1px solid rgba(255,255,255,0.5);
     border-radius: 4px;
     font-size: 0.95em;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  nav .nav-always:hover {
+    background: #25457f;
   }
   nav .menu .nav-link-print {
     display: none;
