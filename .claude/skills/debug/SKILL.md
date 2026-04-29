@@ -93,6 +93,45 @@ Key moves:
 
 **Process rule:** if a CSS layout tweak doesn't visibly change the rendered result on the second attempt, **change strategy** (force flex + order) instead of nudging the same margin a third time. Ask the user for a screenshot only after taking ownership of the layout — don't iterate blind.
 
+### Picnic Nav: Neutralize the Pre-Flex Centering Hack
+
+Picnic centers `.brand`, `.burger`, and `.menu` with a **pre-flex CSS trick** in its base stylesheet:
+
+```css
+nav .brand, nav .menu, nav .burger {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  float: right; /* .brand is float: left */
+}
+```
+
+This works fine in Picnic's default static layout (nav has `height: 3em`). But if you switch the nav to `display: flex` to fix layout (see above), the centering **double-applies**:
+1. `align-items: center` centers the flex children vertically.
+2. Picnic's `transform: translateY(-50%)` then drags them up by 50% of their own height.
+3. Picnic's `top: 50%` (which still works on `position: relative` in flex context) drops them by 50% of the nav height.
+
+Net effect: the brand looks anchored to the bottom-left, the burger to the top-right — they don't line up no matter how many `align-self` tweaks you add.
+
+**Fix: explicitly reset the legacy positioning on the always-visible children** (do NOT include `.menu` — its `position: fixed` is needed when the burger is open):
+
+```css
+@media (max-width: 60em) {
+  nav .brand,
+  nav .burger,
+  nav label.burger {
+    position: static !important;
+    top: auto !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    float: none !important;
+  }
+  nav { height: auto !important; }   /* Picnic's height: 3em clips taller content */
+}
+```
+
+**Diagnostic rule:** when an element looks vertically misaligned in a flex container and `align-items: center` isn't fixing it, **fetch the framework CSS directly** and grep for `transform`, `top:`, `position:`, `float:` on that selector before adding more overrides. `curl -s <cdn-url> | tr '}' '\n' | grep -E 'nav|\.brand'` is faster than guessing.
+
 ## Importmap (No Bundler)
 ```bash
 bin/importmap pin some-package    # add JS dep

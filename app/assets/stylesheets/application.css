@@ -169,6 +169,23 @@ nav .nav-always {
     flex-wrap: nowrap !important;
     align-items: center !important;
     min-height: 56px;
+    height: auto !important;          /* Picnic sets height: 3em which clips */
+  }
+  /* Picnic centers .brand / .burger using a pre-flex hack:
+     `position: relative; top: 50%; transform: translateY(-50%)`.
+     Inside our flex nav, that double-shifts the children downward
+     (align-items centers them, THEN translateY drags them down again,
+     which is why the brand looked anchored to the bottom). Reset
+     them — but NOT `.menu`, which legitimately uses `position: fixed`
+     when the burger is open to slide out from the right. */
+  nav .brand,
+  nav .burger,
+  nav label.burger {
+    position: static !important;
+    top: auto !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    float: none !important;
   }
   nav .brand {
     order: 1;
