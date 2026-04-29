@@ -144,6 +144,29 @@ nav a {
   color: #fff;
 }
 
+/* "Print List" stays in the navbar even when the burger collapses the
+   rest of the menu. The .nav-always copy lives outside .menu and is
+   hidden at large widths (where the in-menu version shows); the
+   in-menu .nav-link-print copy is hidden at small widths to avoid a
+   duplicate after the burger is opened. */
+nav .nav-always {
+  display: none;
+}
+
+@media (max-width: 60em) {
+  nav .nav-always {
+    display: inline-block;
+    margin-right: 0.5em;
+    padding: 6px 12px;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 4px;
+    font-size: 0.95em;
+  }
+  nav .menu .nav-link-print {
+    display: none;
+  }
+}
+
 @media (max-width: 60em) {
   main {
     margin: 70px 1em;

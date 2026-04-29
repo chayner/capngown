@@ -19,11 +19,12 @@
   <body>
     <nav>
       <a href="/start" class="brand">Belmont Cap &amp; Gown</a>
+      <a href="/print" class="nav-link nav-always">Print List</a>
       <input id="bmenub" type="checkbox" class="show">
       <label for="bmenub" class="burger pseudo button">&#8801;</label>
       <div class="menu">
         <a href="/start" class="nav-link">Check-in</a>
-        <a href="/print" class="nav-link">Print List</a>
+        <a href="/print" class="nav-link nav-link-print">Print List</a>
         <%= link_to 'Stats', stats_graduates_path, class: 'nav-link' %>
         <% if current_user&.admin? %>
           <details class="nav-dropdown">
