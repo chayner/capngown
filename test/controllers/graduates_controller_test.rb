@@ -129,4 +129,23 @@ class GraduatesControllerTest < ActionDispatch::IntegrationTest
     get stats_graduates_url, params: { interval: "15min" }
     assert_response :success
   end
+
+  test "stats classifies GR levelcode by degree1 (regression: production uses bare GR)" do
+    # Production rosters use levelcode = "GR" for both master's and doctorate
+    # graduates; the master/doctorate split must come from degree1.
+    Graduate.create!(buid: "B0099GRMA", firstname: "Grad", lastname: "Master",
+                     fullname: "Grad Master", levelcode: "GR", degree1: "MBA",
+                     printed: 1.hour.ago)
+    Graduate.create!(buid: "B0099GRDR", firstname: "Grad", lastname: "Doc",
+                     fullname: "Grad Doc", levelcode: "GR", degree1: "PHD",
+                     printed: 1.hour.ago)
+
+    assert_operator Graduate.master.where.not(printed: nil).count, :>=, 1,
+      "Master scope should pick up GR levelcode + master degree code"
+    assert_operator Graduate.doctorate.where.not(printed: nil).count, :>=, 1,
+      "Doctorate scope should pick up GR levelcode + doctorate degree code"
+
+    get stats_graduates_url
+    assert_response :success
+  end
 end

@@ -152,14 +152,14 @@ class GraduatesController < ApplicationController
 
   def stats
     # Total counts for undergraduates and graduates
-    @total_undergrad = Graduate.where(levelcode: 'UG').count
-    @total_master = Graduate.where(levelcode: 'GR-M').count
-    @total_doctorate = Graduate.where(levelcode: 'GR-D').count
+    @total_undergrad = Graduate.undergraduate.count
+    @total_master = Graduate.master.count
+    @total_doctorate = Graduate.doctorate.count
 
     # Students already printed
-    @printed_undergrad = Graduate.where.not(printed: nil).where(levelcode: 'UG').count
-    @printed_master = Graduate.where.not(printed: nil).where(levelcode: 'GR-M').count
-    @printed_doctorate = Graduate.where.not(printed: nil).where(levelcode: 'GR-D').count
+    @printed_undergrad = Graduate.undergraduate.where.not(printed: nil).count
+    @printed_master = Graduate.master.where.not(printed: nil).count
+    @printed_doctorate = Graduate.doctorate.where.not(printed: nil).count
 
     # Percentages
     @percent_printed_undergrad = @total_undergrad.zero? ? 0 : (@printed_undergrad * 100.0 / @total_undergrad).round(1)
@@ -220,15 +220,15 @@ class GraduatesController < ApplicationController
                                  .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
                                  .count
 
-    @printed_undergrad_over_time = Graduate.where(levelcode: "UG").where.not(printed: nil)
+    @printed_undergrad_over_time = Graduate.undergraduate.where.not(printed: nil)
                                            .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
                                            .count
 
-    @printed_master_over_time = Graduate.where(levelcode: "GR-M").where.not(printed: nil)
+    @printed_master_over_time = Graduate.master.where.not(printed: nil)
                                         .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
                                         .count
 
-    @printed_doctorate_over_time = Graduate.where(levelcode: "GR-D").where.not(printed: nil)
+    @printed_doctorate_over_time = Graduate.doctorate.where.not(printed: nil)
                                            .public_send(interval_param, :printed, time_zone: "Central Time (US & Canada)")
                                            .count
 

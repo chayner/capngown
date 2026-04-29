@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Phase 5 — Admin interface (in progress)
+- **Stats dashboard master/doctorate breakdown bugfix**: Production rosters use `levelcode = "GR"` for both master's and doctorate graduates, but the stats controller was filtering on legacy `"GR-M"` / `"GR-D"` values that don't exist — so the Master and Doctorate counts (both in the "Students Already Printed" summary and the "Printed Data Over Time" table) always showed 0, and the time-series Total didn't equal UG + MA + DR. New `Graduate.master` / `Graduate.doctorate` / `Graduate.undergraduate` scopes derive the level from `degree1` via `DegreeHoodTranslator::DEGREE_HOOD_MAP[:level]` (`MASTER_DEGREE_CODES` / `DOCTORATE_DEGREE_CODES` constants). `GraduatesController#stats` now uses these scopes everywhere. Regression test added.
 - **Sticker layout overhaul**:
   - **List view (`/list`)**: Combined `Deg` + `Major` columns into a single `Program` column to reduce horizontal scroll on smaller screens. Major shows on top with a vertically-centered hat icon (grad only) to its left; degree code shows below as smaller, muted text.
   - **Sticker (`_badge`)**: Undergrad now shows just the major (no "in [degree]"). Grad shows hat icon + degree CODE + "in" + major (e.g. "MBA in Marketing" instead of "Master of Business Administration in Marketing").

@@ -124,6 +124,7 @@ Admin returns `true` for all volunteer-level checks. Account creation and passwo
 - **PG `soundex()` does not bridge K↔C swaps** (`SOUNDEX("Kris")=K620`, `SOUNDEX("Chris")=C620`). Use a prefix-substitution table (see `lib/graduate_search.rb`) for sound-alike spellings.
 - **Some rosters cram the full preferred name into `preferredfirst`** ("Cameron Bateman"), which printed as "BATEMAN, CAMERON BATEMAN". Always render names via `Graduate#display_preferred_first` / `display_preferred_last` (which sanitize); never concatenate raw `preferredlast` + `preferredfirst` in views. The importer also sanitizes at write time.
 - **`SpreadsheetParser` aliases: highest-priority alias wins, even if the file lists the lower-priority column later.** When multiple input columns alias to the same canonical key (e.g. `Degree1` and `Degree Description` both → `degree1`), only the column matching the FIRST alias in the list is mapped to the canonical key; other matching columns fall through to their normalized header name. Don't reorder existing alias arrays without considering this.
+- **`graduates.levelcode` is `"UG"` or `"GR"` only** — production rosters do NOT distinguish `GR-M` vs `GR-D`. Derive master vs doctorate from `degree1` via `Graduate.master` / `Graduate.doctorate` scopes (backed by `DegreeHoodTranslator::DEGREE_HOOD_MAP[:level]`). Never filter on `levelcode: "GR-M"` / `"GR-D"` — it silently matches zero rows.
 
 ---
 

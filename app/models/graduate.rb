@@ -3,6 +3,19 @@ class Graduate < ApplicationRecord
   has_many :brags, primary_key: "buid", foreign_key: "buid"
   has_many :cords, primary_key: "buid", foreign_key: "buid"
 
+  # Degree-code groupings derived from DegreeHoodTranslator so master vs.
+  # doctorate breakdowns don't depend on `levelcode`. Production rosters use
+  # `levelcode = "GR"` for both master's and doctoral graduates, so the legacy
+  # `GR-M` / `GR-D` filters miss everyone. Always derive level from `degree1`.
+  MASTER_DEGREE_CODES = DegreeHoodTranslator::DEGREE_HOOD_MAP
+                          .select { |_, v| v[:level] == "Masters" }.keys.freeze
+  DOCTORATE_DEGREE_CODES = DegreeHoodTranslator::DEGREE_HOOD_MAP
+                             .select { |_, v| v[:level].to_s.include?("Doctoral") }.keys.freeze
+
+  scope :undergraduate, -> { where(levelcode: "UG") }
+  scope :master,        -> { where("UPPER(degree1) IN (?)", MASTER_DEGREE_CODES) }
+  scope :doctorate,     -> { where("UPPER(degree1) IN (?)", DOCTORATE_DEGREE_CODES) }
+
   # Belmont campus emails follow `pref_first.last@bruins.belmont.edu`. The local
   # part before the first dot is what the student answers to. We use this to
   # backfill `preferredfirst` when the spreadsheet didn't include one.
