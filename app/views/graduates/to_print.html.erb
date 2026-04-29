@@ -1,24 +1,50 @@
-<div  id="to-print">
+<div  id="to-print" data-print-page="true">
   <%= render partial: 'print_list', locals: { graduates: @graduates } %>
 </div>
 
 <script>
   if (window.pollIntervalId) {
     clearInterval(window.pollIntervalId);
+    window.pollIntervalId = null;
   }
 
   document.addEventListener("turbo:load", function () {
     const container = document.getElementById('to-print');
-    if (!container) return;
+    // Only run on the print-list page. Without this guard, Turbo Drive
+    // would replay the green-background side effect on other pages
+    // because the inline body style persists across navigations.
+    if (!container || !container.dataset.printPage) {
+      document.body.classList.remove('print-page-has-results');
+      return;
+    }
+
+    document.body.classList.add('on-print-page');
 
     // Pause polling while the user is interacting with the list (hover or
     // active mousedown). Without this, a 5s innerHTML swap can land between
     // mousedown and mouseup, swallowing the click on "Print All" or a name.
     let userInteracting = false;
-    container.addEventListener('mouseenter', () => { userInteracting = true; });
-    container.addEventListener('mouseleave', () => { userInteracting = false; });
-    container.addEventListener('mousedown',  () => { userInteracting = true; });
-    // Don't reset on mouseup — the navigation begins immediately after.
+    let interactionResetTimer = null;
+
+    function markInteracting() {
+      userInteracting = true;
+      if (interactionResetTimer) clearTimeout(interactionResetTimer);
+      // Safety net: if mouseleave/mouseup never fire (e.g. user clicked a
+      // link and Turbo navigated mid-click), force the flag back to false
+      // so polling resumes when they return to this page.
+      interactionResetTimer = setTimeout(() => { userInteracting = false; }, 2000);
+    }
+    function clearInteracting() {
+      userInteracting = false;
+      if (interactionResetTimer) {
+        clearTimeout(interactionResetTimer);
+        interactionResetTimer = null;
+      }
+    }
+
+    container.addEventListener('mouseenter', markInteracting);
+    container.addEventListener('mouseleave', clearInteracting);
+    container.addEventListener('mousedown',  markInteracting);
 
     function updatePrintList() {
       if (userInteracting) return;
@@ -31,15 +57,16 @@
       fetch(`/get_print?printed=${show_print}`)
         .then(response => response.text())
         .then(html => {
-          if (userInteracting) return; // user started interacting mid-fetch
-          if (!container) return;
+          if (userInteracting) return;
+          const live = document.getElementById('to-print');
+          if (!live) return;
           // Only replace when content actually changed — avoids destroying
           // links/buttons under the user's cursor on every poll.
-          if (container.innerHTML !== html) {
-            container.innerHTML = html;
+          if (live.innerHTML !== html) {
+            live.innerHTML = html;
           }
-          const hasResults = container.querySelectorAll('.graduate-row').length > 0;
-          document.body.style.backgroundColor = hasResults ? '#E1EBCA' : '';
+          const hasResults = live.querySelectorAll('.graduate-row').length > 0;
+          document.body.classList.toggle('print-page-has-results', hasResults);
         })
         .catch(error => console.error(error));
     }
@@ -53,10 +80,17 @@
 
   });
 
+  // Clean up when leaving the print page so the green background doesn't
+  // bleed onto the bulk-print or graduate detail pages.
   document.addEventListener("turbo:before-cache", function () {
     if (window.pollIntervalId) {
       clearInterval(window.pollIntervalId);
       window.pollIntervalId = null;
     }
+    document.body.classList.remove('on-print-page', 'print-page-has-results');
+  });
+
+  document.addEventListener("turbo:before-visit", function () {
+    document.body.classList.remove('on-print-page', 'print-page-has-results');
   });
 </script>

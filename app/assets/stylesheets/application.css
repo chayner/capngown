@@ -14,6 +14,13 @@
  *= require_self
  */
 
+/* Print-list page background tint, scoped via a body class so it can
+   never bleed onto other pages (Turbo Drive keeps the body element
+   across navigations, so inline styles persist — class toggle won't). */
+body.on-print-page.print-page-has-results {
+  background-color: #E1EBCA;
+}
+
  .material-symbols-outlined {
   margin-right: 4px;
   height: 26px;
@@ -159,10 +166,16 @@ nav .nav-always {
      defaults. !important keeps framework rules from re-asserting. */
   nav {
     display: flex !important;
-    flex-flow: row wrap;
-    align-items: center;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    min-height: 56px;
   }
-  nav .brand     { order: 1; margin-right: 0; }
+  nav .brand {
+    order: 1;
+    margin: 0 !important;
+    align-self: center;
+    line-height: 1.2;
+  }
   nav .nav-always {
     order: 2;
     display: inline-flex !important;
@@ -185,8 +198,12 @@ nav .nav-always {
     text-decoration: none;
   }
   nav input#bmenub { order: 3; }
-  nav label.burger { order: 4; margin-left: 0; }
-  nav .menu        { order: 5; flex-basis: 100%; }
+  nav label.burger { order: 4; margin-left: 0; align-self: center; }
+  /* Collapsed menu wraps below the row when expanded by the burger. */
+  nav .menu {
+    order: 5;
+    flex-basis: 100%;
+  }
 
   nav .menu .nav-link-print {
     display: none;
