@@ -16,7 +16,10 @@
 
 <div class="full-grad-info">
   <div class="full-info-content">
-    <h3>Full Grad Info</h3>
+    <div class="full-info-header">
+      <h3>Full Grad Info</h3>
+      <%= link_to "✎ Edit Names", edit_graduate_path(buid: @graduate.buid), class: "button" %>
+    </div>
     <ul>
       <li><strong>BUID:</strong> <%= @graduate.buid %></li>
       <li><strong>First Name:</strong> <%= @graduate.firstname %></li>

@@ -51,6 +51,39 @@ class GraduatesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 70, @graduate.reload.height
   end
 
+  test "GET /graduates/:buid/edit renders edit form" do
+    get edit_graduate_url(buid: @graduate.buid)
+    assert_response :success
+    assert_match "Edit Graduate Names", response.body
+  end
+
+  test "PATCH /graduates/:buid updates name fields" do
+    patch graduate_url(buid: @graduate.buid), params: {
+      graduate: {
+        firstname: "Alicia",
+        lastname: "Smithson",
+        preferredfirst: "Allie",
+        preferredlast: "Smithson"
+      }
+    }
+    assert_redirected_to graduate_path(buid: @graduate.buid)
+    @graduate.reload
+    assert_equal "Alicia", @graduate.firstname
+    assert_equal "Smithson", @graduate.lastname
+    assert_equal "Allie", @graduate.preferredfirst
+    assert_equal "Smithson", @graduate.preferredlast
+  end
+
+  test "PATCH /graduates/:buid does not allow editing buid via mass assignment" do
+    original_buid = @graduate.buid
+    patch graduate_url(buid: original_buid), params: {
+      graduate: { buid: "B99999999", firstname: "Renamed" }
+    }
+    assert_redirected_to graduate_path(buid: original_buid)
+    assert Graduate.exists?(buid: original_buid)
+    assert_not Graduate.exists?(buid: "B99999999")
+  end
+
   # --- Check-in ---
 
   test "PATCH checkin marks checked_in" do

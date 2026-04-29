@@ -1,5 +1,5 @@
 class GraduatesController < ApplicationController
-  before_action :set_graduate, only: [:show, :update, :checkin, :print], except: [:show_bulk, :bulk_print]
+  before_action :set_graduate, only: [:show, :edit, :update, :checkin, :print], except: [:show_bulk, :bulk_print]
 
   def start
 
@@ -111,17 +111,26 @@ class GraduatesController < ApplicationController
     redirect_to show_bulk_path(buids: params[:buids]), notice: message
   end
 
+  def edit
+  end
+
   def update
-    # @graduate = Graduate.find_sole_by(buid: params[:buid])
-
-    if params[:graduate][:height]
-      @graduate.height = params[:graduate][:height]
-
-      if @graduate.save
+    # Height-only update from the badge modal keeps its legacy behavior
+    # (no flash, no extra fields). Anything else goes through the general
+    # edit form (name fields, etc.).
+    if params[:graduate].keys == ["height"]
+      if @graduate.update(height: params[:graduate][:height])
         redirect_to graduate_path(buid: @graduate.buid)
       else
-        render :show
+        render :show, status: :unprocessable_entity
       end
+      return
+    end
+
+    if @graduate.update(graduate_params)
+      redirect_to graduate_path(buid: @graduate.buid), notice: "Graduate updated."
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -274,7 +283,7 @@ class GraduatesController < ApplicationController
   end
 
   def graduate_params
-    params.require(:graduate).permit(:height)
+    params.require(:graduate).permit(:height, :firstname, :lastname, :preferredfirst, :preferredlast)
   end
 
 end

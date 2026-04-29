@@ -1,0 +1,65 @@
+<div id="back">
+  <%= link_to "← Back to Graduate", graduate_path(buid: @graduate.buid) %>
+</div>
+
+<article class="edit-graduate">
+  <header class="edit-graduate-header">
+    <h2>Edit Graduate Names</h2>
+    <p class="edit-graduate-meta">
+      <span><strong>BUID:</strong> <%= @graduate.buid %></span>
+      <span><strong>Diploma name:</strong> <%= @graduate.fullname %></span>
+    </p>
+  </header>
+
+  <% if @graduate.errors.any? %>
+    <div class="error edit-graduate-errors">
+      <strong><%= pluralize(@graduate.errors.count, "error") %> prevented saving:</strong>
+      <ul>
+        <% @graduate.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @graduate, url: graduate_path(buid: @graduate.buid), method: :patch, local: true, html: { class: "edit-graduate-form" } do |form| %>
+    <fieldset>
+      <legend>Formal name (as it appears on the diploma roster)</legend>
+
+      <div class="form-row">
+        <div class="form-group">
+          <%= form.label :firstname, "First Name" %>
+          <%= form.text_field :firstname, autocomplete: "off" %>
+        </div>
+
+        <div class="form-group">
+          <%= form.label :lastname, "Last Name" %>
+          <%= form.text_field :lastname, autocomplete: "off" %>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Preferred name (printed large on the sticker)</legend>
+
+      <div class="form-row">
+        <div class="form-group">
+          <%= form.label :preferredfirst, "Preferred First Name" %>
+          <%= form.text_field :preferredfirst, autocomplete: "off" %>
+          <small class="hint">Leave blank to fall back to the formal first name.</small>
+        </div>
+
+        <div class="form-group">
+          <%= form.label :preferredlast, "Preferred Last Name" %>
+          <%= form.text_field :preferredlast, autocomplete: "off" %>
+          <small class="hint">Leave blank to fall back to the formal last name.</small>
+        </div>
+      </div>
+    </fieldset>
+
+    <footer class="edit-graduate-actions">
+      <%= form.submit "Save Changes", class: "button" %>
+      <%= link_to "Cancel", graduate_path(buid: @graduate.buid), class: "button pseudo" %>
+    </footer>
+  <% end %>
+</article>

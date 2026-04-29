@@ -8,8 +8,21 @@
   }
 
   document.addEventListener("turbo:load", function () {
-  
+    const container = document.getElementById('to-print');
+    if (!container) return;
+
+    // Pause polling while the user is interacting with the list (hover or
+    // active mousedown). Without this, a 5s innerHTML swap can land between
+    // mousedown and mouseup, swallowing the click on "Print All" or a name.
+    let userInteracting = false;
+    container.addEventListener('mouseenter', () => { userInteracting = true; });
+    container.addEventListener('mouseleave', () => { userInteracting = false; });
+    container.addEventListener('mousedown',  () => { userInteracting = true; });
+    // Don't reset on mouseup — the navigation begins immediately after.
+
     function updatePrintList() {
+      if (userInteracting) return;
+
       const toggle = document.getElementById('show-printed');
       if (!toggle) return;
 
@@ -18,16 +31,19 @@
       fetch(`/get_print?printed=${show_print}`)
         .then(response => response.text())
         .then(html => {
-          const container = document.getElementById('to-print');
-          if (container) {
+          if (userInteracting) return; // user started interacting mid-fetch
+          if (!container) return;
+          // Only replace when content actually changed — avoids destroying
+          // links/buttons under the user's cursor on every poll.
+          if (container.innerHTML !== html) {
             container.innerHTML = html;
-            const hasResults = container.querySelectorAll('.graduate-row').length > 0;
-            document.body.style.backgroundColor = hasResults ? '#E1EBCA' : '';
           }
+          const hasResults = container.querySelectorAll('.graduate-row').length > 0;
+          document.body.style.backgroundColor = hasResults ? '#E1EBCA' : '';
         })
         .catch(error => console.error(error));
     }
-    
+
     const toggle = document.getElementById('show-printed');
     if (toggle) {
       toggle.addEventListener('click', updatePrintList);
