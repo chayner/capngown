@@ -740,9 +740,13 @@ h1.name {
 
 
 @media print {
+  /* !important required because our @media (max-width: 60em) rule sets
+     `nav { display: flex !important }` to fix the burger-row layout.
+     Without !important here, that rule wins when printing onto small
+     paper sizes and the nav prints over the badge content. */
   nav, #back, #height-modal, .page-header, .action-bar, .notice, .card, .modal,
   .card-action-bar, .bulk-action-bar, .instructions, .printed-badge, .checkedin-banner, .full-grad-info {
-    display: none;
+    display: none !important;
   }
 
   main {
@@ -759,6 +763,7 @@ h1.name {
     margin: 0;
     padding: 0;
     text-align: center;
+    background: #fff !important;   /* defeat .print-page-has-results green */
   }
 
   body article.badge,
