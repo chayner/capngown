@@ -170,6 +170,7 @@ Account creation and password resets are admin-only via rake tasks (see `docs/de
 - **No timestamps on `graduates`, `brags`, `cords`.** Don't `.order(:created_at)` on these tables.
 - **`checked_in` / `printed` are timestamps used as flags.** `WHERE printed IS NULL` means "not printed". Don't add a separate boolean column.
 - **Picnic CSS, not Tailwind.** Style with Picnic classes (`button`, `pseudo`, `success`, `error`) and the `app/assets/stylesheets/application.scss` overrides. Don't add Tailwind utility classes — they won't compile.
+- **Picnic nav layout — don't nudge margins, own the flex contract.** When the nav button won't anchor right or vertically center, stop tweaking `margin-left: auto` / sibling margins (Picnic's `nav` / `.brand` defaults silently win). In the media query, force `nav { display: flex !important; align-items: center; }` and assign explicit `order` to every child. Use `margin-left: auto !important` on the anchor item. See `.claude/skills/debug/SKILL.md` → "Picnic Nav". If a CSS fix doesn't visibly change the result on the second attempt, change strategy.
 - **Importmap, no bundler.** Add JS deps via `bin/importmap pin <pkg>`, not `yarn`/`npm`.
 - **Turbo POST buttons:** `link_to` with `method: :post` does NOT work in Turbo — Turbo ignores `data-method`. Use `button_to` (creates a real `<form method="post">`).
 - **`button_to` data attributes:** `data: { turbo: false }` on `button_to` applies to the **button**, not the **form**. Use `form: { data: { turbo: false } }` instead.

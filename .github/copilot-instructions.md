@@ -114,6 +114,7 @@ Admin returns `true` for all volunteer-level checks. Account creation and passwo
 - **No timestamps on `graduates`/`brags`/`cords`.** `.order(:created_at)` will raise.
 - **`checked_in` / `printed` are timestamps used as flags.** `WHERE printed IS NULL` = not yet printed.
 - **Picnic CSS, not Tailwind.** Use Picnic classes (`button`, `success`, `error`, `pseudo`); add overrides in `app/assets/stylesheets/`. Tailwind utilities won't compile.
+- **Picnic nav layout — don't nudge margins, own the flex contract.** When fixing nav alignment (anchoring right, vertical centering), don't iterate on `margin-left: auto` or sibling `margin-right` tweaks — Picnic's own `nav` / `.brand` rules silently win. Inside your media query, force `nav { display: flex !important; align-items: center; }` and assign explicit `order` to every child (brand, nav-always, input, label.burger, menu). Use `margin-left: auto !important` on the anchor item. If a CSS layout fix doesn't change the rendered result on the second attempt, change strategy — don't repeat the same nudge.
 - **Importmap, not a bundler.** Add JS deps via `bin/importmap pin <pkg>`.
 - **Turbo POST buttons:** `link_to` with `method: :post` does NOT work in Turbo. Always use `button_to`.
 - **`button_to` data attributes:** `data: { turbo: false }` applies to the **button**, not the **form**. Use `form: { data: { turbo: false } }`.
